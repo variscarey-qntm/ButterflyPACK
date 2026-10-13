@@ -304,6 +304,17 @@ endif()
 
 endif()
 
+if(BUILD_TESTING AND enable_fixed_seed)
+  add_executable(random_seed_test EXCLUDE_FROM_ALL RandomSeedTest.f90)
+  target_link_libraries(random_seed_test ${all_link_libs_d})
+  add_test(NAME random_seed_serial COMMAND random_seed_test)
+  if(enable_mpi)
+    add_test(NAME random_seed_mpi
+      COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2
+        ${MPIEXEC_PREFLAGS} $<TARGET_FILE:random_seed_test> ${MPIEXEC_POSTFLAGS})
+  endif()
+endif()
+
 # Optional standalone BP C-interface regressions; build these targets explicitly.
 if(enable_mpi)
   foreach(bp_precision d z s c)
