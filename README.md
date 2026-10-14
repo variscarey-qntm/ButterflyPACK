@@ -69,11 +69,34 @@ make install
 ( see example cmake script in example_scripts: run_cmake_build_gnu_ubuntu_mpi4_gcc910_sequential.sh)
 ```
 
-### Fixed-seed regression test
-With `-Denable_fixed_seed=ON` and `-DBUILD_TESTING=ON`, explicitly build the
-`random_seed_test` target and run `ctest -R random_seed --output-on-failure`
+### Setting a random seed from C
+Set the integer `random_seed` option before construction using the C wrapper:
+```c
+F2Cptr option;
+int seed = 12345;
+d_c_bpack_createoption(&option);
+d_c_bpack_setoption(&option, "random_seed", &seed);
+```
+Use the generated `dBPACK_wrapper.h` header; the `z_`, `s_`, and `c_`
+interfaces support the same option. A nonnegative value overrides the
+compile-time seed and uses `seed + MPI_COMM_WORLD rank` (rank zero without
+MPI) at each library seed initialization, including nested construction
+calls. Zero is valid. A negative value (default `-1`) restores the build
+default: time/process-ID seeding, or base `104729` with
+`-Denable_fixed_seed=ON`. Set the option on every participating rank.
+Option copies preserve it; setting it does not immediately reset the
+process's Fortran random generator. The repeatability limitations above
+still apply.
+
+### Random-seed regression test
+With `-DBUILD_TESTING=ON`, explicitly build the
+`random_seed_test` and `random_seed_option_test` targets and run
+`ctest -R random_seed --output-on-failure`
 from the build directory. This checks repeatable seeds and random sequences
-in all four precisions; MPI builds also check distinct seeds with two ranks.
+in all four precisions, including zero and maximum integer runtime seeds;
+MPI builds also check distinct seeds with two ranks. With
+`-Denable_fixed_seed=ON`, it also checks the compile-time default.
+The C test checks setting, getting, and copying the option in all precisions.
 
 ## Website
    [http://portal.nersc.gov/project/sparse/butterflypack/](http://portal.nersc.gov/project/sparse/butterflypack/)
@@ -128,4 +151,3 @@ in all four precisions; MPI builds also check distinct seeds with two ranks.
 [14] Y. Liu, "A comparative study of butterfly-enhanced direct integral and differential equation solvers for high-frequency electromagnetic analysis involving inhomogeneous dielectrics," 3rd URSI Atlantic Radio Science Meeting (AT-AP-RASC), 2022. 
 
 [15] Y. Liu, J. Song, R. Burridge, and J. Qian, "A fast butterfly-compressed Hadamard-Babich integrator for high-frequency inhomogenous Helmholtz equations in variable media," SIAM J. Multiscale Model. Simul., 2022. 
-

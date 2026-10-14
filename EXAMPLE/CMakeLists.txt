@@ -304,7 +304,11 @@ endif()
 
 endif()
 
-if(BUILD_TESTING AND enable_fixed_seed)
+if(BUILD_TESTING)
+  add_executable(random_seed_option_test EXCLUDE_FROM_ALL RandomSeedOptionTest.c)
+  target_link_libraries(random_seed_option_test ${all_link_libs_d})
+  set_target_properties(random_seed_option_test PROPERTIES LINKER_LANGUAGE CXX)
+  add_test(NAME random_seed_c_option COMMAND random_seed_option_test)
   add_executable(random_seed_test EXCLUDE_FROM_ALL RandomSeedTest.f90)
   target_link_libraries(random_seed_test ${all_link_libs_d})
   add_test(NAME random_seed_serial COMMAND random_seed_test)

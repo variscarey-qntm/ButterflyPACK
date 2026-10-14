@@ -13,27 +13,45 @@ program RandomSeedTest
 
    rank = 0
    nprocs = 1
-   call check_seed(init_d)
+   call check_seed(init_d, 12345)
 #ifdef HAVE_MPI
    call MPI_Init(ierr)
    call MPI_Comm_rank(MPI_COMM_WORLD, rank, ierr)
    call MPI_Comm_size(MPI_COMM_WORLD, nprocs, ierr)
 #endif
-   call check_seed(init_d)
-   call check_seed(init_z)
-   call check_seed(init_s)
-   call check_seed(init_c)
+   call check_precision(init_d)
+   call check_precision(init_z)
+   call check_precision(init_s)
+   call check_precision(init_c)
 #ifdef HAVE_MPI
    call MPI_Finalize(ierr)
 #endif
 
 contains
 
-   subroutine check_seed(initialize)
+   subroutine check_precision(initialize)
       interface
-         subroutine initialize()
+         subroutine initialize(base_seed)
+            integer, optional, intent(in) :: base_seed
          end subroutine initialize
       end interface
+      call check_seed(initialize, 12345)
+      call check_seed(initialize, 54321)
+      call check_seed(initialize, 0)
+      call check_seed(initialize, huge(0))
+#ifdef HAVE_FIXED_SEED
+      call check_seed(initialize)
+      call check_seed(initialize, -1)
+#endif
+   end subroutine check_precision
+
+   subroutine check_seed(initialize, base_seed)
+      interface
+         subroutine initialize(base_seed)
+            integer, optional, intent(in) :: base_seed
+         end subroutine initialize
+      end interface
+      integer, optional, intent(in) :: base_seed
       integer, allocatable :: seed(:), repeated(:)
       integer :: n, expected
       integer(int64) :: base
@@ -46,16 +64,20 @@ contains
 
       call random_seed(size=n)
       allocate(seed(n), repeated(n))
-      call initialize()
+      call initialize(base_seed)
       call random_seed(get=seed)
       call random_number(values)
-      call initialize()
+      call initialize(base_seed)
       call random_seed(get=repeated)
       call random_number(repeated_values)
       if (any(seed /= repeated)) error stop 'Seed is not repeatable'
       if (any(values /= repeated_values)) error stop 'Random sequence is not repeatable'
 
       base = 104729_int64 + int(rank, int64)
+      if (present(base_seed)) then
+         if (base_seed >= 0) base = int(base_seed, int64) + int(rank, int64)
+      endif
+      if (base == 0) base = 104729_int64
       expected = int(mod(mod(base*279470273_int64, 4294967291_int64), int(huge(0), int64)))
       if (seed(1) /= expected) error stop 'Seed does not use fixed base plus rank'
 #ifdef HAVE_MPI

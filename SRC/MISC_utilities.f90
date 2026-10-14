@@ -1506,28 +1506,35 @@ contains
 
    end subroutine rperm
 
-   subroutine init_random_seed()
+   subroutine init_random_seed(base_seed)
       implicit none
+      integer, optional, intent(in) :: base_seed
       integer, allocatable :: seed(:)
       integer :: i, n, un, istat, dt(8), pid
       integer*8 :: t
-#ifdef HAVE_FIXED_SEED
       integer :: rank
+      integer :: fixed_seed
 #ifdef HAVE_MPI
       logical :: mpi_started
-#endif
 #endif
 
       call random_seed(size=n)
       allocate (seed(n))
+      fixed_seed = -1
 #ifdef HAVE_FIXED_SEED
+      fixed_seed = 104729
+#endif
+      if (present(base_seed)) then
+         if (base_seed >= 0) fixed_seed = base_seed
+      endif
+      if (fixed_seed >= 0) then
       rank = 0
 #ifdef HAVE_MPI
       call MPI_Initialized(mpi_started, istat)
       if (mpi_started) call MPI_Comm_rank(MPI_COMM_WORLD, rank, istat)
 #endif
-      t = 104729_int64 + int(rank, int64)
-#else
+      t = int(fixed_seed, int64) + int(rank, int64)
+      else
 ! First try if the OS provides a random number generator
 
 ! Fallback to XOR:ing the current time and pid. The PID is
@@ -1549,7 +1556,7 @@ contains
       pid = getpid()
 #endif
       t = ieor(t, int(pid, kind(t)))
-#endif
+      endif
       do i = 1, n
          seed(i) = lcg(t)
       end do

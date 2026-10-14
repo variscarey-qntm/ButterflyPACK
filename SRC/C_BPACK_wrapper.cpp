@@ -112,6 +112,7 @@ void c_bpack_set_option_from_command_line(int argc, const char* const* cargv,F2C
 		{"tol_itersol",     "convergence tolerance for the iterative solver (format-7 precon=2 uses H2 BiCGSTAB)"},
 		{"n_iter",          "maximum iteration count for the iterative solver"},
 		{"IR_HODLR", "maximum HODLR direct-solve refinement steps; 0 disables refinement"},
+		{"random_seed", "nonnegative base seed plus MPI world rank; negative uses build default"},
 		{"level_check",     "the level in the hierarchical partitioning where the randomized construction algorithm is tested, set to 10000 by default (no checking)"},
 		{"precon",          "the use mode of butterflypack: 1: as a direct solver 2: as an iterative solver (compress the matrix and use it without a preconditioner), 3: as a preconditioned iterative solver (compress and invert the matrix, using the approximate inverse as a preconditioner)"},
 		{"xyzsort",         "the hierarchical partitioning algorithm: 0: no permutation 1: permutation based on KD-tree 2: permutation based on cobble-like partitioning"},
@@ -223,6 +224,7 @@ void c_bpack_set_option_from_command_line(int argc, const char* const* cargv,F2C
 		{"H2_ID_proxy", required_argument, 0, 49},
 		{"h2_id_proxy_points", required_argument, 0, 50},
 		{"H2_ID_proxy_points", required_argument, 0, 50},
+		{"random_seed", required_argument, 0, 51},
 		{NULL, 0, NULL, 0}
 		};
 	int c, option_index = 0;
@@ -466,6 +468,11 @@ void c_bpack_set_option_from_command_line(int argc, const char* const* cargv,F2C
 		std::istringstream iss(optarg);
 		iss >> opt_i;
 		c_bpack_set_I_option(&option0, "H2_ID_proxy_points", opt_i);
+		} break;
+		case 51: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		c_bpack_set_I_option(&option0, "random_seed", opt_i);
 		} break;
 		case 36: {
 		std::istringstream iss(optarg);
