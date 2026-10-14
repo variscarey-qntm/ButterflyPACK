@@ -23,6 +23,11 @@ option(enable_toplevel_openmp    "Use OpenMP at top levels of the solver" OFF)
 option(enable_mpi    "Build with MPI support" ON)
 option(enable_python "Enable Python" OFF)
 option(enable_fftw "Build FFTW" OFF)
+option(enable_fixed_seed "Use a fixed random seed per MPI rank" OFF)
+
+if(enable_fixed_seed)
+  set(CMAKE_Fortran_FLAGS "-DHAVE_FIXED_SEED ${CMAKE_Fortran_FLAGS}")
+endif()
 
 ######################################################################
 #

@@ -88,7 +88,7 @@ contains
       character(len=1024)  :: strings
       integer threads_num
 
-      call init_random_seed()
+      call init_random_seed(option%random_seed)
 
       call assert(associated(ker%QuantApp), 'ker%QuantApp is not assigned')
       if(option%cpp==0)call assert(associated(ker%FuncZmnBlock) .or. associated(ker%FuncZmn) .or. associated(ker%FuncHMatVec), 'one of the following should be assigned: ker%FuncZmn, ker%FuncZmnBlock, ker%FuncHMatVec')
@@ -241,7 +241,7 @@ contains
       character(len=1024)  :: strings
       integer threads_num
 
-      call init_random_seed()
+      call init_random_seed(option%random_seed)
 
       call assert(associated(ker%QuantApp), 'ker%QuantApp is not assigned')
       if(option%cpp==0)call assert(associated(ker%FuncZmn_MD) , 'one of the following should be assigned: ker%FuncZmn_MD, ker%FuncZmn_MDBlock')
@@ -555,7 +555,7 @@ contains
       ! seed_myid(1) = times(4)*(360000*times(5) + 6000*times(6) + 100*times(7) + times(8))
       ! seed_myid(1) = myid*1000
       ! call RANDOM_SEED(PUT=seed_myid)
-      call init_random_seed()
+      call init_random_seed(option%random_seed)
       verbosity_save=option%verbosity
       option%verbosity=-1
       call BPACK_construction_Init(M, Permutation_m, M_loc, bmat_m, option, stats, mshr, ker, ptree, Coordinates_m, tree_m)
@@ -785,7 +785,7 @@ contains
       ! seed_myid(1) = times(4)*(360000*times(5) + 6000*times(6) + 100*times(7) + times(8))
       ! seed_myid(1) = myid*1000
       ! call RANDOM_SEED(PUT=seed_myid)
-      call init_random_seed()
+      call init_random_seed(option%random_seed)
       verbosity_save=option%verbosity
       option%verbosity=-1
       call BPACK_MD_construction_Init(M, Ndim, Permutation_m, M_loc, bmat_m, option, stats, mshr, ker, ptree, Coordinates_m, tree_m)
@@ -1247,7 +1247,7 @@ contains
       ! seed_myid(1) = times(4)*(360000*times(5) + 6000*times(6) + 100*times(7) + times(8))
       ! seed_myid(1) = myid*1000
       ! call RANDOM_SEED(PUT=seed_myid)
-      call init_random_seed()
+      call init_random_seed(option%random_seed)
       verbosity_save=option%verbosity
       format_save=option%format
       option%verbosity=-1

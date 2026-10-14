@@ -86,6 +86,18 @@ int main(int argc, char** argv) {
     F2Cptr ptree = nullptr, opt = nullptr;
     API(c_bpack_createptree)(&size, members.data(), &comm, &ptree);
     API(c_bpack_createoption)(&opt);
+    int failures=0;
+    double seed_value;
+    API(c_bpack_getoption)(&opt, "random_seed", &seed_value);
+    if (seed_value != -1) ++failures;
+    int seed=12345;
+    API(c_bpack_setoption)(&opt, "random_seed", &seed);
+    F2Cptr copied_opt=nullptr;
+    API(c_bpack_copyoption)(&opt, &copied_opt);
+    API(c_bpack_getoption)(&copied_opt, "random_seed", &seed_value);
+    if (seed_value != seed) ++failures;
+    API(c_bpack_deleteoption)(&opt);
+    opt=copied_opt;
     seti(opt,"cpp",1); seti(opt,"verbosity",-1); seti(opt,"nogeo",1);
     seti(opt,"xyzsort",0); seti(opt,"Nmin_leaf",32); seti(opt,"knn",0);
     seti(opt,"format",1); seti(opt,"LRlevel",0); seti(opt,"elem_extract",0);
@@ -97,7 +109,6 @@ int main(int argc, char** argv) {
     int m=512, n=768, nrhs=3;
     if (rank==0) std::printf("BP regression: M=%d N=%d Nmin_leaf=32 RHS=%d ranks=%d\n",m,n,nrhs,size);
     F2Cptr mshr=mesh(m,opt,ptree), mshc=mesh(n,opt,ptree);
-    int failures=0;
     // HODLR forwardN15flag=2 also exercises its error-check pointer.
     for (int test : {1,2,-2,3,5}) {
         const int format = std::abs(test);

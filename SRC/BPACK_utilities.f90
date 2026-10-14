@@ -1251,6 +1251,7 @@ contains
       type(Hoption)::option
 
       option%Nmin_leaf = 200
+      option%random_seed = -1
       option%tol_comp = 1d-4
       option%tol_LS = 1d-12
       option%tol_itersol = 1d-6
@@ -1355,6 +1356,8 @@ contains
                   read (strings1, *) option%tol_LS
                else if (trim(strings) == '--n_iter') then
                   read (strings1, *) option%n_iter
+               else if (trim(strings) == '--random_seed') then
+                  read (strings1, *) option%random_seed
                else if (trim(strings) == '--IR_HODLR') then
                   read (strings1, *) option%IR_HODLR
                else if (trim(strings) == '--level_check') then
@@ -1491,6 +1494,7 @@ contains
       type(Hoption)::option, option1
 
       option1%Nmin_leaf = option%Nmin_leaf
+      option1%random_seed = option%random_seed
       option1%CA_level = option%CA_level
       option1%H2_use_sketch = option%H2_use_sketch
       option1%H2_ID_radius = option%H2_ID_radius
@@ -1568,6 +1572,7 @@ contains
          write (*, *) ' '
          write (*, *) '***************************'
          write (*, '(A25)') 'Printing Solver Options:'
+         write (*, '(A18,I12)') 'random_seed', option%random_seed
          write (*, '(A18,I8)') 'format', option%format
          write (*, '(A18,I8)') 'lrlevel', option%LRlevel
          write (*, '(A18,I8)') 'sym', option%sym

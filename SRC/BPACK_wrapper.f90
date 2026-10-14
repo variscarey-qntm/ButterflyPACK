@@ -779,6 +779,10 @@ contains
          val_d = option%n_iter
          valid_opt = 1
       endif
+      if (trim(str) == 'random_seed') then
+         val_d = option%random_seed
+         valid_opt = 1
+      endif
       if (trim(str) == 'IR_HODLR') then
          val_d = option%IR_HODLR
          valid_opt = 1
@@ -1079,6 +1083,11 @@ contains
       call c_f_pointer(option_Cptr, option)
 
 !>**** integer parameters
+      if (trim(str) == 'random_seed') then
+         call c_f_pointer(val_Cptr, val_i)
+         option%random_seed = val_i
+         valid_opt = 1
+      endif
       if (trim(str) == 'n_iter') then
          call c_f_pointer(val_Cptr, val_i)
          option%n_iter = val_i
@@ -1704,7 +1713,7 @@ contains
       ! seed_myid(1) = times(4)*(360000*times(5) + 6000*times(6) + 100*times(7) + times(8))
       ! seed_myid(1) = myid*1000
       ! call RANDOM_SEED(PUT=seed_myid)
-      call init_random_seed()
+      call init_random_seed(option%random_seed)
 
       if (ptree%MyID == Main_ID .and. option%verbosity >= 0) then
          write (*, *) "BPACK_BUTTERFLY_SOLVER"
@@ -1969,7 +1978,7 @@ contains
       ! seed_myid(1) = times(4)*(360000*times(5) + 6000*times(6) + 100*times(7) + times(8))
       ! seed_myid(1) = myid*1000
       ! call RANDOM_SEED(PUT=seed_myid)
-      call init_random_seed()
+      call init_random_seed(option%random_seed)
 
       if (ptree%MyID == Main_ID .and. option%verbosity >= 0) then
          write (*, *) "BPACK_BUTTERFLY_SOLVER"
@@ -2327,7 +2336,7 @@ contains
       ! seed_myid(1) = times(4)*(360000*times(5) + 6000*times(6) + 100*times(7) + times(8))
       ! seed_myid(1) = myid*1000
       ! call RANDOM_SEED(PUT=seed_myid)
-      call init_random_seed()
+      call init_random_seed(option%random_seed)
 
       if (ptree%MyID == Main_ID .and. option%verbosity >= 0) then
          write (*, *) "BPACK_BUTTERFLY_SOLVER"
@@ -2545,7 +2554,7 @@ contains
          nns_m = reshape(nnsr(1:option%knn*M), shape(nns_m))
          nns_n = reshape(nnsc(1:option%knn*N), shape(nns_n))
       endif
-      call init_random_seed()
+      call init_random_seed(option%random_seed)
       call BP_Construct_Init_from_mshrc(M, N, M_loc, N_loc, mshr, mshc, handle%BP, option, stats, msh, ker, ptree, nns_m, nns_n)
       bp_Cptr = c_loc(handle)
       msh_Cptr = c_loc(msh)
@@ -2661,7 +2670,7 @@ contains
       ! seed_myid(1) = times(4)*(360000*times(5) + 6000*times(6) + 100*times(7) + times(8))
       ! seed_myid(1) = myid*1000
       ! call RANDOM_SEED(PUT=seed_myid)
-      call init_random_seed()
+      call init_random_seed(option%random_seed)
 
       ! if(ptree%MyID==Main_ID)then
       ! write(*,*) "BPACK_BUTTERFLY_SOLVER"

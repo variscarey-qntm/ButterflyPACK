@@ -14,6 +14,7 @@ The installation uses CMake. You may need "bash" for the build process. The base
 - `-Denable_python=ON` builds the Python interface. This requires a working Python development environment and `pybind11`.
 - `-Denable_parsec=ON` builds optional PaRSEC PTG support for Hmat factorization. This requires MPI, a PaRSEC installation with the CMake targets `PaRSEC::parsec` and `PaRSEC::parsec-ptgpp`, and usually `CMAKE_PREFIX_PATH` pointing to the PaRSEC prefix. 
 - `-Denable_fftw=ON` enables FFTW support, used by the FFT-based circulant path for translational-invariant tensor blocks. CMake either finds FFTW through `find_package(FFTW)` or uses `TPL_FFTW_LIBRARIES`.
+- `-Denable_fixed_seed=ON` enables repeatable random seeding in all four precisions (default: `OFF`). Each seed initialization uses `104729 + rank`, where `rank` is the rank in `MPI_COMM_WORLD`, to generate the Fortran seed vector. Non-MPI builds and calls before MPI initialization use rank zero. For direct compiler/Makefile builds, add `-DHAVE_FIXED_SEED` to the Fortran flags instead. With the option disabled, the existing time/process-ID seeding is unchanged. Repeatability requires the same compiler/runtime, process/thread configuration and call order; this does not guarantee bitwise-identical solver results across configurations.
 - ZFP support is enabled by providing `-DTPL_ZFP_LIBRARIES=...` and `-DTPL_ZFP_INCLUDE=...`. 
 - PARPACK support is enabled by providing `-DTPL_ARPACK_LIBRARIES=...`. 
 
@@ -68,6 +69,35 @@ make install
 ( see example cmake script in example_scripts: run_cmake_build_gnu_ubuntu_mpi4_gcc910_sequential.sh)
 ```
 
+### Setting a random seed from C
+Set the integer `random_seed` option before construction using the C wrapper:
+```c
+F2Cptr option;
+int seed = 12345;
+d_c_bpack_createoption(&option);
+d_c_bpack_setoption(&option, "random_seed", &seed);
+```
+Use the generated `dBPACK_wrapper.h` header; the `z_`, `s_`, and `c_`
+interfaces support the same option. A nonnegative value overrides the
+compile-time seed and uses `seed + MPI_COMM_WORLD rank` (rank zero without
+MPI) at each library seed initialization, including nested construction
+calls. Zero is valid. A negative value (default `-1`) restores the build
+default: time/process-ID seeding, or base `104729` with
+`-Denable_fixed_seed=ON`. Set the option on every participating rank.
+Option copies preserve it; setting it does not immediately reset the
+process's Fortran random generator. The repeatability limitations above
+still apply.
+
+### Random-seed regression test
+With `-DBUILD_TESTING=ON`, explicitly build the
+`random_seed_test` and `random_seed_option_test` targets and run
+`ctest -R random_seed --output-on-failure`
+from the build directory. This checks repeatable seeds and random sequences
+in all four precisions, including zero and maximum integer runtime seeds;
+MPI builds also check distinct seeds with two ranks. With
+`-Denable_fixed_seed=ON`, it also checks the compile-time default.
+The C test checks setting, getting, and copying the option in all precisions.
+
 ## Website
    [http://portal.nersc.gov/project/sparse/butterflypack/](http://portal.nersc.gov/project/sparse/butterflypack/)
 
@@ -121,5 +151,3 @@ make install
 [14] Y. Liu, "A comparative study of butterfly-enhanced direct integral and differential equation solvers for high-frequency electromagnetic analysis involving inhomogeneous dielectrics," 3rd URSI Atlantic Radio Science Meeting (AT-AP-RASC), 2022. 
 
 [15] Y. Liu, J. Song, R. Burridge, and J. Qian, "A fast butterfly-compressed Hadamard-Babich integrator for high-frequency inhomogenous Helmholtz equations in variable media," SIAM J. Multiscale Model. Simul., 2022. 
-
-

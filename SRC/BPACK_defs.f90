@@ -790,6 +790,7 @@ integer, allocatable::index_MD(:, :, :) !< an array of block offsets
 
     !>**** BPACK solver options
     type Hoption
+        integer :: random_seed = -1 !< nonnegative base seed plus MPI world rank; negative uses build default
 
         integer::format !< HODLR, HMAT, HSS, HSS_MD, BLR
         integer::verbosity !< printlevel -1: no printing except error and warning. 0: default printing. 1: print info for each high-level operation 2: print information for each low-level operation

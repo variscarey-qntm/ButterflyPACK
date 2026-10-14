@@ -90,6 +90,7 @@ void c_bpack_printstructure(F2Cptr* bmat, int* inverse, F2Cptr*option, F2Cptr*st
 void c_bpack_getstats(F2Cptr*stats, char const*nam, double*val_d);
 void c_bpack_setstats(F2Cptr*stats, char const*nam, double*val_d);
 void c_bpack_createoption(F2Cptr*option);
+// Integer option "random_seed": nonnegative base plus MPI world rank; negative uses the build default.
 void c_bpack_setoption(F2Cptr*option, char const*nam, C2Fptr val);
 void c_bpack_getoption(F2Cptr*option, char const*nam, double*val_d);
 void c_bpack_readoption(F2Cptr*option, F2Cptr*ptree, int*ii);
