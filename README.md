@@ -7,6 +7,25 @@ ButterflyPACK is a mathematical software for rapidly solving large-scale dense l
 
 ButterflyPACK is written in Fortran 2003, it also has C++ interfaces. ButterflyPACK supports hybrid MPI/OpenMP programming models. In addition, ButterflyPACK can be readily invoked from the software STRUMPACK for solving dense and sparse linear systems.
 
+### ScaLAPACK merge diagnostics
+
+MPI builds append merge diagnostics to `scalapack_merge_rank_<MPI_COMM_WORLD rank>.txt`
+in the working directory. Records are written before the SVD, matrix multiplication,
+and redistribution calls in `LR_HMerge`, including the final 2D-to-1D redistribution.
+Each record identifies the process-tree group, merge depth, operation dimensions
+(`call_m`, `call_n`), and one matrix operand's BLACS grid dimensions, process
+coordinates, global and local rows/columns, block sizes, and local leading dimension.
+`local_storage_elements` is the 64-bit product of the leading dimension and local
+column count, in elements rather than bytes.
+
+Operands are numbered in descriptor order: input/U/VT for SVD, A/B/C for matrix
+multiplication, and source/destination for redistribution. Global/local dimensions
+describe the full descriptor-backed matrix, which may exceed the operated-on
+submatrix. Processes outside an operand's grid do not log that operand.
+Files are closed after each logging call so diagnostics survive a subsequent
+ScaLAPACK failure; existing files are appended across runs. Logging failures issue
+a warning without stopping compression. Non-MPI builds do not produce these files.
+
 
 ## Installation
 The installation uses CMake. You may need "bash" for the build process. The base MPI build requires BLAS, LAPACK and SCALAPACK; ARPACK is optional. Optional features are enabled with CMake switches and TPL variables:
@@ -121,5 +140,4 @@ make install
 [14] Y. Liu, "A comparative study of butterfly-enhanced direct integral and differential equation solvers for high-frequency electromagnetic analysis involving inhomogeneous dielectrics," 3rd URSI Atlantic Radio Science Meeting (AT-AP-RASC), 2022. 
 
 [15] Y. Liu, J. Song, R. Burridge, and J. Qian, "A fast butterfly-compressed Hadamard-Babich integrator for high-frequency inhomogenous Helmholtz equations in variable media," SIAM J. Multiscale Model. Simul., 2022. 
-
 

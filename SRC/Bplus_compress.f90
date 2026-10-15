@@ -6500,6 +6500,7 @@ time_tmp = time_tmp + n2 - n1
                   call descinit_wp(descsmatU1c, M1, rank1, nbslpk, nbslpk, 0, 0, ptree%pgrp(pgno1)%ctxt, max(myArows, 1), info)
                   call assert(info == 0, 'descinit_wp fail for descsmatU1c')
 
+                  call LogScalapackMerge('GEMR2D', ptree, pgno, cridx, M1, rank1, descsmatU1c, descsmatU)
                   call pgemr2df90(M1, rank1, blocks%sons(1, 1)%ButterflyU%blocks(1)%matrix, 1, 1, descsmatU1c, matU, 1, 1, descsmatU, ptree%pgrp(pgno)%ctxt1DCol)
                   deallocate (blocks%sons(1, 1)%ButterflyU%blocks(1)%matrix)
 
@@ -6508,12 +6509,15 @@ time_tmp = time_tmp + n2 - n1
                   myAcols = numroc_wp(rank1, nbslpk, mycol1, 0, npcol1)
                   call descinit_wp(descsmatV1c, N1, rank1, nbslpk, nbslpk, 0, 0, ptree%pgrp(pgno1)%ctxt, max(myArows, 1), info)
                   call assert(info == 0, 'descinit_wp fail for descsmatV1c')
+                  call LogScalapackMerge('GEMR2D', ptree, pgno, cridx, N1, rank1, descsmatV1c, descsmatV1)
                   call pgemr2df90(N1, rank1, blocks%sons(1, 1)%ButterflyV%blocks(1)%matrix, 1, 1, descsmatV1c, matV1, 1, 1, descsmatV1, ptree%pgrp(pgno)%ctxt1DCol)
                   deallocate (blocks%sons(1, 1)%ButterflyV%blocks(1)%matrix)
                else
                   descsmatU1c(2) = -1
+                  call LogScalapackMerge('GEMR2D', ptree, pgno, cridx, M1, rank1, descsmatU1c, descsmatU)
                   call pgemr2df90(M1, rank1, tmp, 1, 1, descsmatU1c, matU, 1, 1, descsmatU, ptree%pgrp(pgno)%ctxt1DCol)
                   descsmatV1c(2) = -1
+                  call LogScalapackMerge('GEMR2D', ptree, pgno, cridx, N1, rank1, descsmatV1c, descsmatV1)
                   call pgemr2df90(N1, rank1, tmp, 1, 1, descsmatV1c, matV1, 1, 1, descsmatV1, ptree%pgrp(pgno)%ctxt1DCol)
                endif
                if (allocated(blocks%sons(1, 1)%ButterflyU%blocks)) deallocate (blocks%sons(1, 1)%ButterflyU%blocks)
@@ -6525,6 +6529,7 @@ time_tmp = time_tmp + n2 - n1
                   myAcols = numroc_wp(rank2, nbslpk, mycol2, 0, npcol2)
                   call descinit_wp(descsmatU2c, M2, rank2, nbslpk, nbslpk, 0, 0, ptree%pgrp(pgno2)%ctxt, max(myArows, 1), info)
                   call assert(info == 0, 'descinit_wp fail for descsmatU2c')
+                  call LogScalapackMerge('GEMR2D', ptree, pgno, cridx, M2, rank2, descsmatU2c, descsmatU)
                   call pgemr2df90(M2, rank2, blocks%sons(2, 1)%ButterflyU%blocks(1)%matrix, 1, 1, descsmatU2c, matU, 1, 1 + rank1, descsmatU, ptree%pgrp(pgno)%ctxt1DCol)
                   deallocate (blocks%sons(2, 1)%ButterflyU%blocks(1)%matrix)
 
@@ -6533,12 +6538,15 @@ time_tmp = time_tmp + n2 - n1
                   myAcols = numroc_wp(rank2, nbslpk, mycol2, 0, npcol2)
                   call descinit_wp(descsmatV2c, N2, rank2, nbslpk, nbslpk, 0, 0, ptree%pgrp(pgno2)%ctxt, max(myArows, 1), info)
                   call assert(info == 0, 'descinit_wp fail for descsmatV2c')
+                  call LogScalapackMerge('GEMR2D', ptree, pgno, cridx, N2, rank2, descsmatV2c, descsmatV2)
                   call pgemr2df90(N2, rank2, blocks%sons(2, 1)%ButterflyV%blocks(1)%matrix, 1, 1, descsmatV2c, matV2, 1, 1, descsmatV2, ptree%pgrp(pgno)%ctxt1DCol)
                   deallocate (blocks%sons(2, 1)%ButterflyV%blocks(1)%matrix)
                else
                   descsmatU2c(2) = -1
+                  call LogScalapackMerge('GEMR2D', ptree, pgno, cridx, M2, rank2, descsmatU2c, descsmatU)
                   call pgemr2df90(M2, rank2, tmp, 1, 1, descsmatU2c, matU, 1, 1 + rank1, descsmatU, ptree%pgrp(pgno)%ctxt1DCol)
                   descsmatV2c(2) = -1
+                  call LogScalapackMerge('GEMR2D', ptree, pgno, cridx, N2, rank2, descsmatV2c, descsmatV2)
                   call pgemr2df90(N2, rank2, tmp, 1, 1, descsmatV2c, matV2, 1, 1, descsmatV2, ptree%pgrp(pgno)%ctxt1DCol)
                endif
 
@@ -6565,6 +6573,7 @@ time_tmp = time_tmp + n2 - n1
                   allocate (Singular(mnmin))
                   Singular = 0
 
+                  call LogScalapackMerge('GESVD', ptree, pgno, cridx, M1, rank1 + rank2, descsmatU, descUU, descVV)
                   call PSVD_Truncate(M1, rank1 + rank2, matU, descsmatU, UU, VV, descUU, descVV, Singular, option%tol_comp, rank, ptree%pgrp(pgno)%ctxt, BPACK_SafeUnderflow, flop=flop)
                   stats%Flop_tmp = stats%Flop_tmp + flop/dble(nprow*npcol)
 
@@ -6594,8 +6603,10 @@ time_tmp = time_tmp + n2 - n1
                   call assert(info == 0, 'descinit_wp fail for descButterflyU')
                   blocks%ButterflyU%blocks(1)%matrix = UU(1:max(1,myArows), 1:max(1,myAcols))
 
+                  call LogScalapackMerge('GEMM', ptree, pgno, cridx, N1, rank, descsmatV1, descVV, descButterflyV)
                   call pgemmf90('N', 'T', N1, rank, rank1, BPACK_cone, matV1, 1, 1, descsmatV1, VV, 1, 1, descVV, BPACK_czero, blocks%ButterflyV%blocks(1)%matrix, 1, 1, descButterflyV, flop=flop)
                   stats%Flop_tmp = stats%Flop_tmp + flop/dble(nprow*npcol)
+                  call LogScalapackMerge('GEMM', ptree, pgno, cridx, N2, rank, descsmatV2, descVV, descButterflyV)
                   call pgemmf90('N', 'T', N2, rank, rank2, BPACK_cone, matV2, 1, 1, descsmatV2, VV, 1, 1 + rank1, descVV, BPACK_czero, blocks%ButterflyV%blocks(1)%matrix, 1 + N1, 1, descButterflyV, flop=flop)
                   stats%Flop_tmp = stats%Flop_tmp + flop/dble(nprow*npcol)
                   deallocate (UU, VV, Singular, matV1, matV2, matU)
@@ -6652,6 +6663,7 @@ time_tmp = time_tmp + n2 - n1
                   call descinit_wp(descsmatU1c, M1, rank1, nbslpk, nbslpk, 0, 0, ptree%pgrp(pgno1)%ctxt, max(myArows, 1), info)
                   call assert(info == 0, 'descinit_wp fail for descsmatU1c')
                   ! write(*,*)shape(blocks%sons(1,1)%ButterflyU%blocks(1)%matrix),shape(matU1),rank1,M1,blocks%sons(1,1)%rankmax
+                  call LogScalapackMerge('GEMR2D', ptree, pgno, cridx, M1, rank1, descsmatU1c, descsmatU1)
                   call pgemr2df90(M1, rank1, blocks%sons(1, 1)%ButterflyU%blocks(1)%matrix, 1, 1, descsmatU1c, matU1, 1, 1, descsmatU1, ptree%pgrp(pgno)%ctxt1DCol)
                   deallocate (blocks%sons(1, 1)%ButterflyU%blocks(1)%matrix)
 
@@ -6660,12 +6672,15 @@ time_tmp = time_tmp + n2 - n1
                   myAcols = numroc_wp(rank1, nbslpk, mycol1, 0, npcol1)
                   call descinit_wp(descsmatV1c, N1, rank1, nbslpk, nbslpk, 0, 0, ptree%pgrp(pgno1)%ctxt, max(myArows, 1), info)
                   call assert(info == 0, 'descinit_wp fail for descsmatV1c')
+                  call LogScalapackMerge('GEMR2D', ptree, pgno, cridx, N1, rank1, descsmatV1c, descsmatV)
                   call pgemr2df90(N1, rank1, blocks%sons(1, 1)%ButterflyV%blocks(1)%matrix, 1, 1, descsmatV1c, matV, 1, 1, descsmatV, ptree%pgrp(pgno)%ctxt1DCol)
                   deallocate (blocks%sons(1, 1)%ButterflyV%blocks(1)%matrix)
                else
                   descsmatU1c(2) = -1
+                  call LogScalapackMerge('GEMR2D', ptree, pgno, cridx, M1, rank1, descsmatU1c, descsmatU1)
                   call pgemr2df90(M1, rank1, tmp, 1, 1, descsmatU1c, matU1, 1, 1, descsmatU1, ptree%pgrp(pgno)%ctxt1DCol)
                   descsmatV1c(2) = -1
+                  call LogScalapackMerge('GEMR2D', ptree, pgno, cridx, N1, rank1, descsmatV1c, descsmatV)
                   call pgemr2df90(N1, rank1, tmp, 1, 1, descsmatV1c, matV, 1, 1, descsmatV, ptree%pgrp(pgno)%ctxt1DCol)
                endif
                if (allocated(blocks%sons(1, 1)%ButterflyU%blocks)) deallocate (blocks%sons(1, 1)%ButterflyU%blocks)
@@ -6677,6 +6692,7 @@ time_tmp = time_tmp + n2 - n1
                   myAcols = numroc_wp(rank2, nbslpk, mycol2, 0, npcol2)
                   call descinit_wp(descsmatU2c, M2, rank2, nbslpk, nbslpk, 0, 0, ptree%pgrp(pgno2)%ctxt, max(myArows, 1), info)
                   call assert(info == 0, 'descinit_wp fail for descsmatU2c')
+                  call LogScalapackMerge('GEMR2D', ptree, pgno, cridx, M2, rank2, descsmatU2c, descsmatU2)
                   call pgemr2df90(M2, rank2, blocks%sons(2, 1)%ButterflyU%blocks(1)%matrix, 1, 1, descsmatU2c, matU2, 1, 1, descsmatU2, ptree%pgrp(pgno)%ctxt1DCol)
                   deallocate (blocks%sons(2, 1)%ButterflyU%blocks(1)%matrix)
 
@@ -6685,12 +6701,15 @@ time_tmp = time_tmp + n2 - n1
                   myAcols = numroc_wp(rank2, nbslpk, mycol2, 0, npcol2)
                   call descinit_wp(descsmatV2c, N2, rank2, nbslpk, nbslpk, 0, 0, ptree%pgrp(pgno2)%ctxt, max(myArows, 1), info)
                   call assert(info == 0, 'descinit_wp fail for descsmatV2c')
+                  call LogScalapackMerge('GEMR2D', ptree, pgno, cridx, N2, rank2, descsmatV2c, descsmatV)
                   call pgemr2df90(N2, rank2, blocks%sons(2, 1)%ButterflyV%blocks(1)%matrix, 1, 1, descsmatV2c, matV, 1, 1 + rank1, descsmatV, ptree%pgrp(pgno)%ctxt1DCol)
                   deallocate (blocks%sons(2, 1)%ButterflyV%blocks(1)%matrix)
                else
                   descsmatU2c(2) = -1
+                  call LogScalapackMerge('GEMR2D', ptree, pgno, cridx, M2, rank2, descsmatU2c, descsmatU2)
                   call pgemr2df90(M2, rank2, tmp, 1, 1, descsmatU2c, matU2, 1, 1, descsmatU2, ptree%pgrp(pgno)%ctxt1DCol)
                   descsmatV2c(2) = -1
+                  call LogScalapackMerge('GEMR2D', ptree, pgno, cridx, N2, rank2, descsmatV2c, descsmatV)
                   call pgemr2df90(N2, rank2, tmp, 1, 1, descsmatV2c, matV, 1, 1 + rank1, descsmatV, ptree%pgrp(pgno)%ctxt1DCol)
                endif
 
@@ -6717,6 +6736,7 @@ time_tmp = time_tmp + n2 - n1
                   allocate (Singular(mnmin))
                   Singular = 0
 
+                  call LogScalapackMerge('GESVD', ptree, pgno, cridx, N1, rank1 + rank2, descsmatV, descUU, descVV)
                   call PSVD_Truncate(N1, rank1 + rank2, matV, descsmatV, UU, VV, descUU, descVV, Singular, option%tol_comp, rank, ptree%pgrp(pgno)%ctxt, BPACK_SafeUnderflow, flop=flop)
                   stats%Flop_tmp = stats%Flop_tmp + flop/dble(nprow*npcol)
                   do ii = 1, rank
@@ -6745,9 +6765,11 @@ time_tmp = time_tmp + n2 - n1
                   call assert(info == 0, 'descinit_wp fail for descButterflyU')
                   blocks%ButterflyU%blocks(1)%matrix = 0
 
+                  call LogScalapackMerge('GEMM', ptree, pgno, cridx, M1, rank, descsmatU1, descVV, descButterflyU)
                   call pgemmf90('N', 'T', M1, rank, rank1, BPACK_cone, matU1, 1, 1, descsmatU1, VV, 1, 1, descVV, BPACK_czero, blocks%ButterflyU%blocks(1)%matrix, 1, 1, descButterflyU, flop=flop)
                   stats%Flop_tmp = stats%Flop_tmp + flop/dble(nprow*npcol)
 
+                  call LogScalapackMerge('GEMM', ptree, pgno, cridx, M2, rank, descsmatU2, descVV, descButterflyU)
                   call pgemmf90('N', 'T', M2, rank, rank2, BPACK_cone, matU2, 1, 1, descsmatU2, VV, 1, 1 + rank1, descVV, BPACK_czero, blocks%ButterflyU%blocks(1)%matrix, 1 + M1, 1, descButterflyU, flop=flop)
                   stats%Flop_tmp = stats%Flop_tmp + flop/dble(nprow*npcol)
                   deallocate (UU, VV, Singular, matU1, matU2, matV)
@@ -6811,8 +6833,8 @@ time_tmp = time_tmp + n2 - n1
             blocks%ButterflyV%blocks(1)%matrix = 0
 ! write(*,*) blocks%row_group,blocks%col_group,isnanMat(matU2D,size(matU2D,1),size(matU2D,2)),isnanMat(matV2D,size(matV2D,1),size(matV2D,2)),'nima222bi',ptree%MyID
             ! write(*,*)size(matU2D,1),size(matU2D,2),ptree%MyID,'dddddddd',myrow,mycol,myArows,myAcols
-            call Redistribute2Dto1D(matU2D, blocks%M, 0, pgno, blocks%ButterflyU%blocks(1)%matrix, blocks%M_p, 0, pgno, rank, ptree)
-            call Redistribute2Dto1D(matV2D, blocks%N, 0, pgno, blocks%ButterflyV%blocks(1)%matrix, blocks%N_p, 0, pgno, rank, ptree)
+            call Redistribute2Dto1D(matU2D, blocks%M, 0, pgno, blocks%ButterflyU%blocks(1)%matrix, blocks%M_p, 0, pgno, rank, ptree, merge_depth=cridx)
+            call Redistribute2Dto1D(matV2D, blocks%N, 0, pgno, blocks%ButterflyV%blocks(1)%matrix, blocks%N_p, 0, pgno, rank, ptree, merge_depth=cridx)
 
             ! write(*,*) fnorm(blocks%ButterflyU%blocks(1)%matrix,blocks%M_loc,rank),fnorm(blocks%ButterflyV%blocks(1)%matrix,blocks%N_loc,rank),isnanMat(blocks%ButterflyU%blocks(1)%matrix,blocks%M_loc,rank),'nimabi'
             ! write(*,*) blocks%row_group,blocks%col_group,isnanMat(blocks%ButterflyU%blocks(1)%matrix,blocks%M_loc,rank),'nimabi',ptree%MyID

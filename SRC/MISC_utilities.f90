@@ -6033,8 +6033,74 @@ end subroutine TensorPermute
 
    end subroutine Redistribute1Dto2D
 
+   !> Log descriptor storage before merge ScaLAPACK calls, including counts beyond INT4.
+   subroutine LogScalapackMerge(operation, ptree, pgno, depth, m, n, descA, descB, descC)
+      use, intrinsic :: iso_fortran_env, only: int64, error_unit
+      implicit none
+      character(len=*), intent(in) :: operation
+      type(proctree), intent(in) :: ptree
+      integer, intent(in) :: pgno, depth, m, n, descA(9)
+      integer, optional, intent(in) :: descB(9), descC(9)
+#ifdef HAVE_MPI
+      integer :: descriptors(9, 3), count, operand, ctxt, nprow, npcol, myrow, mycol
+      integer :: local_rows, local_cols, world_rank, ierr, logunit, ios, close_ios
+      integer(kind=int64) :: local_elements
+      character(len=128) :: filename
+      logical, save :: warned = .false.
+
+      descriptors = 0
+      descriptors(2, 1) = descA(2)
+      if (descA(2) >= 0) descriptors(:, 1) = descA
+      count = 1
+      if (present(descB)) then
+         count = count + 1
+         descriptors(2, count) = descB(2)
+         if (descB(2) >= 0) descriptors(:, count) = descB
+      endif
+      if (present(descC)) then
+         count = count + 1
+         descriptors(2, count) = descC(2)
+         if (descC(2) >= 0) descriptors(:, count) = descC
+      endif
+      call MPI_Comm_rank(MPI_COMM_WORLD, world_rank, ierr)
+      if (ierr /= 0) return
+      write(filename, '(a,i0,a)') 'scalapack_merge_rank_', world_rank, '.txt'
+
+!$omp critical(scalapack_merge_log)
+      open(newunit=logunit, file=trim(filename), status='unknown', position='append', action='write', iostat=ios)
+      if (ios == 0) then
+         do operand = 1, count
+            ctxt = descriptors(2, operand)
+            ! Nonmembers only initialize the descriptor context to -1.
+            if (ctxt < 0) cycle
+            call blacs_gridinfo_wrp(ctxt, nprow, npcol, myrow, mycol)
+            if (myrow < 0 .or. mycol < 0) cycle
+            local_rows = numroc_wp(descriptors(3, operand), descriptors(5, operand), myrow, descriptors(7, operand), nprow)
+            local_cols = numroc_wp(descriptors(4, operand), descriptors(6, operand), mycol, descriptors(8, operand), npcol)
+            local_elements = int(descriptors(9, operand), int64)*int(local_cols, int64)
+            write(logunit, '(*(g0,1x))', iostat=ios) 'operation=', trim(operation), 'operand=', operand, &
+               'world_rank=', world_rank, 'bpack_rank=', ptree%MyID, 'pgno=', pgno, 'merge_depth=', depth, &
+               'call_m=', m, 'call_n=', n, 'ctxt=', ctxt, 'grid_rows=', nprow, 'grid_cols=', npcol, &
+               'process_row=', myrow, 'process_col=', mycol, &
+               'global_rows=', descriptors(3, operand), 'global_cols=', descriptors(4, operand), &
+               'block_rows=', descriptors(5, operand), 'block_cols=', descriptors(6, operand), &
+               'local_rows=', local_rows, 'local_cols=', local_cols, 'lld=', descriptors(9, operand), &
+               'local_storage_elements=', local_elements
+            if (ios /= 0) exit
+         enddo
+         close(logunit, iostat=close_ios)
+         if (ios == 0) ios = close_ios
+      endif
+      if (ios /= 0 .and. .not. warned) then
+         write(error_unit, '(a)') 'Warning: unable to write ScaLAPACK merge diagnostics to '//trim(filename)
+         warned = .true.
+      endif
+!$omp end critical(scalapack_merge_log)
+#endif
+   end subroutine LogScalapackMerge
+
 ! redistribute 2D block array dat_i distributed among process group pgno_i to 1D block array dat_o distributed among process group pgno_o
-   subroutine Redistribute2Dto1D(dat_i, M, head_i, pgno_i, dat_o, M_p_o, head_o, pgno_o, N, ptree)
+   subroutine Redistribute2Dto1D(dat_i, M, head_i, pgno_i, dat_o, M_p_o, head_o, pgno_o, N, ptree, merge_depth)
       implicit none
       integer ld
       DT::dat_i(:, :), dat_o(:, :)
@@ -6050,6 +6116,7 @@ end subroutine TensorPermute
       integer ctxt1D, ctxt1DCol, nproc, nprow, npcol, myrow, mycol, nb1Dc, nb1Dr, myArows, myAcols
       integer::desc1D(9), desc2D(9)
       integer::ctxt, info
+      integer, optional, intent(in) :: merge_depth
 
       ctxt1DCol = ptree%pgrp(pgno_i)%ctxt1DCol
       ctxt1D = ptree%pgrp(pgno_i)%ctxt1D
@@ -6087,6 +6154,7 @@ end subroutine TensorPermute
       endif
 
 ! write(*,*)ptree%MyID,M,N,myArows,myAcols,size(dat_i,1),size(dat_i,2),size(dat_1D,1),size(dat_1D,2),'2D2D',isnanMat(dat_i,size(dat_i,1),size(dat_i,2)),isnanMat(dat_1D,size(dat_1D,1),size(dat_1D,2)),myrow,mycol,pgno_i,ctxt
+      if (present(merge_depth)) call LogScalapackMerge('GEMR2D_2Dto1D', ptree, pgno_i, merge_depth, M, N, desc2D, desc1D)
       call pgemr2df90(M, N, dat_i, 1, 1, desc2D, dat_1D, 1, 1, desc1D, ctxt1DCol)
 ! write(*,*)ptree%MyID,M,N,myArows,myAcols,size(dat_1D,1),size(dat_1D,2),size(dat_o,1),size(dat_o,2),'1D1D',isnanMat(dat_1D,size(dat_1D,1),size(dat_1D,2)),isnanMat(dat_o,size(dat_o,1),size(dat_o,2)),myrow,mycol
       call Redistribute1Dto1D(dat_1D, ld, M_p_1D, head_i, pgno_i, dat_o, size(dat_o,1), M_p_o, head_o, pgno_o, N, ptree)
