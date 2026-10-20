@@ -12,13 +12,20 @@ program test_mpi4
             import c_int64_t
             integer(c_int64_t) :: handle
         end subroutine
+        subroutine errors_return() bind(C, name="bpack_mpi_test_errors_return")
+        end subroutine
+        function thread_checks() bind(C, name="bpack_mpi_test_threads") result(success)
+            import c_int64_t
+            integer(c_int64_t) :: success
+        end function
     end interface
-    integer :: ierr, provided, rank, nproc, peer, parent, c, g, g2, newrank, j, idx, count, ztype
+    integer :: ierr, provided, rank, nproc, peer, parent, c, g, g2, newrank, idx, count, ztype
     integer :: requests(2), status(MPI_STATUS_SIZE), statuses(MPI_STATUS_SIZE, 2)
     integer :: ranks(2), counts(2), displs(2), x, y, send(2), recv(2), large
     logical :: flag
     double precision :: start
 
+    provided = MPI_THREAD_SINGLE
     if (command_argument_count() == 0) then
         call MPI_Init_thread(MPI_THREAD_MULTIPLE, provided, ierr)
         call ok(ierr == MPI_SUCCESS, 'init_thread')
@@ -135,6 +142,17 @@ program test_mpi4
     requests(2) = MPI_REQUEST_NULL
     call MPI_Waitall(2, requests, MPI_STATUSES_IGNORE, ierr)
     call ok(ierr == MPI_SUCCESS, 'waitall ignored')
+    call MPI_Waitall(0, requests, MPI_STATUSES_IGNORE, ierr)
+    call ok(ierr == MPI_SUCCESS, 'empty waitall')
+    call errors_return()
+    call MPI_Irecv(y, 0, MPI_INTEGER, peer, 43, MPI_COMM_WORLD, requests(1), ierr)
+    call MPI_Isend(x, 1, MPI_INTEGER, peer, 43, MPI_COMM_WORLD, requests(2), ierr)
+    call MPI_Waitall(2, requests, statuses, ierr)
+    call ok(ierr /= MPI_SUCCESS, 'waitall error')
+    call ok(statuses(MPI_ERROR, 1) /= MPI_SUCCESS, 'waitall per-request error')
+    call ok(statuses(MPI_SOURCE, 1) == peer .and. statuses(MPI_TAG, 1) == 43, 'waitall error status')
+    call MPI_Waitall(2, requests, MPI_STATUSES_IGNORE, ierr)
+    call ok(ierr == MPI_SUCCESS, 'finish any pending send after waitall error')
 
     ! A zero-extent datatype tests large counts/displacements without large allocation.
     ztype = zero_type()
@@ -151,6 +169,7 @@ program test_mpi4
     call MPI_Waitall(2, requests, MPI_STATUSES_IGNORE, ierr)
     call ok(ierr == MPI_SUCCESS, 'large-count waitall')
     call free_type(ztype)
+    if (provided == MPI_THREAD_MULTIPLE) call ok(thread_checks() == 1, 'concurrent vector requests and waits')
     call MPI_Barrier(MPI_COMM_WORLD, ierr)
     call ok(ierr == MPI_SUCCESS .and. MPI_Wtime() >= start, 'barrier and wtime')
     call MPI_Finalize(ierr)

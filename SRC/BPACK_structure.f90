@@ -36,6 +36,7 @@ contains
       real*8 para
       procedure(F_Compressibility), POINTER :: proc1
       procedure(C_Compressibility), POINTER :: proc1_c
+      integer(c_int) :: near_or_far_c
 
       if (option%nogeo == 0 .or. option%nogeo == 4) then  ! geometrical information is provided
          near_or_far_user = near_or_far_geo(group_m, group_n, msh, option, ker, para)
@@ -48,7 +49,8 @@ contains
       else if (option%nogeo == 2) then  ! no geometrical information is provided, but user provides a compressibility function
          if (option%cpp == 1) then
             call c_f_procpointer(ker%C_FuncNearFar, proc1_C)
-            call proc1_C(group_m, group_n, near_or_far_user, ker%C_QuantApp)
+            call proc1_C(checked_c_int(group_m), checked_c_int(group_n), near_or_far_c, ker%C_QuantApp)
+            near_or_far_user = int(near_or_far_c,kind(0))
          else
             proc1 => ker%FuncNearFar
             call proc1(group_m, group_n, near_or_far_user, ker%QuantApp)
@@ -161,6 +163,7 @@ contains
       type(mesh)::msh(Ndim)
       ! procedure(F_Compressibility), POINTER :: proc1
       procedure(C_Compressibility_MD), POINTER :: proc1_c_md
+      integer(c_int) :: near_or_far_c
 
       if (option%nogeo == 0 .or. option%nogeo == 4) then  ! geometrical information is provided
          near_or_far_user_MD = near_or_far_geo_MD(group_m, group_n, Ndim, msh, option, ker, para)
@@ -173,7 +176,8 @@ contains
       else if (option%nogeo == 2) then  ! no geometrical information is provided, but user provides a compressibility function
          if (option%cpp == 1) then
             call c_f_procpointer(ker%C_FuncNearFar_MD, proc1_c_md)
-            call proc1_c_md(Ndim, group_m, group_n, near_or_far_user_MD, ker%C_QuantApp)
+            call proc1_c_md(checked_c_int(Ndim), checked_c_int(group_m), checked_c_int(group_n), near_or_far_c, ker%C_QuantApp)
+            near_or_far_user_MD = int(near_or_far_c,kind(0))
          else
             ! proc1 => ker%FuncNearFar
             ! call proc1(group_m, group_n, near_or_far_user, ker%QuantApp)
@@ -270,7 +274,7 @@ contains
       else if (option%nogeo == 2) then  ! no geometrical information is provided, but user provides a distance function
          if (option%cpp == 1) then
             call c_f_procpointer(ker%C_FuncDistmn, proc1_C)
-            call proc1_C(edgem, edgen, distance_user, ker%C_QuantApp)
+            call proc1_C(checked_c_int(edgem), checked_c_int(edgen), distance_user, ker%C_QuantApp)
          else
             proc1 => ker%FuncDistmn
             call proc1(edgem, edgen, distance_user, ker%QuantApp)

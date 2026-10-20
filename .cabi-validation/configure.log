@@ -1,0 +1,85 @@
+-- The C compiler identification is GNU 13.3.0
+-- The CXX compiler identification is GNU 13.3.0
+-- The Fortran compiler identification is GNU 13.3.0
+cc1: warning: command-line option ‘-fallow-invalid-boz’ is valid for Fortran but not for C
+cc1: warning: command-line option ‘-fallow-argument-mismatch’ is valid for Fortran but not for C
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/mpicc.mpich - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/mpicxx.mpich - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Detecting Fortran compiler ABI info
+-- Detecting Fortran compiler ABI info - done
+-- Check for working Fortran compiler: /usr/bin/mpifort.mpich - skipped
+
+Process XSDK defaults ...
+USE_XSDK_DEFAULTS = 'FALSE'
+-- Include /home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/source/cmake/setup_external_macros.cmake
+-- Include /home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/source/cmake/Macros/macro_find_system_library.cmake
+-- ButterflyPACK will be built as a static library.
+-- Performing Test COMPILER_GNU
+-- Performing Test COMPILER_GNU - Success
+-- Performing Test GNU10
+-- Performing Test GNU10 - Success
+-- Performing Test COMPILER_Ifort
+-- Performing Test COMPILER_Ifort - Failed
+-- Performing Test COMPILER_Ifx
+-- Performing Test COMPILER_Ifx - Failed
+-- Performing Test COMPILER_PGI
+-- Performing Test COMPILER_PGI - Failed
+-- Performing Test COMPILER_CRAY
+-- Performing Test COMPILER_CRAY - Failed
+-- Performing Test qoptmatmul
+-- Performing Test qoptmatmul - Failed
+-- Using TPL_BLAS_LIBRARIES='/usr/lib/x86_64-linux-gnu/libblas64.so'
+-- Using TPL_LAPACK_LIBRARIES='/usr/lib/x86_64-linux-gnu/liblapack64.so'
+-- Using TPL_SCALAPACK_LIBRARIES='/usr/lib/x86_64-linux-gnu/libscalapack-mpich.so'
+-- Found MPI_C: /usr/bin/mpicc.mpich (found version "4.1")
+-- Found MPI_CXX: /usr/bin/mpicxx.mpich (found version "4.1")
+-- Found MPI_Fortran: /usr/bin/mpifort.mpich (found version "4.1")
+-- Found MPI: TRUE (found version "4.1")
+-- Performing Test BUTTERFLYPACK_HAS_MPI4
+-- Performing Test BUTTERFLYPACK_HAS_MPI4 - Success
+-- Performing Test BUTTERFLYPACK_USE_MPI3
+-- Performing Test BUTTERFLYPACK_USE_MPI3 - Success
+-- Using MPI3 features
+-- Performing Test BUTTERFLYPACK_USE_Finalizer
+-- Performing Test BUTTERFLYPACK_USE_Finalizer - Success
+-- Using Fortran Finalizer features
+-- detecting sed version...
+-- sed version: /usr/bin/sed (GNU sed) 4.9
+Packaged by Debian
+Copyright (C) 2022 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by Jay Fenlason, Tom Lord, Ken Pizzini,
+Paolo Bonzini, Jim Meyering, and Assaf Gordon.
+
+This sed program was built with SELinux support.
+SELinux is disabled on this system.
+
+GNU sed home page: <https://www.gnu.org/software/sed/>.
+General help using GNU software: <https://www.gnu.org/gethelp/>.
+E-mail bug reports to: <bug-sed@gnu.org>.
+
+-- using GNU sed...
+-- sed command [/usr/bin/sed -i ]
+-- generating macro definition header ...
+-- copy and modify SRC dir ...
+-- processing SRC_DOUBLECOMPLEX ...
+-- processing SRC_DOUBLE ...
+-- processing SRC_COMPLEX ...
+-- processing SRC_SINGLE ...
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (16.5s)
+-- Generating done (0.2s)
+-- Build files have been written to: /home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4

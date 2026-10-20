@@ -3,8 +3,19 @@
 
 #include <algorithm>
 #include <complex>
+#include <cmath>
+#include <limits>
 #include <stdexcept>
 #include <type_traits>
+
+template<typename T>
+inline int bpack_lapack_workspace_size(const T& query) {
+    const long double size = std::ceil(static_cast<long double>(std::real(query)));
+    if (!std::isfinite(size) || size < 1 ||
+        size > std::numeric_limits<int>::max())
+        throw std::overflow_error("LAPACK workspace exceeds the H2 int interface");
+    return static_cast<int>(size);
+}
 
 // extern "C" {
 //     // =====================
@@ -170,6 +181,264 @@
 // }
 
 
+#ifdef MPI4
+#include <array>
+#include <cstdint>
+#include <initializer_list>
+#include <tuple>
+#include <utility>
+#include <vector>
+
+// The H2 interface and stored pivots stay int; only Fortran arguments are widened.
+namespace bpack_ilp64 {
+using integer = std::int64_t;
+
+template<std::size_t N> struct layout {
+    std::array<std::size_t, N> lengths;
+    std::array<bool, N> output;
+    layout(std::initializer_list<std::pair<std::size_t, std::size_t>> arrays = {},
+           std::initializer_list<std::size_t> outputs = {}) {
+        lengths.fill(1);
+        output.fill(false);
+        for (auto p : arrays) lengths[p.first] = p.second;
+        for (auto i : outputs) output[i] = true;
+    }
+};
+
+template<typename T> struct argument {
+    T value;
+    argument(T p, std::size_t, bool) : value(p) {}
+    T get() { return value; }
+    void validate() const {}
+    void commit() {}
+};
+
+template<typename T> struct integer_argument {
+    T* original;
+    std::size_t length;
+    integer scalar = 0;
+    std::vector<integer> values;
+    integer_argument(T* p, std::size_t n, bool output)
+        : original(p), length(n), values(n > 1 ? n : 0) {
+        if (n && !p)
+            throw std::invalid_argument("Null integer argument to numerical library");
+        if (!output)
+            for (std::size_t i = 0; i < n; ++i) get()[i] = p[i];
+    }
+    integer* get() { return length > 1 ? values.data() : &scalar; }
+    const integer* get() const { return length > 1 ? values.data() : &scalar; }
+    void validate() const {
+        if constexpr (!std::is_const_v<T>) {
+            for (std::size_t i = 0; i < length; ++i) {
+                if (get()[i] < std::numeric_limits<int>::min() ||
+                    get()[i] > std::numeric_limits<int>::max())
+                    throw std::overflow_error("ILP64 result exceeds the H2 int interface");
+            }
+        }
+    }
+    void commit() {
+        if constexpr (!std::is_const_v<T>)
+            for (std::size_t i = 0; i < length; ++i)
+                original[i] = static_cast<int>(get()[i]);
+    }
+};
+template<> struct argument<int*> : integer_argument<int> {
+    using integer_argument<int>::integer_argument;
+};
+template<> struct argument<const int*> : integer_argument<const int> {
+    using integer_argument<const int>::integer_argument;
+};
+
+template<typename F, typename... A, std::size_t... I>
+auto invoke_impl(F function, const layout<sizeof...(A)>& shape,
+                 std::index_sequence<I...>, A... args) {
+    auto converted = std::make_tuple(argument<A>(args, shape.lengths[I], shape.output[I])...);
+    auto commit = [&] {
+        (std::get<I>(converted).validate(), ...);
+        (std::get<I>(converted).commit(), ...);
+    };
+    if constexpr (std::is_void_v<decltype(function(std::get<I>(converted).get()...))>) {
+        function(std::get<I>(converted).get()...);
+        commit();
+    } else {
+        auto result = function(std::get<I>(converted).get()...);
+        commit();
+        return result;
+    }
+}
+template<typename F, typename... A>
+auto invoke(F function, const layout<sizeof...(A)>& shape, A... args) {
+    return invoke_impl(function, shape, std::index_sequence_for<A...>{}, args...);
+}
+template<std::size_t I, typename Tuple>
+std::size_t extent(const Tuple& a) {
+    return static_cast<std::size_t>(std::max(0, *std::get<I>(a)));
+}
+template<std::size_t N, std::size_t LWORK, typename Tuple>
+std::size_t factor_extent(const Tuple& a) {
+    return *std::get<LWORK>(a) == -1 ? 0 : extent<N>(a);
+}
+template<typename Tuple>
+std::size_t laswp_extent(const Tuple& a) {
+    const integer k1 = *std::get<3>(a), k2 = *std::get<4>(a);
+    const integer inc = *std::get<6>(a);
+    if (inc == 0 || k2 < k1 || *std::get<0>(a) <= 0) return 0;
+    if (k1 < 1)
+        throw std::invalid_argument("LASWP requires a positive first pivot index");
+    const integer last = inc > 0 ? k1 + (k2 - k1) * inc
+                                 : 1 + (1 - k2) * inc;
+    if (static_cast<std::uint64_t>(last) > std::numeric_limits<std::size_t>::max())
+        throw std::overflow_error("LASWP pivot extent exceeds addressable storage");
+    return static_cast<std::size_t>(last);
+}
+}
+
+// Distinct C++ names bind to the original Fortran symbols without recursion.
+#define BPACK_I8_DECL(NAME, RESULT, SIGNATURE, ARRAYS, OUTPUTS) \
+    extern "C" RESULT bpack_i8_##NAME SIGNATURE __asm__(#NAME); \
+    template<typename... A> inline auto NAME(A... args) { \
+        auto a = std::make_tuple(args...); \
+        (void)a; \
+        using bpack_ilp64::extent; \
+        using bpack_ilp64::factor_extent; \
+        using bpack_ilp64::laswp_extent; \
+        return bpack_ilp64::invoke(bpack_i8_##NAME, \
+            bpack_ilp64::layout<sizeof...(A)>( \
+                std::initializer_list<std::pair<std::size_t, std::size_t>> ARRAYS, \
+                std::initializer_list<std::size_t> OUTPUTS), args...); \
+    }
+
+using bpack_blas_int = bpack_ilp64::integer;
+using bpack_complex_double = std::complex<double>;
+using bpack_complex_float = std::complex<float>;
+
+#define BPACK_I8_POTRF(NAME, T) \
+    BPACK_I8_DECL(NAME, void, (const char*, const bpack_blas_int*, T*, const bpack_blas_int*, bpack_blas_int*), {}, {4})
+#define BPACK_I8_POTRS(NAME, T) \
+    BPACK_I8_DECL(NAME, void, (const char*, const bpack_blas_int*, const bpack_blas_int*, const T*, const bpack_blas_int*, T*, const bpack_blas_int*, bpack_blas_int*), {}, {7})
+#define BPACK_I8_GETRF(NAME, T) \
+    BPACK_I8_DECL(NAME, void, (const bpack_blas_int*, const bpack_blas_int*, T*, const bpack_blas_int*, bpack_blas_int*, bpack_blas_int*), \
+        ({{4, std::min(extent<0>(a), extent<1>(a))}}), ({4, 5}))
+#define BPACK_I8_GETRI(NAME, T) \
+    BPACK_I8_DECL(NAME, void, (const bpack_blas_int*, T*, const bpack_blas_int*, const bpack_blas_int*, T*, const bpack_blas_int*, bpack_blas_int*), \
+        ({{3, extent<0>(a)}}), {6})
+#define BPACK_I8_GETRS(NAME, T) \
+    BPACK_I8_DECL(NAME, void, (const char*, const bpack_blas_int*, const bpack_blas_int*, T*, const bpack_blas_int*, const bpack_blas_int*, T*, const bpack_blas_int*, bpack_blas_int*), \
+        ({{5, extent<1>(a)}}), {8})
+#define BPACK_I8_SYTRF(NAME, T) \
+    BPACK_I8_DECL(NAME, void, (const char*, const bpack_blas_int*, T*, const bpack_blas_int*, bpack_blas_int*, T*, const bpack_blas_int*, bpack_blas_int*), \
+        ({{4, factor_extent<1, 6>(a)}}), ({4, 7}))
+#define BPACK_I8_SYTRS(NAME, T) \
+    BPACK_I8_DECL(NAME, void, (const char*, const bpack_blas_int*, const bpack_blas_int*, const T*, const bpack_blas_int*, const bpack_blas_int*, T*, const bpack_blas_int*, bpack_blas_int*), \
+        ({{5, extent<1>(a)}}), {8})
+#define BPACK_I8_GEQRF(NAME, T) \
+    BPACK_I8_DECL(NAME, void, (const bpack_blas_int*, const bpack_blas_int*, T*, const bpack_blas_int*, T*, T*, const bpack_blas_int*, bpack_blas_int*), {}, {7})
+
+BPACK_I8_POTRF(dpotrf_, double)
+BPACK_I8_POTRF(zpotrf_, bpack_complex_double)
+BPACK_I8_POTRS(dpotrs_, double)
+BPACK_I8_POTRS(zpotrs_, bpack_complex_double)
+BPACK_I8_GETRF(dgetrf_, double)
+BPACK_I8_GETRF(zgetrf_, bpack_complex_double)
+BPACK_I8_GETRI(dgetri_, double)
+BPACK_I8_GETRI(zgetri_, bpack_complex_double)
+BPACK_I8_GETRS(dgetrs_, double)
+BPACK_I8_GETRS(zgetrs_, bpack_complex_double)
+BPACK_I8_SYTRF(dsytrf_, double)
+BPACK_I8_SYTRF(zsytrf_, bpack_complex_double)
+BPACK_I8_SYTRS(dsytrs_, double)
+BPACK_I8_SYTRS(zsytrs_, bpack_complex_double)
+BPACK_I8_GEQRF(dgeqrf_, double)
+BPACK_I8_GEQRF(zgeqrf_, bpack_complex_double)
+
+BPACK_I8_DECL(dgeqp3_, void,
+    (const bpack_blas_int*, const bpack_blas_int*, double*, const bpack_blas_int*, bpack_blas_int*, double*, double*, const bpack_blas_int*, bpack_blas_int*),
+    ({{4, extent<1>(a)}}), {8})
+BPACK_I8_DECL(zgeqp3_, void,
+    (const bpack_blas_int*, const bpack_blas_int*, bpack_complex_double*, const bpack_blas_int*, bpack_blas_int*, bpack_complex_double*, bpack_complex_double*, const bpack_blas_int*, double*, bpack_blas_int*),
+    ({{4, extent<1>(a)}}), {9})
+BPACK_I8_DECL(dgeqp3rk_, void,
+    (const bpack_blas_int*, const bpack_blas_int*, const bpack_blas_int*, const bpack_blas_int*, const double*, const double*, double*, const bpack_blas_int*, bpack_blas_int*, double*, double*, bpack_blas_int*, double*, double*, const bpack_blas_int*, bpack_blas_int*, bpack_blas_int*),
+    ({{8, *std::get<14>(a) == -1 ? 0u : 1u}, {11, factor_extent<1, 14>(a)}, {15, factor_extent<1, 14>(a)}}), ({8, 11, 15, 16}))
+BPACK_I8_DECL(zgeqp3rk_, void,
+    (const bpack_blas_int*, const bpack_blas_int*, const bpack_blas_int*, const bpack_blas_int*, const double*, const double*, bpack_complex_double*, const bpack_blas_int*, bpack_blas_int*, double*, double*, bpack_blas_int*, bpack_complex_double*, bpack_complex_double*, const bpack_blas_int*, double*, bpack_blas_int*, bpack_blas_int*),
+    ({{8, *std::get<14>(a) == -1 ? 0u : 1u}, {11, factor_extent<1, 14>(a)}, {16, factor_extent<1, 14>(a)}}), ({8, 11, 16, 17}))
+
+#define BPACK_I8_GEMM(NAME, T) \
+    BPACK_I8_DECL(NAME, void, (const char*, const char*, const bpack_blas_int*, const bpack_blas_int*, const bpack_blas_int*, const T*, const T*, const bpack_blas_int*, const T*, const bpack_blas_int*, const T*, T*, const bpack_blas_int*), {}, {})
+#define BPACK_I8_TRMM(NAME, T) \
+    BPACK_I8_DECL(NAME, void, (const char*, const char*, const char*, const char*, const bpack_blas_int*, const bpack_blas_int*, const T*, const T*, const bpack_blas_int*, T*, const bpack_blas_int*), {}, {})
+#define BPACK_I8_TRTRS(NAME, T) \
+    BPACK_I8_DECL(NAME, void, (const char*, const char*, const char*, const bpack_blas_int*, const bpack_blas_int*, const T*, const bpack_blas_int*, T*, const bpack_blas_int*, bpack_blas_int*), {}, {9})
+#define BPACK_I8_LACPY(NAME, T) \
+    BPACK_I8_DECL(NAME, void, (const char*, const bpack_blas_int*, const bpack_blas_int*, const T*, const bpack_blas_int*, T*, const bpack_blas_int*), {}, {})
+#define BPACK_I8_AXPY(NAME, T) \
+    BPACK_I8_DECL(NAME, void, (const bpack_blas_int*, const T*, const T*, const bpack_blas_int*, T*, const bpack_blas_int*), {}, {})
+#define BPACK_I8_GEMV(NAME, T) \
+    BPACK_I8_DECL(NAME, void, (const char*, const bpack_blas_int*, const bpack_blas_int*, const T*, const T*, const bpack_blas_int*, const T*, const bpack_blas_int*, const T*, T*, const bpack_blas_int*), {}, {})
+#define BPACK_I8_NRM2(NAME, T, R) \
+    BPACK_I8_DECL(NAME, R, (const bpack_blas_int*, const T*, const bpack_blas_int*), {}, {})
+#define BPACK_I8_TRMV(NAME, T) \
+    BPACK_I8_DECL(NAME, void, (const char*, const char*, const char*, const bpack_blas_int*, const T*, const bpack_blas_int*, T*, const bpack_blas_int*), {}, {})
+#define BPACK_I8_LASWP(NAME, T) \
+    BPACK_I8_DECL(NAME, void, (const bpack_blas_int*, T*, const bpack_blas_int*, const bpack_blas_int*, const bpack_blas_int*, const bpack_blas_int*, const bpack_blas_int*), \
+        ({{5, laswp_extent(a)}}), {})
+
+BPACK_I8_GEMM(dgemm_, double)
+BPACK_I8_GEMM(sgemm_, float)
+BPACK_I8_GEMM(zgemm_, bpack_complex_double)
+BPACK_I8_GEMM(cgemm_, bpack_complex_float)
+BPACK_I8_TRMM(dtrsm_, double)
+BPACK_I8_TRMM(strsm_, float)
+BPACK_I8_TRMM(ztrsm_, bpack_complex_double)
+BPACK_I8_TRMM(ctrsm_, bpack_complex_float)
+BPACK_I8_TRMM(dtrmm_, double)
+BPACK_I8_TRMM(strmm_, float)
+BPACK_I8_TRMM(ztrmm_, bpack_complex_double)
+BPACK_I8_TRMM(ctrmm_, bpack_complex_float)
+BPACK_I8_TRTRS(dtrtrs_, double)
+BPACK_I8_TRTRS(ztrtrs_, bpack_complex_double)
+BPACK_I8_LACPY(dlacpy_, double)
+BPACK_I8_LACPY(zlacpy_, bpack_complex_double)
+BPACK_I8_AXPY(daxpy_, double)
+BPACK_I8_AXPY(zaxpy_, bpack_complex_double)
+BPACK_I8_GEMV(dgemv_, double)
+BPACK_I8_GEMV(sgemv_, float)
+BPACK_I8_GEMV(zgemv_, bpack_complex_double)
+BPACK_I8_GEMV(cgemv_, bpack_complex_float)
+BPACK_I8_NRM2(dnrm2_, double, double)
+BPACK_I8_NRM2(snrm2_, float, float)
+BPACK_I8_NRM2(dznrm2_, bpack_complex_double, double)
+BPACK_I8_NRM2(scnrm2_, bpack_complex_float, float)
+BPACK_I8_TRMV(dtrmv_, double)
+BPACK_I8_TRMV(ztrmv_, bpack_complex_double)
+BPACK_I8_LASWP(dlaswp_, double)
+BPACK_I8_LASWP(zlaswp_, bpack_complex_double)
+
+#undef BPACK_I8_DECL
+#undef BPACK_I8_POTRF
+#undef BPACK_I8_POTRS
+#undef BPACK_I8_GETRF
+#undef BPACK_I8_GETRI
+#undef BPACK_I8_GETRS
+#undef BPACK_I8_SYTRF
+#undef BPACK_I8_SYTRS
+#undef BPACK_I8_GEQRF
+#undef BPACK_I8_GEMM
+#undef BPACK_I8_TRMM
+#undef BPACK_I8_TRTRS
+#undef BPACK_I8_LACPY
+#undef BPACK_I8_AXPY
+#undef BPACK_I8_GEMV
+#undef BPACK_I8_NRM2
+#undef BPACK_I8_TRMV
+#undef BPACK_I8_LASWP
+
+extern "C" {
+    void openblas_set_num_threads(int num_threads);
+    int openblas_get_num_threads(void);
+}
+#else
 extern "C" {
     // =====================
     // OpenBLAS threading
@@ -415,6 +684,7 @@ extern "C" {
     void zlaswp_(const int* N, std::complex<double>* A, const int* LDA,
                  const int* K1, const int* K2, const int* IPIV, const int* INCX);
 }
+#endif
 
 
 template <typename DataType>

@@ -1,0 +1,1 @@
+/usr/bin/mpicxx.mpich -DHAVE_MPI  -g -Wl,--dependency-file=CMakeFiles/testproxy.dir/link.d CMakeFiles/testproxy.dir/Test_proxy_selection.f90.o -o testproxy  -Wl,-rpath,:::::::::::::: ../libbutterflypack.a /usr/lib/x86_64-linux-gnu/libscalapack-mpich.so /usr/lib/x86_64-linux-gnu/liblapack64.so /usr/lib/x86_64-linux-gnu/libblas64.so -lm -lmpichfort -lgfortran -lquadmath

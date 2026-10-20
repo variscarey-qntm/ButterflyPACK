@@ -1,0 +1,1 @@
+/usr/bin/mpicxx.mpich -DHAVE_MPI  -g -Wl,--dependency-file=CMakeFiles/cmatern1d_h2.dir/link.d CMakeFiles/cmatern1d_h2.dir/Matern1D_H2Test_Driver.cpp.o -o cmatern1d_h2  ../libbutterflypack.a /usr/lib/x86_64-linux-gnu/libscalapack-mpich.so /usr/lib/x86_64-linux-gnu/liblapack64.so /usr/lib/x86_64-linux-gnu/libblas64.so -lm -lmpichfort -lgfortran -lquadmath

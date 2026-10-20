@@ -97,6 +97,9 @@ endif ()
 
 
 add_library(butterflypack OBJECT ${sources} ${headers})
+if(MPI4)
+  add_dependencies(butterflypack bpack_mpi4)
+endif()
 target_include_directories(butterflypack PRIVATE
   ${CMAKE_SOURCE_DIR}/h2_parallel
   ${CMAKE_SOURCE_DIR}/h2_parallel/color_CA)

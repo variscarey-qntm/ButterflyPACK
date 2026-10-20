@@ -67,14 +67,24 @@ cmake -S . -B build-mpi4 \
   -DTPL_LAPACK_LIBRARIES=/path/to/ilp64/libopenblas.so \
   -DTPL_SCALAPACK_LIBRARIES=/path/to/ilp64/libscalapack.so
 cmake --build build-mpi4
+ctest --test-dir build-mpi4 -R mpi4_bridge --output-on-failure
 ```
 
 Use a fresh build directory when changing integer widths, and rebuild Fortran
 applications against the generated modules using `-fdefault-integer-8`.
+External Fortran sources that call MPI must also enable preprocessing, define
+`MPI4`, and include the installed `bpack_mpi4.fi` mapping header before their
+MPI calls (with the ButterflyPACK definitions module in scope). CMake applies
+these mappings automatically to ButterflyPACK and its Fortran examples.
 MPI ranks, tags, handles and status fields retain the MPI implementation's ABI;
 large-count operations must not pass default 8-byte integers to legacy MPI
 Fortran entry points. CMake checks for the MPI-4 C large-count API, but the
 user remains responsible for selecting matching ILP64 numerical libraries.
+The bridge regression tests use two MPI ranks and exercise large-count calls
+without allocating multi-gigabyte buffers. The C/C++ public interfaces retain
+their existing 32-bit integer dimensions and indices; widening the Fortran
+implementation does not widen that public API. OpenBLAS batch GEMM is disabled
+in this mode; the existing individual GEMM path is used instead.
 MAGMA, ARPACK/PARPACK, PaRSEC, ZFP and FFTW integrations are currently rejected
 in this mode rather than assuming their integer interfaces are ILP64-compatible.
 
@@ -156,4 +166,3 @@ make install
 [14] Y. Liu, "A comparative study of butterfly-enhanced direct integral and differential equation solvers for high-frequency electromagnetic analysis involving inhomogeneous dielectrics," 3rd URSI Atlantic Radio Science Meeting (AT-AP-RASC), 2022. 
 
 [15] Y. Liu, J. Song, R. Burridge, and J. Qian, "A fast butterfly-compressed Hadamard-Babich integrator for high-frequency inhomogenous Helmholtz equations in variable media," SIAM J. Multiscale Model. Simul., 2022. 
-

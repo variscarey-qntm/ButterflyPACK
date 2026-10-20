@@ -825,8 +825,9 @@ subroutine Port_e_nxe_arbi(xm,ym,zm,e,nxe,quant,pp,nn,Nx,Ny,Exs,Eys,xs,ys)
 		x1 = x
 		y1 = y
 
-		call CubicInterp2D_F(xs,ys,Exs,Nx,Ny,x1,y1,Ex,1)
-		call CubicInterp2D_F(xs,ys,Eys,Nx,Ny,x1,y1,Ey,1)
+		call z_assert(Nx <= int(huge(0_c_int),kind(0)) .and. Ny <= int(huge(0_c_int),kind(0)), 'CubicInterp2D dimensions exceed C int')
+		call CubicInterp2D_F(xs,ys,Exs,int(Nx,c_int),int(Ny,c_int),x1,y1,Ex,1_c_int)
+		call CubicInterp2D_F(xs,ys,Eys,int(Nx,c_int),int(Ny,c_int),x1,y1,Ey,1_c_int)
 		e = (Ex(1)*quant%ports(pp)%x+Ey(1)*quant%ports(pp)%y)*quant%ports(pp)%A_n_arbi(nn)
 
 		call z_rrcurl(quant%ports(pp)%z,e,nxe)

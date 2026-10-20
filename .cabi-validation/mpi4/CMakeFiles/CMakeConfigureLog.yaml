@@ -1,0 +1,1461 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineSystem.cmake:205 (message)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      The system is: Linux - 6.17.0-1022-azure - x86_64
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+      Compiler: /usr/bin/mpicc.mpich 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out"
+      
+      The C compiler identification is GNU, found in:
+        /home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/3.31.6/CompilerIdC/a.out
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: /usr/bin/mpicxx.mpich 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
+      
+      The CXX compiler identification is GNU, found in:
+        /home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/3.31.6/CompilerIdCXX/a.out
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineFortranCompiler.cmake:190 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Compiling the Fortran compiler identification source file "CMakeFortranCompilerId.F" succeeded.
+      Compiler: /usr/bin/mpifort.mpich 
+      Build flags: 
+      Id flags: -v 
+      
+      The output was:
+      0
+      mpifort for MPICH version 4.2.0
+      Driving: gfortran -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=. -flto=auto -fstack-protector-strong -fstack-clash-protection -fcf-protection -fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3 -fallow-invalid-boz -fallow-argument-mismatch -Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -Wl,-z,relro -v CMakeFortranCompilerId.F -I/usr/lib/x86_64-linux-gnu/mpich/include -I/usr/lib/x86_64-linux-gnu/mpich/include -L/usr/lib/x86_64-linux-gnu/mpich/lib -lmpichfort -lmpich -l gfortran -l m -shared-libgcc
+      Using built-in specs.
+      COLLECT_GCC=gfortran
+      COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper
+      OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+      OFFLOAD_TARGET_DEFAULT=1
+      Target: x86_64-linux-gnu
+      Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04.1' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++,m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2
+      Thread model: posix
+      Supported LTO compression algorithms: zlib zstd
+      gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 
+      COLLECT_GCC_OPTIONS='-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-flto=auto' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-fallow-invalid-boz' '-fallow-argument-mismatch' '-flto=auto' '-ffat-lto-objects' '-v' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'a-'
+       /usr/libexec/gcc/x86_64-linux-gnu/13/f951 CMakeFortranCompilerId.F -ffixed-form -cpp=/tmp/ccNIUkU8.f90 -quiet -v -I /usr/lib/x86_64-linux-gnu/mpich/include -I /usr/lib/x86_64-linux-gnu/mpich/include -imultiarch x86_64-linux-gnu CMakeFortranCompilerId.F -quiet -dumpdir a- -dumpbase CMakeFortranCompilerId.F -dumpbase-ext .F -mno-omit-leaf-frame-pointer -mtune=generic -march=x86-64 -O2 -version -fno-omit-frame-pointer -ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=. -flto=auto -fstack-protector-strong -fstack-clash-protection -fcf-protection=full -fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3 -fallow-invalid-boz -fallow-argument-mismatch -flto=auto -ffat-lto-objects -fintrinsic-modules-path /usr/lib/gcc/x86_64-linux-gnu/13/finclude -fpre-include=/usr/include/finclude/x86_64-linux-gnu/math-vector-fortran.h -o /tmp/ccWrfAAf.s
+      GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04.1) version 13.3.0 (x86_64-linux-gnu)
+      	compiled by GNU C version 13.3.0, GMP version 6.3.0, MPFR version 4.2.1, MPC version 1.3.1, isl version isl-0.26-GMP
+      
+      GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+      ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"
+      ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed/x86_64-linux-gnu"
+      ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed"
+      ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/../../../../x86_64-linux-gnu/include"
+      ignoring duplicate directory "/usr/lib/x86_64-linux-gnu/mpich/include"
+      #include "..." search starts here:
+      #include <...> search starts here:
+       /usr/lib/x86_64-linux-gnu/mpich/include
+       /usr/lib/gcc/x86_64-linux-gnu/13/finclude
+       /usr/lib/gcc/x86_64-linux-gnu/13/include
+       /usr/local/include
+       /usr/include/x86_64-linux-gnu
+       /usr/include
+      End of search list.
+      COLLECT_GCC_OPTIONS='-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-flto=auto' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-fallow-invalid-boz' '-fallow-argument-mismatch' '-flto=auto' '-ffat-lto-objects' '-v' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'a-'
+       as -v -I /usr/lib/x86_64-linux-gnu/mpich/include -I /usr/lib/x86_64-linux-gnu/mpich/include --64 -o /tmp/ccGSpAzz.o /tmp/ccWrfAAf.s
+      GNU assembler version 2.42 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.42
+      Reading specs from /usr/lib/gcc/x86_64-linux-gnu/13/libgfortran.spec
+      rename spec lib to liborig
+      COLLECT_GCC_OPTIONS='-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-flto=auto' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-fallow-invalid-boz' '-fallow-argument-mismatch' '-flto=auto' '-ffat-lto-objects' '-v' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'a-'
+      COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/
+      LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/
+      COLLECT_GCC_OPTIONS='-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-flto=auto' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-fallow-invalid-boz' '-fallow-argument-mismatch' '-flto=auto' '-ffat-lto-objects' '-v' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'a.'
+       /usr/libexec/gcc/x86_64-linux-gnu/13/collect2 -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccfRrzW3.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lquadmath -plugin-opt=-pass-through=-lm -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -flto=auto -flto=auto --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/x86_64-linux-gnu/mpich/lib -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -Bsymbolic-functions -z relro /tmp/ccGSpAzz.o -lmpichfort -lmpich -lgfortran -lm -lgcc_s -lgcc --as-needed -lquadmath --no-as-needed -lm -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o
+      /usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -fresolution=/tmp/ccfRrzW3.res -flinker-output=pie /tmp/ccGSpAzz.o 
+      /usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -fresolution=/tmp/ccfRrzW3.res -flinker-output=pie /tmp/ccGSpAzz.o 
+      LTO parallelism level set to 4
+      gfortran @/tmp/ccMIdco4
+      Using built-in specs.
+      COLLECT_GCC=gfortran
+      OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+      OFFLOAD_TARGET_DEFAULT=1
+      Target: x86_64-linux-gnu
+      Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04.1' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++,m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2
+      Thread model: posix
+      Supported LTO compression algorithms: zlib zstd
+      gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 
+      COLLECT_GCC_OPTIONS='-c' '-fno-openmp' '-fno-openacc' '-fPIC' '-O2' '-fcf-protection=full' '-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-ffat-lto-objects' '-v' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64'   '-fltrans-output-list=/tmp/cc7ue7qt.ltrans.out' '-fwpa=4' '-fresolution=/tmp/ccfRrzW3.res' '-flinker-output=pie'
+       /usr/libexec/gcc/x86_64-linux-gnu/13/lto1 -quiet -dumpbase ./a.wpa -mno-omit-leaf-frame-pointer -mtune=generic -march=x86-64 -O2 -O2 -version -fno-openmp -fno-openacc -fPIC -fcf-protection=full -fno-omit-frame-pointer -ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=. -fstack-protector-strong -fstack-clash-protection -fcf-protection=full -fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3 -ffat-lto-objects -fltrans-output-list=/tmp/cc7ue7qt.ltrans.out -fwpa=4 -fresolution=/tmp/ccfRrzW3.res -flinker-output=pie @/tmp/cculbD90
+      GNU GIMPLE (Ubuntu 13.3.0-6ubuntu2~24.04.1) version 13.3.0 (x86_64-linux-gnu)
+      	compiled by GNU C version 13.3.0, GMP version 6.3.0, MPFR version 4.2.1, MPC version 1.3.1, isl version isl-0.26-GMP
+      
+      GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+      COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/
+      LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/../lib/:/lib/../lib/x86_64-linux-gnu/:/lib/../lib/../lib/:/usr/lib/../lib/x86_64-linux-gnu/:/usr/lib/../lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/
+      COLLECT_GCC_OPTIONS='-c' '-fno-openmp' '-fno-openacc' '-fPIC' '-O2' '-fcf-protection=full' '-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-ffat-lto-objects' '-v' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64'   '-fltrans-output-list=/tmp/cc7ue7qt.ltrans.out' '-fwpa=4' '-fresolution=/tmp/ccfRrzW3.res' '-flinker-output=pie' '-dumpdir' './a.wpa.'
+      make -f /tmp/ccq9jP2P.mk -j4 all
+      Using built-in specs.
+      COLLECT_GCC=gfortran
+      OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+      OFFLOAD_TARGET_DEFAULT=1
+      Target: x86_64-linux-gnu
+      Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04.1' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++,m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2
+      Thread model: posix
+      Supported LTO compression algorithms: zlib zstd
+      gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 
+      COLLECT_GCC_OPTIONS='-c' '-fno-openmp' '-fno-openacc' '-fPIC' '-O2' '-fcf-protection=full' '-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-ffat-lto-objects' '-v' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64'   '-fltrans' '-o' '/tmp/cc7ue7qt.ltrans0.ltrans.o'
+       /usr/libexec/gcc/x86_64-linux-gnu/13/lto1 -quiet -dumpbase ./a.ltrans0.ltrans -mno-omit-leaf-frame-pointer -mtune=generic -march=x86-64 -O2 -O2 -version -fno-openmp -fno-openacc -fPIC -fcf-protection=full -fno-omit-frame-pointer -ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=. -fstack-protector-strong -fstack-clash-protection -fcf-protection=full -fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3 -ffat-lto-objects -fltrans /tmp/cc7ue7qt.ltrans0.o -o /tmp/ccOQ7wwk.s
+      GNU GIMPLE (Ubuntu 13.3.0-6ubuntu2~24.04.1) version 13.3.0 (x86_64-linux-gnu)
+      	compiled by GNU C version 13.3.0, GMP version 6.3.0, MPFR version 4.2.1, MPC version 1.3.1, isl version isl-0.26-GMP
+      
+      GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+      COLLECT_GCC_OPTIONS='-c' '-fno-openmp' '-fno-openacc' '-fPIC' '-O2' '-fcf-protection=full' '-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-ffat-lto-objects' '-v' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64'   '-fltrans' '-o' '/tmp/cc7ue7qt.ltrans0.ltrans.o'
+       as -v --64 -o /tmp/cc7ue7qt.ltrans0.ltrans.o /tmp/ccOQ7wwk.s
+      GNU assembler version 2.42 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.42
+      MAKEFLAGS= -j4 
+      COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/
+      LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/../lib/:/lib/../lib/x86_64-linux-gnu/:/lib/../lib/../lib/:/usr/lib/../lib/x86_64-linux-gnu/:/usr/lib/../lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/
+      COLLECT_GCC_OPTIONS='-c' '-fno-openmp' '-fno-openacc' '-fPIC' '-O2' '-fcf-protection=full' '-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-ffat-lto-objects' '-v' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64'   '-fltrans' '-o' '/tmp/cc7ue7qt.ltrans0.ltrans.o' '-dumpdir' './a.ltrans0.ltrans.'
+      COLLECT_GCC_OPTIONS='-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-flto=auto' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-fallow-invalid-boz' '-fallow-argument-mismatch' '-flto=auto' '-ffat-lto-objects' '-v' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'a.'
+      
+      
+      Compilation of the Fortran compiler identification source "CMakeFortranCompilerId.F" produced "a.out"
+      
+      The Fortran compiler identification is GNU, found in:
+        /home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/3.31.6/CompilerIdFortran/a.out
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:13 (project)"
+    checks:
+      - "Detecting C compiler ABI info"
+    directories:
+      source: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-SbgVw3"
+      binary: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-SbgVw3"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "CMAKE_C_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-SbgVw3'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_052d5/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_052d5.dir/build.make CMakeFiles/cmTC_052d5.dir/build
+        gmake[1]: Entering directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-SbgVw3'
+        Building C object CMakeFiles/cmTC_052d5.dir/CMakeCCompilerABI.c.o
+        /usr/bin/mpicc.mpich   -v -o CMakeFiles/cmTC_052d5.dir/CMakeCCompilerABI.c.o -c /usr/local/share/cmake-3.31/Modules/CMakeCCompilerABI.c
+        mpicc for MPICH version 4.2.0
+        Using built-in specs.
+        COLLECT_GCC=gcc
+        OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+        OFFLOAD_TARGET_DEFAULT=1
+        Target: x86_64-linux-gnu
+        Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04.1' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++,m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_052d5.dir/CMakeCCompilerABI.c.o' '-c' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_052d5.dir/'
+         /usr/libexec/gcc/x86_64-linux-gnu/13/cc1 -quiet -v -I /usr/lib/x86_64-linux-gnu/mpich/include -imultiarch x86_64-linux-gnu /usr/local/share/cmake-3.31/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_052d5.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=generic -march=x86-64 -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -o /tmp/ccnzZhLC.s
+        GNU C17 (Ubuntu 13.3.0-6ubuntu2~24.04.1) version 13.3.0 (x86_64-linux-gnu)
+        	compiled by GNU C version 13.3.0, GMP version 6.3.0, MPFR version 4.2.1, MPC version 1.3.1, isl version isl-0.26-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed/x86_64-linux-gnu"
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed"
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/../../../../x86_64-linux-gnu/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /usr/lib/x86_64-linux-gnu/mpich/include
+         /usr/lib/gcc/x86_64-linux-gnu/13/include
+         /usr/local/include
+         /usr/include/x86_64-linux-gnu
+         /usr/include
+        End of search list.
+        Compiler executable checksum: b220a7f1a1f69970d969d254ad9ec166
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_052d5.dir/CMakeCCompilerABI.c.o' '-c' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_052d5.dir/'
+         as -v -I /usr/lib/x86_64-linux-gnu/mpich/include --64 -o CMakeFiles/cmTC_052d5.dir/CMakeCCompilerABI.c.o /tmp/ccnzZhLC.s
+        GNU assembler version 2.42 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.42
+        COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/
+        LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_052d5.dir/CMakeCCompilerABI.c.o' '-c' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_052d5.dir/CMakeCCompilerABI.c.'
+        Linking C executable cmTC_052d5
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_052d5.dir/link.txt --verbose=1
+        mpicc for MPICH version 4.2.0
+        Using built-in specs.
+        COLLECT_GCC=gcc
+        COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper
+        OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+        OFFLOAD_TARGET_DEFAULT=1
+        Target: x86_64-linux-gnu
+        Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04.1' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++,m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 
+        COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/
+        LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-flto=auto' '-ffat-lto-objects' '-v' '-o' 'cmTC_052d5' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_052d5.'
+         /usr/libexec/gcc/x86_64-linux-gnu/13/collect2 -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccUxWcK9.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -flto=auto --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_052d5 /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/x86_64-linux-gnu/mpich/lib -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -Bsymbolic-functions -z relro -v CMakeFiles/cmTC_052d5.dir/CMakeCCompilerABI.c.o -lmpich -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o
+        collect2 version 13.3.0
+        /usr/bin/ld -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccUxWcK9.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_052d5 /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/x86_64-linux-gnu/mpich/lib -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -Bsymbolic-functions -z relro -v CMakeFiles/cmTC_052d5.dir/CMakeCCompilerABI.c.o -lmpich -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o
+        GNU ld (GNU Binutils for Ubuntu) 2.42
+        COLLECT_GCC_OPTIONS='-flto=auto' '-ffat-lto-objects' '-v' '-o' 'cmTC_052d5' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_052d5.'
+        /usr/bin/mpicc.mpich  -v -Wl,-v CMakeFiles/cmTC_052d5.dir/CMakeCCompilerABI.c.o -o cmTC_052d5
+        gmake[1]: Leaving directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-SbgVw3'
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:182 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Parsed C implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/usr/lib/x86_64-linux-gnu/mpich/include]
+          add: [/usr/lib/gcc/x86_64-linux-gnu/13/include]
+          add: [/usr/local/include]
+          add: [/usr/include/x86_64-linux-gnu]
+          add: [/usr/include]
+        end of search list found
+        collapse include dir [/usr/lib/x86_64-linux-gnu/mpich/include] ==> [/usr/lib/x86_64-linux-gnu/mpich/include]
+        collapse include dir [/usr/lib/gcc/x86_64-linux-gnu/13/include] ==> [/usr/lib/gcc/x86_64-linux-gnu/13/include]
+        collapse include dir [/usr/local/include] ==> [/usr/local/include]
+        collapse include dir [/usr/include/x86_64-linux-gnu] ==> [/usr/include/x86_64-linux-gnu]
+        collapse include dir [/usr/include] ==> [/usr/include]
+        implicit include dirs: [/usr/lib/x86_64-linux-gnu/mpich/include;/usr/lib/gcc/x86_64-linux-gnu/13/include;/usr/local/include;/usr/include/x86_64-linux-gnu;/usr/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Parsed C implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?))("|,| |$)]
+        ignore line: [Change Dir: '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-SbgVw3']
+        ignore line: []
+        ignore line: [Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_052d5/fast]
+        ignore line: [/usr/bin/gmake  -f CMakeFiles/cmTC_052d5.dir/build.make CMakeFiles/cmTC_052d5.dir/build]
+        ignore line: [gmake[1]: Entering directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-SbgVw3']
+        ignore line: [Building C object CMakeFiles/cmTC_052d5.dir/CMakeCCompilerABI.c.o]
+        ignore line: [/usr/bin/mpicc.mpich   -v -o CMakeFiles/cmTC_052d5.dir/CMakeCCompilerABI.c.o -c /usr/local/share/cmake-3.31/Modules/CMakeCCompilerABI.c]
+        ignore line: [mpicc for MPICH version 4.2.0]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=gcc]
+        ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
+        ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+        ignore line: [Target: x86_64-linux-gnu]
+        ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04.1' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c ada c++ go d fortran objc obj-c++ m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-nvptx/usr amdgcn-amdhsa=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) ]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_052d5.dir/CMakeCCompilerABI.c.o' '-c' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_052d5.dir/']
+        ignore line: [ /usr/libexec/gcc/x86_64-linux-gnu/13/cc1 -quiet -v -I /usr/lib/x86_64-linux-gnu/mpich/include -imultiarch x86_64-linux-gnu /usr/local/share/cmake-3.31/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_052d5.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=generic -march=x86-64 -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -o /tmp/ccnzZhLC.s]
+        ignore line: [GNU C17 (Ubuntu 13.3.0-6ubuntu2~24.04.1) version 13.3.0 (x86_64-linux-gnu)]
+        ignore line: [	compiled by GNU C version 13.3.0  GMP version 6.3.0  MPFR version 4.2.1  MPC version 1.3.1  isl version isl-0.26-GMP]
+        ignore line: []
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed/x86_64-linux-gnu"]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed"]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/../../../../x86_64-linux-gnu/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /usr/lib/x86_64-linux-gnu/mpich/include]
+        ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/13/include]
+        ignore line: [ /usr/local/include]
+        ignore line: [ /usr/include/x86_64-linux-gnu]
+        ignore line: [ /usr/include]
+        ignore line: [End of search list.]
+        ignore line: [Compiler executable checksum: b220a7f1a1f69970d969d254ad9ec166]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_052d5.dir/CMakeCCompilerABI.c.o' '-c' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_052d5.dir/']
+        ignore line: [ as -v -I /usr/lib/x86_64-linux-gnu/mpich/include --64 -o CMakeFiles/cmTC_052d5.dir/CMakeCCompilerABI.c.o /tmp/ccnzZhLC.s]
+        ignore line: [GNU assembler version 2.42 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.42]
+        ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/]
+        ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_052d5.dir/CMakeCCompilerABI.c.o' '-c' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_052d5.dir/CMakeCCompilerABI.c.']
+        ignore line: [Linking C executable cmTC_052d5]
+        ignore line: [/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_052d5.dir/link.txt --verbose=1]
+        ignore line: [mpicc for MPICH version 4.2.0]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=gcc]
+        ignore line: [COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper]
+        ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
+        ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+        ignore line: [Target: x86_64-linux-gnu]
+        ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04.1' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c ada c++ go d fortran objc obj-c++ m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-nvptx/usr amdgcn-amdhsa=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) ]
+        ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/]
+        ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-flto=auto' '-ffat-lto-objects' '-v' '-o' 'cmTC_052d5' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_052d5.']
+        link line: [ /usr/libexec/gcc/x86_64-linux-gnu/13/collect2 -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccUxWcK9.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -flto=auto --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_052d5 /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/x86_64-linux-gnu/mpich/lib -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -Bsymbolic-functions -z relro -v CMakeFiles/cmTC_052d5.dir/CMakeCCompilerABI.c.o -lmpich -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o]
+          arg [/usr/libexec/gcc/x86_64-linux-gnu/13/collect2] ==> ignore
+          arg [-plugin] ==> ignore
+          arg [/usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so] ==> ignore
+          arg [-plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper] ==> ignore
+          arg [-plugin-opt=-fresolution=/tmp/ccUxWcK9.res] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [-plugin-opt=-pass-through=-lc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [-flto=auto] ==> ignore
+          arg [--build-id] ==> ignore
+          arg [--eh-frame-hdr] ==> ignore
+          arg [-m] ==> ignore
+          arg [elf_x86_64] ==> ignore
+          arg [--hash-style=gnu] ==> ignore
+          arg [--as-needed] ==> ignore
+          arg [-dynamic-linker] ==> ignore
+          arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+          arg [-pie] ==> ignore
+          arg [-znow] ==> ignore
+          arg [-zrelro] ==> ignore
+          arg [-o] ==> ignore
+          arg [cmTC_052d5] ==> ignore
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o]
+          arg [-L/usr/lib/x86_64-linux-gnu/mpich/lib] ==> dir [/usr/lib/x86_64-linux-gnu/mpich/lib]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib]
+          arg [-L/lib/x86_64-linux-gnu] ==> dir [/lib/x86_64-linux-gnu]
+          arg [-L/lib/../lib] ==> dir [/lib/../lib]
+          arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
+          arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../..]
+          arg [-Bsymbolic-functions] ==> ignore
+          arg [-zrelro] ==> ignore
+          arg [-v] ==> ignore
+          arg [CMakeFiles/cmTC_052d5.dir/CMakeCCompilerABI.c.o] ==> ignore
+          arg [-lmpich] ==> lib [mpich]
+          arg [-lgcc] ==> lib [gcc]
+          arg [--push-state] ==> ignore
+          arg [--as-needed] ==> ignore
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [--pop-state] ==> ignore
+          arg [-lc] ==> lib [c]
+          arg [-lgcc] ==> lib [gcc]
+          arg [--push-state] ==> ignore
+          arg [--as-needed] ==> ignore
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [--pop-state] ==> ignore
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o]
+        ignore line: [collect2 version 13.3.0]
+        ignore line: [/usr/bin/ld -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccUxWcK9.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_052d5 /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/x86_64-linux-gnu/mpich/lib -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -Bsymbolic-functions -z relro -v CMakeFiles/cmTC_052d5.dir/CMakeCCompilerABI.c.o -lmpich -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o]
+        linker tool for 'C': /usr/bin/ld
+        collapse obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o] ==> [/usr/lib/x86_64-linux-gnu/Scrt1.o]
+        collapse obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o] ==> [/usr/lib/x86_64-linux-gnu/crti.o]
+        collapse obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o] ==> [/usr/lib/x86_64-linux-gnu/crtn.o]
+        collapse library dir [/usr/lib/x86_64-linux-gnu/mpich/lib] ==> [/usr/lib/x86_64-linux-gnu/mpich/lib]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13] ==> [/usr/lib/gcc/x86_64-linux-gnu/13]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib] ==> [/usr/lib]
+        collapse library dir [/lib/x86_64-linux-gnu] ==> [/lib/x86_64-linux-gnu]
+        collapse library dir [/lib/../lib] ==> [/lib]
+        collapse library dir [/usr/lib/x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+        collapse library dir [/usr/lib/../lib] ==> [/usr/lib]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../..] ==> [/usr/lib]
+        implicit libs: [mpich;gcc;gcc_s;c;gcc;gcc_s]
+        implicit objs: [/usr/lib/x86_64-linux-gnu/Scrt1.o;/usr/lib/x86_64-linux-gnu/crti.o;/usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o;/usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o;/usr/lib/x86_64-linux-gnu/crtn.o]
+        implicit dirs: [/usr/lib/x86_64-linux-gnu/mpich/lib;/usr/lib/gcc/x86_64-linux-gnu/13;/usr/lib/x86_64-linux-gnu;/usr/lib;/lib/x86_64-linux-gnu;/lib]
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Running the C compiler's linker: "/usr/bin/ld" "-v"
+      GNU ld (GNU Binutils for Ubuntu) 2.42
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:13 (project)"
+    checks:
+      - "Detecting CXX compiler ABI info"
+    directories:
+      source: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-djp06V"
+      binary: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-djp06V"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_CXX_SCAN_FOR_MODULES: "OFF"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "CMAKE_CXX_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-djp06V'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_c3220/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_c3220.dir/build.make CMakeFiles/cmTC_c3220.dir/build
+        gmake[1]: Entering directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-djp06V'
+        Building CXX object CMakeFiles/cmTC_c3220.dir/CMakeCXXCompilerABI.cpp.o
+        /usr/bin/mpicxx.mpich   -v -o CMakeFiles/cmTC_c3220.dir/CMakeCXXCompilerABI.cpp.o -c /usr/local/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp
+        mpicxx for MPICH version 4.2.0
+        Using built-in specs.
+        COLLECT_GCC=g++
+        OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+        OFFLOAD_TARGET_DEFAULT=1
+        Target: x86_64-linux-gnu
+        Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04.1' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++,m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c3220.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c3220.dir/'
+         /usr/libexec/gcc/x86_64-linux-gnu/13/cc1plus -quiet -v -I /usr/lib/x86_64-linux-gnu/mpich/include -imultiarch x86_64-linux-gnu -D_GNU_SOURCE /usr/local/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_c3220.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -o /tmp/ccdzDS14.s
+        GNU C++17 (Ubuntu 13.3.0-6ubuntu2~24.04.1) version 13.3.0 (x86_64-linux-gnu)
+        	compiled by GNU C version 13.3.0, GMP version 6.3.0, MPFR version 4.2.1, MPC version 1.3.1, isl version isl-0.26-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        ignoring duplicate directory "/usr/include/x86_64-linux-gnu/c++/13"
+        ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed/x86_64-linux-gnu"
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed"
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/../../../../x86_64-linux-gnu/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /usr/lib/x86_64-linux-gnu/mpich/include
+         /usr/include/c++/13
+         /usr/include/x86_64-linux-gnu/c++/13
+         /usr/include/c++/13/backward
+         /usr/lib/gcc/x86_64-linux-gnu/13/include
+         /usr/local/include
+         /usr/include/x86_64-linux-gnu
+         /usr/include
+        End of search list.
+        Compiler executable checksum: 7896445e4990772fdae9dc0659a99266
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c3220.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c3220.dir/'
+         as -v -I /usr/lib/x86_64-linux-gnu/mpich/include --64 -o CMakeFiles/cmTC_c3220.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccdzDS14.s
+        GNU assembler version 2.42 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.42
+        COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/
+        LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c3220.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c3220.dir/CMakeCXXCompilerABI.cpp.'
+        Linking CXX executable cmTC_c3220
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c3220.dir/link.txt --verbose=1
+        mpicxx for MPICH version 4.2.0
+        Using built-in specs.
+        COLLECT_GCC=g++
+        COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper
+        OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+        OFFLOAD_TARGET_DEFAULT=1
+        Target: x86_64-linux-gnu
+        Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04.1' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++,m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 
+        COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/
+        LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-flto=auto' '-ffat-lto-objects' '-v' '-o' 'cmTC_c3220' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_c3220.'
+         /usr/libexec/gcc/x86_64-linux-gnu/13/collect2 -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccZ5NkOE.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -flto=auto --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_c3220 /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/x86_64-linux-gnu/mpich/lib -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -Bsymbolic-functions -z relro -v CMakeFiles/cmTC_c3220.dir/CMakeCXXCompilerABI.cpp.o -lmpichcxx -lmpich -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o
+        collect2 version 13.3.0
+        /usr/bin/ld -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccZ5NkOE.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_c3220 /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/x86_64-linux-gnu/mpich/lib -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -Bsymbolic-functions -z relro -v CMakeFiles/cmTC_c3220.dir/CMakeCXXCompilerABI.cpp.o -lmpichcxx -lmpich -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o
+        GNU ld (GNU Binutils for Ubuntu) 2.42
+        COLLECT_GCC_OPTIONS='-flto=auto' '-ffat-lto-objects' '-v' '-o' 'cmTC_c3220' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_c3220.'
+        /usr/bin/mpicxx.mpich  -v -Wl,-v CMakeFiles/cmTC_c3220.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_c3220
+        gmake[1]: Leaving directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-djp06V'
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:182 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Parsed CXX implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/usr/lib/x86_64-linux-gnu/mpich/include]
+          add: [/usr/include/c++/13]
+          add: [/usr/include/x86_64-linux-gnu/c++/13]
+          add: [/usr/include/c++/13/backward]
+          add: [/usr/lib/gcc/x86_64-linux-gnu/13/include]
+          add: [/usr/local/include]
+          add: [/usr/include/x86_64-linux-gnu]
+          add: [/usr/include]
+        end of search list found
+        collapse include dir [/usr/lib/x86_64-linux-gnu/mpich/include] ==> [/usr/lib/x86_64-linux-gnu/mpich/include]
+        collapse include dir [/usr/include/c++/13] ==> [/usr/include/c++/13]
+        collapse include dir [/usr/include/x86_64-linux-gnu/c++/13] ==> [/usr/include/x86_64-linux-gnu/c++/13]
+        collapse include dir [/usr/include/c++/13/backward] ==> [/usr/include/c++/13/backward]
+        collapse include dir [/usr/lib/gcc/x86_64-linux-gnu/13/include] ==> [/usr/lib/gcc/x86_64-linux-gnu/13/include]
+        collapse include dir [/usr/local/include] ==> [/usr/local/include]
+        collapse include dir [/usr/include/x86_64-linux-gnu] ==> [/usr/include/x86_64-linux-gnu]
+        collapse include dir [/usr/include] ==> [/usr/include]
+        implicit include dirs: [/usr/lib/x86_64-linux-gnu/mpich/include;/usr/include/c++/13;/usr/include/x86_64-linux-gnu/c++/13;/usr/include/c++/13/backward;/usr/lib/gcc/x86_64-linux-gnu/13/include;/usr/local/include;/usr/include/x86_64-linux-gnu;/usr/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Parsed CXX implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?))("|,| |$)]
+        ignore line: [Change Dir: '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-djp06V']
+        ignore line: []
+        ignore line: [Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_c3220/fast]
+        ignore line: [/usr/bin/gmake  -f CMakeFiles/cmTC_c3220.dir/build.make CMakeFiles/cmTC_c3220.dir/build]
+        ignore line: [gmake[1]: Entering directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-djp06V']
+        ignore line: [Building CXX object CMakeFiles/cmTC_c3220.dir/CMakeCXXCompilerABI.cpp.o]
+        ignore line: [/usr/bin/mpicxx.mpich   -v -o CMakeFiles/cmTC_c3220.dir/CMakeCXXCompilerABI.cpp.o -c /usr/local/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [mpicxx for MPICH version 4.2.0]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=g++]
+        ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
+        ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+        ignore line: [Target: x86_64-linux-gnu]
+        ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04.1' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c ada c++ go d fortran objc obj-c++ m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-nvptx/usr amdgcn-amdhsa=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) ]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c3220.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c3220.dir/']
+        ignore line: [ /usr/libexec/gcc/x86_64-linux-gnu/13/cc1plus -quiet -v -I /usr/lib/x86_64-linux-gnu/mpich/include -imultiarch x86_64-linux-gnu -D_GNU_SOURCE /usr/local/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_c3220.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -o /tmp/ccdzDS14.s]
+        ignore line: [GNU C++17 (Ubuntu 13.3.0-6ubuntu2~24.04.1) version 13.3.0 (x86_64-linux-gnu)]
+        ignore line: [	compiled by GNU C version 13.3.0  GMP version 6.3.0  MPFR version 4.2.1  MPC version 1.3.1  isl version isl-0.26-GMP]
+        ignore line: []
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [ignoring duplicate directory "/usr/include/x86_64-linux-gnu/c++/13"]
+        ignore line: [ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed/x86_64-linux-gnu"]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed"]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/../../../../x86_64-linux-gnu/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /usr/lib/x86_64-linux-gnu/mpich/include]
+        ignore line: [ /usr/include/c++/13]
+        ignore line: [ /usr/include/x86_64-linux-gnu/c++/13]
+        ignore line: [ /usr/include/c++/13/backward]
+        ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/13/include]
+        ignore line: [ /usr/local/include]
+        ignore line: [ /usr/include/x86_64-linux-gnu]
+        ignore line: [ /usr/include]
+        ignore line: [End of search list.]
+        ignore line: [Compiler executable checksum: 7896445e4990772fdae9dc0659a99266]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c3220.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c3220.dir/']
+        ignore line: [ as -v -I /usr/lib/x86_64-linux-gnu/mpich/include --64 -o CMakeFiles/cmTC_c3220.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccdzDS14.s]
+        ignore line: [GNU assembler version 2.42 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.42]
+        ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/]
+        ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c3220.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c3220.dir/CMakeCXXCompilerABI.cpp.']
+        ignore line: [Linking CXX executable cmTC_c3220]
+        ignore line: [/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c3220.dir/link.txt --verbose=1]
+        ignore line: [mpicxx for MPICH version 4.2.0]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=g++]
+        ignore line: [COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper]
+        ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
+        ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+        ignore line: [Target: x86_64-linux-gnu]
+        ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04.1' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c ada c++ go d fortran objc obj-c++ m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-nvptx/usr amdgcn-amdhsa=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) ]
+        ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/]
+        ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-flto=auto' '-ffat-lto-objects' '-v' '-o' 'cmTC_c3220' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_c3220.']
+        link line: [ /usr/libexec/gcc/x86_64-linux-gnu/13/collect2 -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccZ5NkOE.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -flto=auto --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_c3220 /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/x86_64-linux-gnu/mpich/lib -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -Bsymbolic-functions -z relro -v CMakeFiles/cmTC_c3220.dir/CMakeCXXCompilerABI.cpp.o -lmpichcxx -lmpich -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o]
+          arg [/usr/libexec/gcc/x86_64-linux-gnu/13/collect2] ==> ignore
+          arg [-plugin] ==> ignore
+          arg [/usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so] ==> ignore
+          arg [-plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper] ==> ignore
+          arg [-plugin-opt=-fresolution=/tmp/ccZ5NkOE.res] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-flto=auto] ==> ignore
+          arg [--build-id] ==> ignore
+          arg [--eh-frame-hdr] ==> ignore
+          arg [-m] ==> ignore
+          arg [elf_x86_64] ==> ignore
+          arg [--hash-style=gnu] ==> ignore
+          arg [--as-needed] ==> ignore
+          arg [-dynamic-linker] ==> ignore
+          arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+          arg [-pie] ==> ignore
+          arg [-znow] ==> ignore
+          arg [-zrelro] ==> ignore
+          arg [-o] ==> ignore
+          arg [cmTC_c3220] ==> ignore
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o]
+          arg [-L/usr/lib/x86_64-linux-gnu/mpich/lib] ==> dir [/usr/lib/x86_64-linux-gnu/mpich/lib]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib]
+          arg [-L/lib/x86_64-linux-gnu] ==> dir [/lib/x86_64-linux-gnu]
+          arg [-L/lib/../lib] ==> dir [/lib/../lib]
+          arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
+          arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../..]
+          arg [-Bsymbolic-functions] ==> ignore
+          arg [-zrelro] ==> ignore
+          arg [-v] ==> ignore
+          arg [CMakeFiles/cmTC_c3220.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+          arg [-lmpichcxx] ==> lib [mpichcxx]
+          arg [-lmpich] ==> lib [mpich]
+          arg [-lstdc++] ==> lib [stdc++]
+          arg [-lm] ==> lib [m]
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [-lgcc] ==> lib [gcc]
+          arg [-lc] ==> lib [c]
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [-lgcc] ==> lib [gcc]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o]
+        ignore line: [collect2 version 13.3.0]
+        ignore line: [/usr/bin/ld -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccZ5NkOE.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_c3220 /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/x86_64-linux-gnu/mpich/lib -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -Bsymbolic-functions -z relro -v CMakeFiles/cmTC_c3220.dir/CMakeCXXCompilerABI.cpp.o -lmpichcxx -lmpich -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o]
+        linker tool for 'CXX': /usr/bin/ld
+        collapse obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o] ==> [/usr/lib/x86_64-linux-gnu/Scrt1.o]
+        collapse obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o] ==> [/usr/lib/x86_64-linux-gnu/crti.o]
+        collapse obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o] ==> [/usr/lib/x86_64-linux-gnu/crtn.o]
+        collapse library dir [/usr/lib/x86_64-linux-gnu/mpich/lib] ==> [/usr/lib/x86_64-linux-gnu/mpich/lib]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13] ==> [/usr/lib/gcc/x86_64-linux-gnu/13]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib] ==> [/usr/lib]
+        collapse library dir [/lib/x86_64-linux-gnu] ==> [/lib/x86_64-linux-gnu]
+        collapse library dir [/lib/../lib] ==> [/lib]
+        collapse library dir [/usr/lib/x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+        collapse library dir [/usr/lib/../lib] ==> [/usr/lib]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../..] ==> [/usr/lib]
+        implicit libs: [mpichcxx;mpich;stdc++;m;gcc_s;gcc;c;gcc_s;gcc]
+        implicit objs: [/usr/lib/x86_64-linux-gnu/Scrt1.o;/usr/lib/x86_64-linux-gnu/crti.o;/usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o;/usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o;/usr/lib/x86_64-linux-gnu/crtn.o]
+        implicit dirs: [/usr/lib/x86_64-linux-gnu/mpich/lib;/usr/lib/gcc/x86_64-linux-gnu/13;/usr/lib/x86_64-linux-gnu;/usr/lib;/lib/x86_64-linux-gnu;/lib]
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Running the CXX compiler's linker: "/usr/bin/ld" "-v"
+      GNU ld (GNU Binutils for Ubuntu) 2.42
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestFortranCompiler.cmake:20 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:13 (project)"
+    checks:
+      - "Detecting Fortran compiler ABI info"
+    directories:
+      source: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-PPOtOW"
+      binary: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-PPOtOW"
+    cmakeVariables:
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_Fortran_FLAGS: ""
+      CMAKE_Fortran_FLAGS_DEBUG: "-g"
+    buildResult:
+      variable: "CMAKE_Fortran_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-PPOtOW'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_cb4d7/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_cb4d7.dir/build.make CMakeFiles/cmTC_cb4d7.dir/build
+        gmake[1]: Entering directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-PPOtOW'
+        Building Fortran object CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.o
+        /usr/bin/mpifort.mpich   -v -c /usr/local/share/cmake-3.31/Modules/CMakeFortranCompilerABI.F90 -o CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.o
+        mpifort for MPICH version 4.2.0
+        Using built-in specs.
+        COLLECT_GCC=gfortran
+        OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+        OFFLOAD_TARGET_DEFAULT=1
+        Target: x86_64-linux-gnu
+        Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04.1' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++,m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 
+        COLLECT_GCC_OPTIONS='-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-flto=auto' '-ffat-lto-objects' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-fallow-invalid-boz' '-fallow-argument-mismatch' '-v' '-c' '-o' 'CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.o' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_cb4d7.dir/'
+         /usr/libexec/gcc/x86_64-linux-gnu/13/f951 /usr/local/share/cmake-3.31/Modules/CMakeFortranCompilerABI.F90 -cpp=/tmp/cc1zhzTR.f90 -quiet -v -I /usr/lib/x86_64-linux-gnu/mpich/include -I /usr/lib/x86_64-linux-gnu/mpich/include -imultiarch x86_64-linux-gnu /usr/local/share/cmake-3.31/Modules/CMakeFortranCompilerABI.F90 -quiet -dumpdir CMakeFiles/cmTC_cb4d7.dir/ -dumpbase CMakeFortranCompilerABI.F90.F90 -dumpbase-ext .F90 -mno-omit-leaf-frame-pointer -mtune=generic -march=x86-64 -O2 -version -fno-omit-frame-pointer -ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=. -flto=auto -ffat-lto-objects -fstack-protector-strong -fstack-clash-protection -fcf-protection=full -fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3 -fallow-invalid-boz -fallow-argument-mismatch -fintrinsic-modules-path /usr/lib/gcc/x86_64-linux-gnu/13/finclude -fpre-include=/usr/include/finclude/x86_64-linux-gnu/math-vector-fortran.h -o /tmp/cceSegXr.s
+        GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04.1) version 13.3.0 (x86_64-linux-gnu)
+        	compiled by GNU C version 13.3.0, GMP version 6.3.0, MPFR version 4.2.1, MPC version 1.3.1, isl version isl-0.26-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed/x86_64-linux-gnu"
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed"
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/../../../../x86_64-linux-gnu/include"
+        ignoring duplicate directory "/usr/lib/x86_64-linux-gnu/mpich/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /usr/lib/x86_64-linux-gnu/mpich/include
+         /usr/lib/gcc/x86_64-linux-gnu/13/finclude
+         /usr/lib/gcc/x86_64-linux-gnu/13/include
+         /usr/local/include
+         /usr/include/x86_64-linux-gnu
+         /usr/include
+        End of search list.
+        COLLECT_GCC_OPTIONS='-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-flto=auto' '-ffat-lto-objects' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-fallow-invalid-boz' '-fallow-argument-mismatch' '-v' '-c' '-o' 'CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.o' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_cb4d7.dir/'
+         as -v -I /usr/lib/x86_64-linux-gnu/mpich/include -I /usr/lib/x86_64-linux-gnu/mpich/include --64 -o CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.o /tmp/cceSegXr.s
+        GNU assembler version 2.42 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.42
+        COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/
+        LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-flto=auto' '-ffat-lto-objects' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-fallow-invalid-boz' '-fallow-argument-mismatch' '-v' '-c' '-o' 'CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.o' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.'
+        Linking Fortran executable cmTC_cb4d7
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_cb4d7.dir/link.txt --verbose=1
+        mpifort for MPICH version 4.2.0
+        Driving: gfortran -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=. -flto=auto -fstack-protector-strong -fstack-clash-protection -fcf-protection -fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3 -fallow-invalid-boz -fallow-argument-mismatch -Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -Wl,-z,relro -v -Wl,-v CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.o -o cmTC_cb4d7 -I/usr/lib/x86_64-linux-gnu/mpich/include -I/usr/lib/x86_64-linux-gnu/mpich/include -L/usr/lib/x86_64-linux-gnu/mpich/lib -lmpichfort -lmpich -l gfortran -l m -shared-libgcc
+        Using built-in specs.
+        COLLECT_GCC=gfortran
+        COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper
+        OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+        OFFLOAD_TARGET_DEFAULT=1
+        Target: x86_64-linux-gnu
+        Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04.1' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++,m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 
+        Reading specs from /usr/lib/gcc/x86_64-linux-gnu/13/libgfortran.spec
+        rename spec lib to liborig
+        COLLECT_GCC_OPTIONS='-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-flto=auto' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-fallow-invalid-boz' '-fallow-argument-mismatch' '-flto=auto' '-ffat-lto-objects' '-v' '-o' 'cmTC_cb4d7' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_cb4d7-'
+        COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/
+        LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-flto=auto' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-fallow-invalid-boz' '-fallow-argument-mismatch' '-flto=auto' '-ffat-lto-objects' '-v' '-o' 'cmTC_cb4d7' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_cb4d7.'
+         /usr/libexec/gcc/x86_64-linux-gnu/13/collect2 -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccw3nhqy.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lquadmath -plugin-opt=-pass-through=-lm -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -flto=auto -flto=auto --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_cb4d7 /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/x86_64-linux-gnu/mpich/lib -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -Bsymbolic-functions -z relro -v CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.o -lmpichfort -lmpich -lgfortran -lm -lgcc_s -lgcc --as-needed -lquadmath --no-as-needed -lm -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o
+        collect2 version 13.3.0
+        /usr/bin/ld -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccw3nhqy.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lquadmath -plugin-opt=-pass-through=-lm -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_cb4d7 /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/x86_64-linux-gnu/mpich/lib -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -Bsymbolic-functions -z relro -v CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.o -lmpichfort -lmpich -lgfortran -lm -lgcc_s -lgcc --as-needed -lquadmath --no-as-needed -lm -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o
+        /usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -fresolution=/tmp/ccw3nhqy.res -flinker-output=pie CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.o 
+        /usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -fresolution=/tmp/ccw3nhqy.res -flinker-output=pie CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.o 
+        LTO parallelism level set to 4
+        gfortran @/tmp/ccgAI3ia
+        Using built-in specs.
+        COLLECT_GCC=gfortran
+        OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+        OFFLOAD_TARGET_DEFAULT=1
+        Target: x86_64-linux-gnu
+        Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04.1' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++,m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 
+        COLLECT_GCC_OPTIONS='-c' '-fno-openmp' '-fno-openacc' '-fPIC' '-O2' '-fcf-protection=full' '-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-ffat-lto-objects' '-v' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64'   '-fltrans-output-list=/tmp/cc0P2AcW.ltrans.out' '-fwpa=4' '-fresolution=/tmp/ccw3nhqy.res' '-flinker-output=pie'
+         /usr/libexec/gcc/x86_64-linux-gnu/13/lto1 -quiet -dumpbase ./cmTC_cb4d7.wpa -mno-omit-leaf-frame-pointer -mtune=generic -march=x86-64 -O2 -O2 -version -fno-openmp -fno-openacc -fPIC -fcf-protection=full -fno-omit-frame-pointer -ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=. -fstack-protector-strong -fstack-clash-protection -fcf-protection=full -fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3 -ffat-lto-objects -fltrans-output-list=/tmp/cc0P2AcW.ltrans.out -fwpa=4 -fresolution=/tmp/ccw3nhqy.res -flinker-output=pie @/tmp/cc43eq3P
+        GNU GIMPLE (Ubuntu 13.3.0-6ubuntu2~24.04.1) version 13.3.0 (x86_64-linux-gnu)
+        	compiled by GNU C version 13.3.0, GMP version 6.3.0, MPFR version 4.2.1, MPC version 1.3.1, isl version isl-0.26-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/
+        LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/../lib/:/lib/../lib/x86_64-linux-gnu/:/lib/../lib/../lib/:/usr/lib/../lib/x86_64-linux-gnu/:/usr/lib/../lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-c' '-fno-openmp' '-fno-openacc' '-fPIC' '-O2' '-fcf-protection=full' '-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-ffat-lto-objects' '-v' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64'   '-fltrans-output-list=/tmp/cc0P2AcW.ltrans.out' '-fwpa=4' '-fresolution=/tmp/ccw3nhqy.res' '-flinker-output=pie' '-dumpdir' './cmTC_cb4d7.wpa.'
+        make -f /tmp/cc4ZBw8D.mk -j4 all
+        Using built-in specs.
+        COLLECT_GCC=gfortran
+        OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+        OFFLOAD_TARGET_DEFAULT=1
+        Target: x86_64-linux-gnu
+        Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04.1' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++,m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 
+        COLLECT_GCC_OPTIONS='-c' '-fno-openmp' '-fno-openacc' '-fPIC' '-O2' '-fcf-protection=full' '-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-ffat-lto-objects' '-v' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64'   '-fltrans' '-o' '/tmp/cc0P2AcW.ltrans0.ltrans.o'
+         /usr/libexec/gcc/x86_64-linux-gnu/13/lto1 -quiet -dumpbase ./cmTC_cb4d7.ltrans0.ltrans -mno-omit-leaf-frame-pointer -mtune=generic -march=x86-64 -O2 -O2 -version -fno-openmp -fno-openacc -fPIC -fcf-protection=full -fno-omit-frame-pointer -ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=. -fstack-protector-strong -fstack-clash-protection -fcf-protection=full -fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3 -ffat-lto-objects -fltrans /tmp/cc0P2AcW.ltrans0.o -o /tmp/ccBwz3N6.s
+        GNU GIMPLE (Ubuntu 13.3.0-6ubuntu2~24.04.1) version 13.3.0 (x86_64-linux-gnu)
+        	compiled by GNU C version 13.3.0, GMP version 6.3.0, MPFR version 4.2.1, MPC version 1.3.1, isl version isl-0.26-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        COLLECT_GCC_OPTIONS='-c' '-fno-openmp' '-fno-openacc' '-fPIC' '-O2' '-fcf-protection=full' '-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-ffat-lto-objects' '-v' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64'   '-fltrans' '-o' '/tmp/cc0P2AcW.ltrans0.ltrans.o'
+         as -v --64 -o /tmp/cc0P2AcW.ltrans0.ltrans.o /tmp/ccBwz3N6.s
+        GNU assembler version 2.42 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.42
+        MAKEFLAGS=w -j4 
+        COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/
+        LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/../lib/:/lib/../lib/x86_64-linux-gnu/:/lib/../lib/../lib/:/usr/lib/../lib/x86_64-linux-gnu/:/usr/lib/../lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-c' '-fno-openmp' '-fno-openacc' '-fPIC' '-O2' '-fcf-protection=full' '-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-ffat-lto-objects' '-v' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64'   '-fltrans' '-o' '/tmp/cc0P2AcW.ltrans0.ltrans.o' '-dumpdir' './cmTC_cb4d7.ltrans0.ltrans.'
+        GNU ld (GNU Binutils for Ubuntu) 2.42
+        COLLECT_GCC_OPTIONS='-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-flto=auto' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-fallow-invalid-boz' '-fallow-argument-mismatch' '-flto=auto' '-ffat-lto-objects' '-v' '-o' 'cmTC_cb4d7' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_cb4d7.'
+        /usr/bin/mpifort.mpich  -v -Wl,-v CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.o -o cmTC_cb4d7
+        gmake[1]: Leaving directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-PPOtOW'
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:182 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestFortranCompiler.cmake:20 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Parsed Fortran implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/usr/lib/x86_64-linux-gnu/mpich/include]
+          add: [/usr/lib/gcc/x86_64-linux-gnu/13/finclude]
+          add: [/usr/lib/gcc/x86_64-linux-gnu/13/include]
+          add: [/usr/local/include]
+          add: [/usr/include/x86_64-linux-gnu]
+          add: [/usr/include]
+        end of search list found
+        collapse include dir [/usr/lib/x86_64-linux-gnu/mpich/include] ==> [/usr/lib/x86_64-linux-gnu/mpich/include]
+        collapse include dir [/usr/lib/gcc/x86_64-linux-gnu/13/finclude] ==> [/usr/lib/gcc/x86_64-linux-gnu/13/finclude]
+        collapse include dir [/usr/lib/gcc/x86_64-linux-gnu/13/include] ==> [/usr/lib/gcc/x86_64-linux-gnu/13/include]
+        collapse include dir [/usr/local/include] ==> [/usr/local/include]
+        collapse include dir [/usr/include/x86_64-linux-gnu] ==> [/usr/include/x86_64-linux-gnu]
+        collapse include dir [/usr/include] ==> [/usr/include]
+        implicit include dirs: [/usr/lib/x86_64-linux-gnu/mpich/include;/usr/lib/gcc/x86_64-linux-gnu/13/finclude;/usr/lib/gcc/x86_64-linux-gnu/13/include;/usr/local/include;/usr/include/x86_64-linux-gnu;/usr/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestFortranCompiler.cmake:20 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Parsed Fortran implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?))("|,| |$)]
+        ignore line: [Change Dir: '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-PPOtOW']
+        ignore line: []
+        ignore line: [Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_cb4d7/fast]
+        ignore line: [/usr/bin/gmake  -f CMakeFiles/cmTC_cb4d7.dir/build.make CMakeFiles/cmTC_cb4d7.dir/build]
+        ignore line: [gmake[1]: Entering directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-PPOtOW']
+        ignore line: [Building Fortran object CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.o]
+        ignore line: [/usr/bin/mpifort.mpich   -v -c /usr/local/share/cmake-3.31/Modules/CMakeFortranCompilerABI.F90 -o CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.o]
+        ignore line: [mpifort for MPICH version 4.2.0]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=gfortran]
+        ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
+        ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+        ignore line: [Target: x86_64-linux-gnu]
+        ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04.1' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c ada c++ go d fortran objc obj-c++ m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-nvptx/usr amdgcn-amdhsa=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) ]
+        ignore line: [COLLECT_GCC_OPTIONS='-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-flto=auto' '-ffat-lto-objects' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-fallow-invalid-boz' '-fallow-argument-mismatch' '-v' '-c' '-o' 'CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.o' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_cb4d7.dir/']
+        ignore line: [ /usr/libexec/gcc/x86_64-linux-gnu/13/f951 /usr/local/share/cmake-3.31/Modules/CMakeFortranCompilerABI.F90 -cpp=/tmp/cc1zhzTR.f90 -quiet -v -I /usr/lib/x86_64-linux-gnu/mpich/include -I /usr/lib/x86_64-linux-gnu/mpich/include -imultiarch x86_64-linux-gnu /usr/local/share/cmake-3.31/Modules/CMakeFortranCompilerABI.F90 -quiet -dumpdir CMakeFiles/cmTC_cb4d7.dir/ -dumpbase CMakeFortranCompilerABI.F90.F90 -dumpbase-ext .F90 -mno-omit-leaf-frame-pointer -mtune=generic -march=x86-64 -O2 -version -fno-omit-frame-pointer -ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=. -flto=auto -ffat-lto-objects -fstack-protector-strong -fstack-clash-protection -fcf-protection=full -fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3 -fallow-invalid-boz -fallow-argument-mismatch -fintrinsic-modules-path /usr/lib/gcc/x86_64-linux-gnu/13/finclude -fpre-include=/usr/include/finclude/x86_64-linux-gnu/math-vector-fortran.h -o /tmp/cceSegXr.s]
+        ignore line: [GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04.1) version 13.3.0 (x86_64-linux-gnu)]
+        ignore line: [	compiled by GNU C version 13.3.0  GMP version 6.3.0  MPFR version 4.2.1  MPC version 1.3.1  isl version isl-0.26-GMP]
+        ignore line: []
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed/x86_64-linux-gnu"]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed"]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/../../../../x86_64-linux-gnu/include"]
+        ignore line: [ignoring duplicate directory "/usr/lib/x86_64-linux-gnu/mpich/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /usr/lib/x86_64-linux-gnu/mpich/include]
+        ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/13/finclude]
+        ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/13/include]
+        ignore line: [ /usr/local/include]
+        ignore line: [ /usr/include/x86_64-linux-gnu]
+        ignore line: [ /usr/include]
+        ignore line: [End of search list.]
+        ignore line: [COLLECT_GCC_OPTIONS='-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-flto=auto' '-ffat-lto-objects' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-fallow-invalid-boz' '-fallow-argument-mismatch' '-v' '-c' '-o' 'CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.o' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_cb4d7.dir/']
+        ignore line: [ as -v -I /usr/lib/x86_64-linux-gnu/mpich/include -I /usr/lib/x86_64-linux-gnu/mpich/include --64 -o CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.o /tmp/cceSegXr.s]
+        ignore line: [GNU assembler version 2.42 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.42]
+        ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/]
+        ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-flto=auto' '-ffat-lto-objects' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-fallow-invalid-boz' '-fallow-argument-mismatch' '-v' '-c' '-o' 'CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.o' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.']
+        ignore line: [Linking Fortran executable cmTC_cb4d7]
+        ignore line: [/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_cb4d7.dir/link.txt --verbose=1]
+        ignore line: [mpifort for MPICH version 4.2.0]
+        ignore line: [Driving: gfortran -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=. -flto=auto -fstack-protector-strong -fstack-clash-protection -fcf-protection -fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3 -fallow-invalid-boz -fallow-argument-mismatch -Wl -Bsymbolic-functions -flto=auto -ffat-lto-objects -Wl -z relro -v -Wl -v CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.o -o cmTC_cb4d7 -I/usr/lib/x86_64-linux-gnu/mpich/include -I/usr/lib/x86_64-linux-gnu/mpich/include -L/usr/lib/x86_64-linux-gnu/mpich/lib -lmpichfort -lmpich -l gfortran -l m -shared-libgcc]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=gfortran]
+        ignore line: [COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper]
+        ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
+        ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+        ignore line: [Target: x86_64-linux-gnu]
+        ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04.1' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c ada c++ go d fortran objc obj-c++ m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-nvptx/usr amdgcn-amdhsa=/build/gcc-13-EldibY/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) ]
+        ignore line: [Reading specs from /usr/lib/gcc/x86_64-linux-gnu/13/libgfortran.spec]
+        ignore line: [rename spec lib to liborig]
+        ignore line: [COLLECT_GCC_OPTIONS='-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-flto=auto' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-fallow-invalid-boz' '-fallow-argument-mismatch' '-flto=auto' '-ffat-lto-objects' '-v' '-o' 'cmTC_cb4d7' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_cb4d7-']
+        ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/]
+        ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-O2' '-fno-omit-frame-pointer' '-mno-omit-leaf-frame-pointer' '-ffile-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=.' '-flto=auto' '-fstack-protector-strong' '-fstack-clash-protection' '-fcf-protection=full' '-fdebug-prefix-map=/build/mpich-C3oteG/mpich-4.2.0=/usr/src/mpich-4.2.0-5build3' '-fallow-invalid-boz' '-fallow-argument-mismatch' '-flto=auto' '-ffat-lto-objects' '-v' '-o' 'cmTC_cb4d7' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-I' '/usr/lib/x86_64-linux-gnu/mpich/include' '-L/usr/lib/x86_64-linux-gnu/mpich/lib' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_cb4d7.']
+        link line: [ /usr/libexec/gcc/x86_64-linux-gnu/13/collect2 -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccw3nhqy.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lquadmath -plugin-opt=-pass-through=-lm -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -flto=auto -flto=auto --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_cb4d7 /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/x86_64-linux-gnu/mpich/lib -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -Bsymbolic-functions -z relro -v CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.o -lmpichfort -lmpich -lgfortran -lm -lgcc_s -lgcc --as-needed -lquadmath --no-as-needed -lm -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o]
+          arg [/usr/libexec/gcc/x86_64-linux-gnu/13/collect2] ==> ignore
+          arg [-plugin] ==> ignore
+          arg [/usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so] ==> ignore
+          arg [-plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper] ==> ignore
+          arg [-plugin-opt=-fresolution=/tmp/ccw3nhqy.res] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lquadmath] ==> ignore
+          arg [-plugin-opt=-pass-through=-lm] ==> ignore
+          arg [-plugin-opt=-pass-through=-lc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-flto=auto] ==> ignore
+          arg [-flto=auto] ==> ignore
+          arg [--build-id] ==> ignore
+          arg [--eh-frame-hdr] ==> ignore
+          arg [-m] ==> ignore
+          arg [elf_x86_64] ==> ignore
+          arg [--hash-style=gnu] ==> ignore
+          arg [--as-needed] ==> ignore
+          arg [-dynamic-linker] ==> ignore
+          arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+          arg [-pie] ==> ignore
+          arg [-znow] ==> ignore
+          arg [-zrelro] ==> ignore
+          arg [-o] ==> ignore
+          arg [cmTC_cb4d7] ==> ignore
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o]
+          arg [-L/usr/lib/x86_64-linux-gnu/mpich/lib] ==> dir [/usr/lib/x86_64-linux-gnu/mpich/lib]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib]
+          arg [-L/lib/x86_64-linux-gnu] ==> dir [/lib/x86_64-linux-gnu]
+          arg [-L/lib/../lib] ==> dir [/lib/../lib]
+          arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
+          arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../..]
+          arg [-Bsymbolic-functions] ==> ignore
+          arg [-zrelro] ==> ignore
+          arg [-v] ==> ignore
+          arg [CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.o] ==> ignore
+          arg [-lmpichfort] ==> lib [mpichfort]
+          arg [-lmpich] ==> lib [mpich]
+          arg [-lgfortran] ==> lib [gfortran]
+          arg [-lm] ==> lib [m]
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [-lgcc] ==> lib [gcc]
+          arg [--as-needed] ==> ignore
+          arg [-lquadmath] ==> lib [quadmath]
+          arg [--no-as-needed] ==> ignore
+          arg [-lm] ==> lib [m]
+          arg [-lc] ==> lib [c]
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [-lgcc] ==> lib [gcc]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o]
+        ignore line: [collect2 version 13.3.0]
+        ignore line: [/usr/bin/ld -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccw3nhqy.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lquadmath -plugin-opt=-pass-through=-lm -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_cb4d7 /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/x86_64-linux-gnu/mpich/lib -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -Bsymbolic-functions -z relro -v CMakeFiles/cmTC_cb4d7.dir/CMakeFortranCompilerABI.F90.o -lmpichfort -lmpich -lgfortran -lm -lgcc_s -lgcc --as-needed -lquadmath --no-as-needed -lm -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o]
+        linker tool for 'Fortran': /usr/bin/ld
+        collapse obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o] ==> [/usr/lib/x86_64-linux-gnu/Scrt1.o]
+        collapse obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o] ==> [/usr/lib/x86_64-linux-gnu/crti.o]
+        collapse obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o] ==> [/usr/lib/x86_64-linux-gnu/crtn.o]
+        collapse library dir [/usr/lib/x86_64-linux-gnu/mpich/lib] ==> [/usr/lib/x86_64-linux-gnu/mpich/lib]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13] ==> [/usr/lib/gcc/x86_64-linux-gnu/13]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib] ==> [/usr/lib]
+        collapse library dir [/lib/x86_64-linux-gnu] ==> [/lib/x86_64-linux-gnu]
+        collapse library dir [/lib/../lib] ==> [/lib]
+        collapse library dir [/usr/lib/x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+        collapse library dir [/usr/lib/../lib] ==> [/usr/lib]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../..] ==> [/usr/lib]
+        implicit libs: [mpichfort;mpich;gfortran;m;gcc_s;gcc;quadmath;m;c;gcc_s;gcc]
+        implicit objs: [/usr/lib/x86_64-linux-gnu/Scrt1.o;/usr/lib/x86_64-linux-gnu/crti.o;/usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o;/usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o;/usr/lib/x86_64-linux-gnu/crtn.o]
+        implicit dirs: [/usr/lib/x86_64-linux-gnu/mpich/lib;/usr/lib/gcc/x86_64-linux-gnu/13;/usr/lib/x86_64-linux-gnu;/usr/lib;/lib/x86_64-linux-gnu;/lib]
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestFortranCompiler.cmake:20 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Running the Fortran compiler's linker: "/usr/bin/ld" "-v"
+      GNU ld (GNU Binutils for Ubuntu) 2.42
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckFortranCompilerFlag.cmake:58 (cmake_check_compiler_flag)"
+      - "CMakeLists.txt:124 (check_fortran_compiler_flag)"
+    checks:
+      - "Performing Test COMPILER_GNU"
+    directories:
+      source: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-256ES1"
+      binary: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-256ES1"
+    cmakeVariables:
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_Fortran_FLAGS: " -DMPI4 -fdefault-integer-8"
+      CMAKE_Fortran_FLAGS_DEBUG: "-g"
+    buildResult:
+      variable: "COMPILER_GNU"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-256ES1'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_ef897/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_ef897.dir/build.make CMakeFiles/cmTC_ef897.dir/build
+        gmake[1]: Entering directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-256ES1'
+        Building Fortran object CMakeFiles/cmTC_ef897.dir/src.F90.o
+        /usr/bin/mpifort.mpich -DCOMPILER_GNU  -DMPI4 -fdefault-integer-8    -ffree-line-length-none -c /home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-256ES1/src.F90 -o CMakeFiles/cmTC_ef897.dir/src.F90.o
+        Linking Fortran executable cmTC_ef897
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ef897.dir/link.txt --verbose=1
+        /usr/bin/mpifort.mpich  -DMPI4 -fdefault-integer-8  CMakeFiles/cmTC_ef897.dir/src.F90.o -o cmTC_ef897
+        gmake[1]: Leaving directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-256ES1'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckFortranCompilerFlag.cmake:58 (cmake_check_compiler_flag)"
+      - "CMakeLists.txt:127 (check_fortran_compiler_flag)"
+    checks:
+      - "Performing Test GNU10"
+    directories:
+      source: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-vZXsdY"
+      binary: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-vZXsdY"
+    cmakeVariables:
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_Fortran_FLAGS: "-cpp -ffree-line-length-none -ffixed-line-length-none -fimplicit-none -lpthread  -DMPI4 -fdefault-integer-8"
+      CMAKE_Fortran_FLAGS_DEBUG: "-g"
+    buildResult:
+      variable: "GNU10"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-vZXsdY'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_71fc4/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_71fc4.dir/build.make CMakeFiles/cmTC_71fc4.dir/build
+        gmake[1]: Entering directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-vZXsdY'
+        Building Fortran object CMakeFiles/cmTC_71fc4.dir/src.F90.o
+        /usr/bin/mpifort.mpich -DGNU10  -cpp -ffree-line-length-none -ffixed-line-length-none -fimplicit-none -lpthread  -DMPI4 -fdefault-integer-8    -fallow-argument-mismatch -c /home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-vZXsdY/src.F90 -o CMakeFiles/cmTC_71fc4.dir/src.F90.o
+        Linking Fortran executable cmTC_71fc4
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_71fc4.dir/link.txt --verbose=1
+        /usr/bin/mpifort.mpich -cpp -ffree-line-length-none -ffixed-line-length-none -fimplicit-none -lpthread  -DMPI4 -fdefault-integer-8  CMakeFiles/cmTC_71fc4.dir/src.F90.o -o cmTC_71fc4
+        gmake[1]: Leaving directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-vZXsdY'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckFortranCompilerFlag.cmake:58 (cmake_check_compiler_flag)"
+      - "CMakeLists.txt:138 (check_fortran_compiler_flag)"
+    checks:
+      - "Performing Test COMPILER_Ifort"
+    directories:
+      source: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-SsECJ0"
+      binary: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-SsECJ0"
+    cmakeVariables:
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_Fortran_FLAGS: "-frange-check -fbacktrace -fbounds-check -Wconversion -fallow-argument-mismatch -cpp -ffree-line-length-none -ffixed-line-length-none -fimplicit-none -lpthread  -DMPI4 -fdefault-integer-8"
+      CMAKE_Fortran_FLAGS_DEBUG: "-g"
+    buildResult:
+      variable: "COMPILER_Ifort"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-SsECJ0'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_97307/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_97307.dir/build.make CMakeFiles/cmTC_97307.dir/build
+        gmake[1]: Entering directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-SsECJ0'
+        Building Fortran object CMakeFiles/cmTC_97307.dir/src.F90.o
+        /usr/bin/mpifort.mpich -DCOMPILER_Ifort  -frange-check -fbacktrace -fbounds-check -Wconversion -fallow-argument-mismatch -cpp -ffree-line-length-none -ffixed-line-length-none -fimplicit-none -lpthread  -DMPI4 -fdefault-integer-8    -no-prec-div -c /home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-SsECJ0/src.F90 -o CMakeFiles/cmTC_97307.dir/src.F90.o
+        gfortran: error: unrecognized command-line option '-no-prec-div'
+        gmake[1]: *** [CMakeFiles/cmTC_97307.dir/build.make:81: CMakeFiles/cmTC_97307.dir/src.F90.o] Error 1
+        gmake[1]: Leaving directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-SsECJ0'
+        gmake: *** [Makefile:134: cmTC_97307/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckFortranCompilerFlag.cmake:58 (cmake_check_compiler_flag)"
+      - "CMakeLists.txt:139 (check_fortran_compiler_flag)"
+    checks:
+      - "Performing Test COMPILER_Ifx"
+    directories:
+      source: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-sjpPMX"
+      binary: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-sjpPMX"
+    cmakeVariables:
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_Fortran_FLAGS: "-frange-check -fbacktrace -fbounds-check -Wconversion -fallow-argument-mismatch -cpp -ffree-line-length-none -ffixed-line-length-none -fimplicit-none -lpthread  -DMPI4 -fdefault-integer-8"
+      CMAKE_Fortran_FLAGS_DEBUG: "-g"
+    buildResult:
+      variable: "COMPILER_Ifx"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-sjpPMX'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_6e739/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_6e739.dir/build.make CMakeFiles/cmTC_6e739.dir/build
+        gmake[1]: Entering directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-sjpPMX'
+        Building Fortran object CMakeFiles/cmTC_6e739.dir/src.F90.o
+        /usr/bin/mpifort.mpich -DCOMPILER_Ifx  -frange-check -fbacktrace -fbounds-check -Wconversion -fallow-argument-mismatch -cpp -ffree-line-length-none -ffixed-line-length-none -fimplicit-none -lpthread  -DMPI4 -fdefault-integer-8    -qopenmp -c /home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-sjpPMX/src.F90 -o CMakeFiles/cmTC_6e739.dir/src.F90.o
+        gfortran: error: unrecognized command-line option '-qopenmp'; did you mean '-fopenmp'?
+        gmake[1]: *** [CMakeFiles/cmTC_6e739.dir/build.make:81: CMakeFiles/cmTC_6e739.dir/src.F90.o] Error 1
+        gmake[1]: Leaving directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-sjpPMX'
+        gmake: *** [Makefile:134: cmTC_6e739/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckFortranCompilerFlag.cmake:58 (cmake_check_compiler_flag)"
+      - "CMakeLists.txt:147 (check_fortran_compiler_flag)"
+    checks:
+      - "Performing Test COMPILER_PGI"
+    directories:
+      source: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-Zx7sEL"
+      binary: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-Zx7sEL"
+    cmakeVariables:
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_Fortran_FLAGS: "-frange-check -fbacktrace -fbounds-check -Wconversion -fallow-argument-mismatch -cpp -ffree-line-length-none -ffixed-line-length-none -fimplicit-none -lpthread  -DMPI4 -fdefault-integer-8"
+      CMAKE_Fortran_FLAGS_DEBUG: "-g"
+    buildResult:
+      variable: "COMPILER_PGI"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-Zx7sEL'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_de8c8/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_de8c8.dir/build.make CMakeFiles/cmTC_de8c8.dir/build
+        gmake[1]: Entering directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-Zx7sEL'
+        Building Fortran object CMakeFiles/cmTC_de8c8.dir/src.F90.o
+        /usr/bin/mpifort.mpich -DCOMPILER_PGI  -frange-check -fbacktrace -fbounds-check -Wconversion -fallow-argument-mismatch -cpp -ffree-line-length-none -ffixed-line-length-none -fimplicit-none -lpthread  -DMPI4 -fdefault-integer-8    -Mextend -c /home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-Zx7sEL/src.F90 -o CMakeFiles/cmTC_de8c8.dir/src.F90.o
+        gfortran: error: unrecognized command-line option '-Mextend'
+        gmake[1]: *** [CMakeFiles/cmTC_de8c8.dir/build.make:81: CMakeFiles/cmTC_de8c8.dir/src.F90.o] Error 1
+        gmake[1]: Leaving directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-Zx7sEL'
+        gmake: *** [Makefile:134: cmTC_de8c8/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckFortranCompilerFlag.cmake:58 (cmake_check_compiler_flag)"
+      - "CMakeLists.txt:155 (check_fortran_compiler_flag)"
+    checks:
+      - "Performing Test COMPILER_CRAY"
+    directories:
+      source: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-DtVdYz"
+      binary: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-DtVdYz"
+    cmakeVariables:
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_Fortran_FLAGS: "-frange-check -fbacktrace -fbounds-check -Wconversion -fallow-argument-mismatch -cpp -ffree-line-length-none -ffixed-line-length-none -fimplicit-none -lpthread  -DMPI4 -fdefault-integer-8"
+      CMAKE_Fortran_FLAGS_DEBUG: "-g"
+    buildResult:
+      variable: "COMPILER_CRAY"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-DtVdYz'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_aaaa1/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_aaaa1.dir/build.make CMakeFiles/cmTC_aaaa1.dir/build
+        gmake[1]: Entering directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-DtVdYz'
+        Building Fortran object CMakeFiles/cmTC_aaaa1.dir/src.F90.o
+        /usr/bin/mpifort.mpich -DCOMPILER_CRAY  -frange-check -fbacktrace -fbounds-check -Wconversion -fallow-argument-mismatch -cpp -ffree-line-length-none -ffixed-line-length-none -fimplicit-none -lpthread  -DMPI4 -fdefault-integer-8    -N 1023 -c /home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-DtVdYz/src.F90 -o CMakeFiles/cmTC_aaaa1.dir/src.F90.o
+        gfortran: warning: 1023: linker input file unused because linking not done
+        gfortran: error: 1023: linker input file not found: No such file or directory
+        gmake[1]: *** [CMakeFiles/cmTC_aaaa1.dir/build.make:81: CMakeFiles/cmTC_aaaa1.dir/src.F90.o] Error 1
+        gmake[1]: *** Deleting file 'CMakeFiles/cmTC_aaaa1.dir/src.F90.o'
+        gmake[1]: Leaving directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-DtVdYz'
+        gmake: *** [Makefile:134: cmTC_aaaa1/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCXXCompilerFlag.cmake:55 (cmake_check_compiler_flag)"
+      - "CMakeLists.txt:165 (check_cxx_compiler_flag)"
+    checks:
+      - "Performing Test qoptmatmul"
+    directories:
+      source: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-9YOOha"
+      binary: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-9YOOha"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "qoptmatmul"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-9YOOha'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_0b39d/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_0b39d.dir/build.make CMakeFiles/cmTC_0b39d.dir/build
+        gmake[1]: Entering directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-9YOOha'
+        Building CXX object CMakeFiles/cmTC_0b39d.dir/src.cxx.o
+        /usr/bin/mpicxx.mpich -Dqoptmatmul  -std=gnu++20   -qopt-matmul -o CMakeFiles/cmTC_0b39d.dir/src.cxx.o -c /home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-9YOOha/src.cxx
+        g++: error: unrecognized command-line option '-qopt-matmul'
+        gmake[1]: *** [CMakeFiles/cmTC_0b39d.dir/build.make:81: CMakeFiles/cmTC_0b39d.dir/src.cxx.o] Error 1
+        gmake[1]: Leaving directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-9YOOha'
+        gmake: *** [Makefile:134: cmTC_0b39d/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/FindMPI.cmake:1283 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/FindMPI.cmake:1677 (_MPI_try_staged_settings)"
+      - "CMakeLists.txt:392 (find_package)"
+    description: "The MPI test test_mpi for CXX in mode MPICXX"
+    directories:
+      source: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-JP93XH"
+      binary: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-JP93XH"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: "-DHAVE_MPI "
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/source/cmake/Modules/"
+    buildResult:
+      variable: "MPI_RESULT_CXX_test_mpi_MPICXX"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-JP93XH'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_8ecad/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_8ecad.dir/build.make CMakeFiles/cmTC_8ecad.dir/build
+        gmake[1]: Entering directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-JP93XH'
+        Building CXX object CMakeFiles/cmTC_8ecad.dir/test_mpi.cpp.o
+        /usr/bin/mpicxx.mpich   -DHAVE_MPI   -std=gnu++20 -o CMakeFiles/cmTC_8ecad.dir/test_mpi.cpp.o -c /home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-JP93XH/test_mpi.cpp
+        Linking CXX executable cmTC_8ecad
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_8ecad.dir/link.txt --verbose=1
+        /usr/bin/mpicxx.mpich -DHAVE_MPI   CMakeFiles/cmTC_8ecad.dir/test_mpi.cpp.o -o cmTC_8ecad
+        gmake[1]: Leaving directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-JP93XH'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/FindMPI.cmake:1283 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/FindMPI.cmake:1712 (_MPI_try_staged_settings)"
+      - "CMakeLists.txt:392 (find_package)"
+    description: "The MPI test mpiver for Fortran in mode F08_MODULE"
+    directories:
+      source: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-L3DFYK"
+      binary: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-L3DFYK"
+    cmakeVariables:
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_Fortran_FLAGS: "-DHAVE_MPI -frange-check -fbacktrace -fbounds-check -Wconversion -fallow-argument-mismatch -cpp -ffree-line-length-none -ffixed-line-length-none -fimplicit-none -lpthread  -DMPI4 -fdefault-integer-8"
+      CMAKE_Fortran_FLAGS_DEBUG: "-g"
+      CMAKE_MODULE_PATH: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/source/cmake/Modules/"
+    buildResult:
+      variable: "MPI_RESULT_Fortran_mpiver_F08_MODULE"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-L3DFYK'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_a0d4a/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_a0d4a.dir/build.make CMakeFiles/cmTC_a0d4a.dir/build
+        gmake[1]: Entering directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-L3DFYK'
+        Building Fortran object CMakeFiles/cmTC_a0d4a.dir/mpiver.f90.o
+        /usr/bin/mpifort.mpich   -DHAVE_MPI -frange-check -fbacktrace -fbounds-check -Wconversion -fallow-argument-mismatch -cpp -ffree-line-length-none -ffixed-line-length-none -fimplicit-none -lpthread  -DMPI4 -fdefault-integer-8  -c /home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-L3DFYK/mpiver.f90 -o CMakeFiles/cmTC_a0d4a.dir/mpiver.f90.o
+        Linking Fortran executable cmTC_a0d4a
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a0d4a.dir/link.txt --verbose=1
+        /usr/bin/mpifort.mpich -DHAVE_MPI -frange-check -fbacktrace -fbounds-check -Wconversion -fallow-argument-mismatch -cpp -ffree-line-length-none -ffixed-line-length-none -fimplicit-none -lpthread  -DMPI4 -fdefault-integer-8  CMakeFiles/cmTC_a0d4a.dir/mpiver.f90.o -o cmTC_a0d4a
+        gmake[1]: Leaving directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-L3DFYK'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "CMakeLists.txt:407 (check_c_source_compiles)"
+    checks:
+      - "Performing Test BUTTERFLYPACK_HAS_MPI4"
+    directories:
+      source: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-GDv4GL"
+      binary: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-GDv4GL"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-DHAVE_MPI "
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: " "
+      CMAKE_MODULE_PATH: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/source/cmake/Modules/"
+    buildResult:
+      variable: "BUTTERFLYPACK_HAS_MPI4"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-GDv4GL'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_7aae7/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_7aae7.dir/build.make CMakeFiles/cmTC_7aae7.dir/build
+        gmake[1]: Entering directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-GDv4GL'
+        Building C object CMakeFiles/cmTC_7aae7.dir/src.c.o
+        /usr/bin/mpicc.mpich -DBUTTERFLYPACK_HAS_MPI4  -DHAVE_MPI   -o CMakeFiles/cmTC_7aae7.dir/src.c.o -c /home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-GDv4GL/src.c
+        Linking C executable cmTC_7aae7
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7aae7.dir/link.txt --verbose=1
+        /usr/bin/mpicc.mpich -DHAVE_MPI   CMakeFiles/cmTC_7aae7.dir/src.c.o -o cmTC_7aae7
+        gmake[1]: Leaving directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-GDv4GL'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "CMakeLists.txt:427 (check_cxx_source_compiles)"
+    checks:
+      - "Performing Test BUTTERFLYPACK_USE_MPI3"
+    directories:
+      source: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-o4FpGl"
+      binary: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-o4FpGl"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: "-DHAVE_MPI "
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: " "
+      CMAKE_MODULE_PATH: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/source/cmake/Modules/"
+    buildResult:
+      variable: "BUTTERFLYPACK_USE_MPI3"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-o4FpGl'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_bb169/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_bb169.dir/build.make CMakeFiles/cmTC_bb169.dir/build
+        gmake[1]: Entering directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-o4FpGl'
+        Building CXX object CMakeFiles/cmTC_bb169.dir/src.cxx.o
+        /usr/bin/mpicxx.mpich -DBUTTERFLYPACK_USE_MPI3  -DHAVE_MPI   -std=gnu++20 -o CMakeFiles/cmTC_bb169.dir/src.cxx.o -c /home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-o4FpGl/src.cxx
+        Linking CXX executable cmTC_bb169
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_bb169.dir/link.txt --verbose=1
+        /usr/bin/mpicxx.mpich -DHAVE_MPI   CMakeFiles/cmTC_bb169.dir/src.cxx.o -o cmTC_bb169
+        gmake[1]: Leaving directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-o4FpGl'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckFortranSourceCompiles.cmake:68 (cmake_check_source_compiles)"
+      - "CMakeLists.txt:462 (check_fortran_source_compiles)"
+    checks:
+      - "Performing Test BUTTERFLYPACK_USE_Finalizer"
+    directories:
+      source: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-Oe7f8v"
+      binary: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-Oe7f8v"
+    cmakeVariables:
+      CMAKE_EXE_LINKER_FLAGS: " "
+      CMAKE_Fortran_FLAGS: "-DHAVE_MPI3  -DHAVE_MPI -frange-check -fbacktrace -fbounds-check -Wconversion -fallow-argument-mismatch -cpp -ffree-line-length-none -ffixed-line-length-none -fimplicit-none -lpthread  -DMPI4 -fdefault-integer-8"
+      CMAKE_Fortran_FLAGS_DEBUG: "-g"
+      CMAKE_MODULE_PATH: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/source/cmake/Modules/"
+    buildResult:
+      variable: "BUTTERFLYPACK_USE_Finalizer"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-Oe7f8v'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_44d7b/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_44d7b.dir/build.make CMakeFiles/cmTC_44d7b.dir/build
+        gmake[1]: Entering directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-Oe7f8v'
+        Building Fortran object CMakeFiles/cmTC_44d7b.dir/src.F90.o
+        /usr/bin/mpifort.mpich -DBUTTERFLYPACK_USE_Finalizer  -DHAVE_MPI3  -DHAVE_MPI -frange-check -fbacktrace -fbounds-check -Wconversion -fallow-argument-mismatch -cpp -ffree-line-length-none -ffixed-line-length-none -fimplicit-none -lpthread  -DMPI4 -fdefault-integer-8  -c /home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-Oe7f8v/src.F90 -o CMakeFiles/cmTC_44d7b.dir/src.F90.o
+        Linking Fortran executable cmTC_44d7b
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_44d7b.dir/link.txt --verbose=1
+        /usr/bin/mpifort.mpich -DHAVE_MPI3  -DHAVE_MPI -frange-check -fbacktrace -fbounds-check -Wconversion -fallow-argument-mismatch -cpp -ffree-line-length-none -ffixed-line-length-none -fimplicit-none -lpthread  -DMPI4 -fdefault-integer-8  CMakeFiles/cmTC_44d7b.dir/src.F90.o -o cmTC_44d7b
+        gmake[1]: Leaving directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-Oe7f8v'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/FindThreads.cmake:97 (CHECK_C_SOURCE_COMPILES)"
+      - "/usr/local/share/cmake-3.31/Modules/FindThreads.cmake:163 (_threads_check_libc)"
+      - "MPI4/CMakeLists.txt:16 (find_package)"
+    checks:
+      - "Performing Test CMAKE_HAVE_LIBC_PTHREAD"
+    directories:
+      source: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-V02a2f"
+      binary: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-V02a2f"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "-DHAVE_MPI "
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: " "
+      CMAKE_MODULE_PATH: "/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/source/cmake/Modules/"
+    buildResult:
+      variable: "CMAKE_HAVE_LIBC_PTHREAD"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-V02a2f'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_f6789/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_f6789.dir/build.make CMakeFiles/cmTC_f6789.dir/build
+        gmake[1]: Entering directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-V02a2f'
+        Building C object CMakeFiles/cmTC_f6789.dir/src.c.o
+        /usr/bin/mpicc.mpich -DCMAKE_HAVE_LIBC_PTHREAD  -DHAVE_MPI   -o CMakeFiles/cmTC_f6789.dir/src.c.o -c /home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-V02a2f/src.c
+        Linking C executable cmTC_f6789
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f6789.dir/link.txt --verbose=1
+        /usr/bin/mpicc.mpich -DHAVE_MPI   CMakeFiles/cmTC_f6789.dir/src.c.o -o cmTC_f6789
+        gmake[1]: Leaving directory '/home/runner/work/ButterflyPACK/ButterflyPACK/.cabi-validation/mpi4/CMakeFiles/CMakeScratch/TryCompile-V02a2f'
+        
+      exitCode: 0
+...

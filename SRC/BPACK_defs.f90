@@ -1234,6 +1234,16 @@ integer, allocatable::index_MD(:, :, :) !< an array of block offsets
     ! integer,allocatable:: basis_group_pre(:,:)
 contains
 
+    elemental function checked_c_int(value) result(converted)
+        integer, intent(in) :: value
+        integer(c_int) :: converted
+        if (value > int(huge(0_c_int), kind(0)) .or. &
+            value < -int(huge(0_c_int), kind(0)) - 1) then
+            error stop 'ButterflyPACK C interface integer exceeds the 32-bit int range'
+        endif
+        converted = int(value, c_int)
+    end function checked_c_int
+
     !> deallocate all entries of an iarray
     subroutine iarray_finalizer(lst)
         implicit none

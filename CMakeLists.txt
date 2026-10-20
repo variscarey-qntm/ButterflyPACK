@@ -46,6 +46,13 @@ if(MPI4)
   set(BLA_SIZEOF_INTEGER 8)
   set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -DMPI4 -fdefault-integer-8")
   add_compile_definitions(MPI4)
+  file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/MPI4/bpack_mpi4.fi"
+       _mpi4_mappings REGEX "^#define ")
+  foreach(_mapping IN LISTS _mpi4_mappings)
+    string(REGEX REPLACE "^#define +([^ ]+) +([^ ]+).*$" "\\1=\\2"
+           _definition "${_mapping}")
+    add_compile_definitions("$<$<COMPILE_LANGUAGE:Fortran>:${_definition}>")
+  endforeach()
 endif()
 
 ######################################################################
@@ -262,7 +269,7 @@ if(BLAS_FOUND)
   endif()
   string(TOLOWER "${BLAS_LIB_STR}" BLAS_LIB_STR_LOWER)
   string(FIND "${BLAS_LIB_STR_LOWER}" "openblas" BUTTERFLYPACK_USE_OPENBLAS)
-  if(BUTTERFLYPACK_USE_OPENBLAS GREATER -1)
+  if(BUTTERFLYPACK_USE_OPENBLAS GREATER -1 AND NOT MPI4)
     set(CMAKE_Fortran_FLAGS "-DHAVE_OPENBLAS_BATCH ${CMAKE_Fortran_FLAGS}")
     message("-- Enabling opt-in OpenBLAS batch GEMM")
   endif()
@@ -596,6 +603,9 @@ add_library(butterflypack
 if(MPI4)
   target_sources(butterflypack PRIVATE $<TARGET_OBJECTS:bpack_mpi4>)
   target_link_libraries(butterflypack PUBLIC ${MPI_C_LIBRARIES})
+  target_include_directories(butterflypack PUBLIC
+    $<BUILD_INTERFACE:${ButterflyPACK_SOURCE_DIR}/MPI4>
+    $<BUILD_INTERFACE:${ButterflyPACK_BINARY_DIR}/MPI4>)
 endif()
 
 if (enable_mpi)

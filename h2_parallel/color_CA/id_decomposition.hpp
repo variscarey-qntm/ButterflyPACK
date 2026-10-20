@@ -179,7 +179,7 @@ IDResult<DataType> compute_id(
                                    std::to_string(INFO));
         }
         
-        LWORK = static_cast<int>(WORK[0]);
+        LWORK = bpack_lapack_workspace_size(WORK[0]);
         WORK.resize(LWORK);
         
         // Perform factorization
@@ -203,7 +203,7 @@ IDResult<DataType> compute_id(
                                    std::to_string(INFO));
         }
         
-        LWORK = static_cast<int>(WORK[0].real());
+        LWORK = bpack_lapack_workspace_size(WORK[0]);
         WORK.resize(LWORK);
         
         // Perform factorization
@@ -348,7 +348,7 @@ IDResult<DataType> compute_id_complex(
                                    std::to_string(INFO));
         }
         
-        LWORK = static_cast<int>(WORK[0]);
+        LWORK = bpack_lapack_workspace_size(WORK[0]);
         WORK.resize(LWORK);
         
         dgeqp3_(&M, &N, A, &LDA,
@@ -367,7 +367,7 @@ IDResult<DataType> compute_id_complex(
                                    std::to_string(INFO));
         }
         
-        LWORK = static_cast<int>(WORK[0].real());
+        LWORK = bpack_lapack_workspace_size(WORK[0]);
         WORK.resize(LWORK);
         
         zgeqp3_(&M, &N, A, &LDA,

@@ -7584,7 +7584,7 @@ void compute_and_modify(
                 "Bunch-Kaufman workspace query failed with INFO = " +
                 std::to_string(info));
         }
-        lwork = std::max(1, static_cast<int>(std::real(work[0])));
+        lwork = bpack_lapack_workspace_size(work[0]);
         work.resize(static_cast<size_t>(lwork));
         sytrf_(&uplo, &n, box->X_RR.data.data(), &n,
                box->X_RR_pivots.data(), work.data(), &lwork, &info);
@@ -7779,7 +7779,9 @@ void compute_and_modify(
             dgetri_(&n, box->X_RR.data.data(), &n, ipiv.data(),
                     work.data(), &lwork, &info);
 
-            lwork = static_cast<int>(work[0]);
+            if (info != 0)
+                throw std::runtime_error("LU inverse workspace query failed: " + std::to_string(info));
+            lwork = bpack_lapack_workspace_size(work[0]);
             work.resize(lwork);
 
             dgetri_(&n, box->X_RR.data.data(), &n, ipiv.data(),
@@ -7795,7 +7797,9 @@ void compute_and_modify(
             zgetri_(&n, box->X_RR.data.data(), &n, ipiv.data(),
                     work.data(), &lwork, &info);
 
-            lwork = static_cast<int>(work[0].real());
+            if (info != 0)
+                throw std::runtime_error("LU inverse workspace query failed: " + std::to_string(info));
+            lwork = bpack_lapack_workspace_size(work[0]);
             work.resize(lwork);
 
             zgetri_(&n, box->X_RR.data.data(), &n, ipiv.data(),

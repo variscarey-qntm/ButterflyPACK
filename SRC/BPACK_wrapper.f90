@@ -70,9 +70,9 @@ contains
 
       call c_f_procpointer(ker%C_FuncHMatVec, proc)
       if (trans == 'N') then  ! note that C_HMatVec takes Nin Nout, instead of takes M,N, so if statement is needed here
-         call proc(trans//c_null_char, int(N,c_int), int(M,c_int), int(num_vect,c_int), Vin, Vout, ker%C_QuantApp)
+         call proc(trans//c_null_char, checked_c_int(N), checked_c_int(M), checked_c_int(num_vect), Vin, Vout, ker%C_QuantApp)
       else
-         call proc(trans//c_null_char, int(M,c_int), int(N,c_int), int(num_vect,c_int), Vin, Vout, ker%C_QuantApp)
+         call proc(trans//c_null_char, checked_c_int(M), checked_c_int(N), checked_c_int(num_vect), Vin, Vout, ker%C_QuantApp)
       endif
       return
 
@@ -91,9 +91,9 @@ contains
 
       call c_f_procpointer(ker%C_FuncHPreconMatVec, proc)
       if (trans == 'N') then
-         call proc(trans//c_null_char, int(N,c_int), int(M,c_int), int(num_vect,c_int), Vin, Vout, ker%C_QuantApp)
+         call proc(trans//c_null_char, checked_c_int(N), checked_c_int(M), checked_c_int(num_vect), Vin, Vout, ker%C_QuantApp)
       else
-         call proc(trans//c_null_char, int(M,c_int), int(N,c_int), int(num_vect,c_int), Vin, Vout, ker%C_QuantApp)
+         call proc(trans//c_null_char, checked_c_int(M), checked_c_int(N), checked_c_int(num_vect), Vin, Vout, ker%C_QuantApp)
       endif
       return
 
@@ -121,9 +121,9 @@ contains
 
       call c_f_procpointer(ker%C_FuncHMatVec_MD, proc)
       if (trans == 'N') then  ! note that C_HMatVec takes Nin Nout, instead of takes M,N, so if statement is needed here
-         call proc(int(Ndim,c_int), trans//c_null_char, int(N,c_int), int(M,c_int), int(num_vect,c_int), Vin, Vout, ker%C_QuantApp)
+         call proc(checked_c_int(Ndim), trans//c_null_char, checked_c_int(N), checked_c_int(M), checked_c_int(num_vect), Vin, Vout, ker%C_QuantApp)
       else
-         call proc(int(Ndim,c_int), trans//c_null_char, int(M,c_int), int(N,c_int), int(num_vect,c_int), Vin, Vout, ker%C_QuantApp)
+         call proc(checked_c_int(Ndim), trans//c_null_char, checked_c_int(M), checked_c_int(N), checked_c_int(num_vect), Vin, Vout, ker%C_QuantApp)
       endif
       return
 
@@ -143,9 +143,9 @@ contains
 
       call c_f_procpointer(ker%C_FuncHPreconMatVec_MD, proc)
       if (trans == 'N') then
-         call proc(int(Ndim,c_int), trans//c_null_char, int(N,c_int), int(M,c_int), int(num_vect,c_int), Vin, Vout, ker%C_QuantApp)
+         call proc(checked_c_int(Ndim), trans//c_null_char, checked_c_int(N), checked_c_int(M), checked_c_int(num_vect), Vin, Vout, ker%C_QuantApp)
       else
-         call proc(int(Ndim,c_int), trans//c_null_char, int(M,c_int), int(N,c_int), int(num_vect,c_int), Vin, Vout, ker%C_QuantApp)
+         call proc(checked_c_int(Ndim), trans//c_null_char, checked_c_int(M), checked_c_int(N), checked_c_int(num_vect), Vin, Vout, ker%C_QuantApp)
       endif
       return
 
@@ -187,9 +187,9 @@ contains
       type is (kernelquant)
          call c_f_procpointer(ker%C_FuncBMatVec, proc)
          if (trans == 'N') then  ! note that C_HMatVec takes Nin Nout, instead of takes M,N, so if statement is needed here
-            call proc(trans//c_null_char, int(N,c_int), int(M,c_int), int(num_vect,c_int), Vin, Vout, ker%C_QuantApp, a, b)
+            call proc(trans//c_null_char, checked_c_int(N), checked_c_int(M), checked_c_int(num_vect), Vin, Vout, ker%C_QuantApp, a, b)
          else
-            call proc(trans//c_null_char, int(M,c_int), int(N,c_int), int(num_vect,c_int), Vin, Vout, ker%C_QuantApp, a, b)
+            call proc(trans//c_null_char, checked_c_int(M), checked_c_int(N), checked_c_int(num_vect), Vin, Vout, ker%C_QuantApp, a, b)
          endif
       end select
    end subroutine Bmatvec_user_C
@@ -221,7 +221,7 @@ contains
    type(proctree), pointer :: ptree
 
    call c_f_pointer(ptree_Cptr, ptree)
-   fcomm = ptree%Comm
+   fcomm = checked_c_int(ptree%Comm)
    end subroutine C_BPACK_Get_Comm
 
 !>**** C interface of initializing statistics
@@ -1698,7 +1698,7 @@ contains
       endif
       if (ptree%MyID == Main_ID .and. option%verbosity >= 0) write (*, *) 'OMP_NUM_THREADS=', threads_num
 #ifdef HAVE_OPENMP
-      call OMP_set_num_threads(threads_num)
+      call OMP_set_num_threads(checked_c_int(threads_num))
 #endif
 
       !>**** create a random seed
@@ -1754,7 +1754,7 @@ contains
             if (msh%pretree(ii) == 0) msh%pretree(ii) = 1
          enddo
          ! write(*,*)'after adjustment:',msh%pretree
-         tree(1:2**Maxlevel) = msh%pretree(1:2**Maxlevel)
+         tree(1:2**Maxlevel) = checked_c_int(msh%pretree(1:2**Maxlevel))
       else
          Maxlevel = 0
          allocate (msh%pretree(2**Maxlevel))
@@ -1805,10 +1805,10 @@ contains
       endif
 
       !>**** return the permutation vector
-      N_loc = msh%idxe - msh%idxs + 1
+      N_loc = checked_c_int(msh%idxe - msh%idxs + 1)
       ! if (ptree%MyID == Main_ID) then
          do edge = 1, N
-            Permutation(edge) = msh%new2old(edge)
+            Permutation(edge) = checked_c_int(msh%new2old(edge))
          enddo
          call LogMemory(stats, SIZEOF(Permutation)/1024.0d3) ! this assumes that the user will deallocate Permutation at a much later time
       ! endif
@@ -1817,9 +1817,9 @@ contains
       !>**** return the clustering tree
       if(nlevel==-1)then
          do group = 2**bmat%Maxlevel, 2**(bmat%Maxlevel + 1) - 1
-            tree(group-2**bmat%Maxlevel+1) = msh%basis_group(group)%tail - msh%basis_group(group)%head + 1
+            tree(group-2**bmat%Maxlevel+1) = checked_c_int(msh%basis_group(group)%tail - msh%basis_group(group)%head + 1)
          enddo
-         nlevel = bmat%Maxlevel
+         nlevel = checked_c_int(bmat%Maxlevel)
          call LogMemory(stats, 2**bmat%Maxlevel*8/1024.0d3) ! this assumes that the user will deallocate tree at a much later time
       endif
 
@@ -1963,7 +1963,7 @@ contains
       endif
       if (ptree%MyID == Main_ID .and. option%verbosity >= 0) write (*, *) 'OMP_NUM_THREADS=', threads_num
 #ifdef HAVE_OPENMP
-      call OMP_set_num_threads(threads_num)
+      call OMP_set_num_threads(checked_c_int(threads_num))
 #endif
 
       !>**** create a random seed
@@ -2023,10 +2023,10 @@ contains
       !>**** return the permutation vector
       Permutation=-1
       do dim_i=1,Ndim
-         N_loc(dim_i) = msh(dim_i)%idxe - msh(dim_i)%idxs + 1
+         N_loc(dim_i) = checked_c_int(msh(dim_i)%idxe - msh(dim_i)%idxs + 1)
          ! if (ptree%MyID == Main_ID) then
             do edge = 1, Ns(dim_i)
-               Permutation(edge+(dim_i-1)*Nmax) = msh(dim_i)%new2old(edge)
+               Permutation(edge+(dim_i-1)*Nmax) = checked_c_int(msh(dim_i)%new2old(edge))
             enddo
          ! endif
       enddo
@@ -2054,7 +2054,7 @@ contains
       type(mesh), pointer::msh
 
       call c_f_pointer(msh_Cptr, msh)
-      oldidx = msh%new2old(msh%idxs + newidx_loc - 1)
+      oldidx = checked_c_int(msh%new2old(msh%idxs + newidx_loc - 1))
 
    end subroutine C_BPACK_New2Old
 
@@ -2071,7 +2071,7 @@ contains
       type(mesh), pointer::msh
 
       call c_f_pointer(msh_Cptr, msh)
-      newidx = msh%old2new(oldidx)
+      newidx = checked_c_int(msh%old2new(oldidx))
 
    end subroutine C_BPACK_Old2New
 
@@ -2086,9 +2086,9 @@ contains
       type(mesh), pointer::msh
 
       call c_f_pointer(msh_Cptr, msh)
-      idxs=msh%idxs
-      Nlocal = msh%idxe - msh%idxs + 1
-      Nglobal = msh%Nunk
+      idxs=checked_c_int(msh%idxs)
+      Nlocal = checked_c_int(msh%idxe - msh%idxs + 1)
+      Nglobal = checked_c_int(msh%Nunk)
    end subroutine C_BPACK_LocalIndices
 
 
@@ -2109,7 +2109,7 @@ contains
 
       call c_f_pointer(msh_Cptr, msh, [Ndim])
       do dim_i=1,Ndim
-         oldidx(dim_i) = msh(dim_i)%new2old(msh(dim_i)%idxs + newidx_loc(dim_i) - 1)
+         oldidx(dim_i) = checked_c_int(msh(dim_i)%new2old(msh(dim_i)%idxs + newidx_loc(dim_i) - 1))
       enddo
 
    end subroutine C_BPACK_MD_New2Old
@@ -2126,7 +2126,7 @@ contains
 
       call c_f_pointer(msh_Cptr, msh, [Ndim])
       do dim_i=1,Ndim
-         oldidx(dim_i) = msh(dim_i)%new2old(newidx_glo(dim_i))
+         oldidx(dim_i) = checked_c_int(msh(dim_i)%new2old(newidx_glo(dim_i)))
       enddo
 
    end subroutine C_BPACK_MD_Global_New2Old
@@ -2148,7 +2148,7 @@ contains
 
       call c_f_pointer(msh_Cptr, msh, [Ndim])
       do dim_i=1,Ndim
-         newidx(dim_i) = msh(dim_i)%old2new(oldidx(dim_i))
+         newidx(dim_i) = checked_c_int(msh(dim_i)%old2new(oldidx(dim_i)))
       enddo
    end subroutine C_BPACK_MD_Old2New
 
@@ -2167,9 +2167,9 @@ contains
 
       call c_f_pointer(msh_Cptr, msh, [Ndim])
       do dim_i=1,Ndim
-         idxs(dim_i)=msh(dim_i)%idxs
-         Nlocal(dim_i) = msh(dim_i)%idxe - msh(dim_i)%idxs + 1
-         Nglobal(dim_i) = msh(dim_i)%Nunk
+         idxs(dim_i)=checked_c_int(msh(dim_i)%idxs)
+         Nlocal(dim_i) = checked_c_int(msh(dim_i)%idxe - msh(dim_i)%idxs + 1)
+         Nglobal(dim_i) = checked_c_int(msh(dim_i)%Nunk)
       enddo
 
    end subroutine C_BPACK_MD_LocalIndices
@@ -2190,7 +2190,7 @@ contains
       integer(c_int) :: single_index_in, multi_index(Ndim)
       integer :: multi_index_core(Ndim)
       call SingleIndexToMultiIndex(int(Ndim,kind(0)),int(dims,kind(0)), int(single_index_in,kind(0)), multi_index_core)
-      multi_index = int(multi_index_core,c_int)
+      multi_index = checked_c_int(multi_index_core)
    end subroutine C_SingleIndexToMultiIndex
 
 
@@ -2207,7 +2207,7 @@ contains
       integer(c_int) :: single_index_in, multi_index(Ndim)
       integer :: single_index_core
       call MultiIndexToSingleIndex(int(Ndim,kind(0)),int(dims,kind(0)), single_index_core, int(multi_index,kind(0)))
-      single_index_in = int(single_index_core,c_int)
+      single_index_in = checked_c_int(single_index_core)
    end subroutine C_MultiIndexToSingleIndex
 
 
@@ -2224,7 +2224,7 @@ contains
       type(mesh), pointer::msh,mshr
 
       call c_f_pointer(mshr_Cptr, mshr)
-      oldidx = mshr%new2old(mshr%idxs + newidx_loc - 1)
+      oldidx = checked_c_int(mshr%new2old(mshr%idxs + newidx_loc - 1))
    end subroutine C_BF_New2Old_Row
 
 !>**** C interface of converting from new,local index to old, global index, the indexs start from 1
@@ -2239,7 +2239,7 @@ contains
       type(mesh), pointer::msh,mshc
 
       call c_f_pointer(mshc_Cptr, mshc)
-      oldidx = mshc%new2old(mshc%idxs + newidx_loc - 1)
+      oldidx = checked_c_int(mshc%new2old(mshc%idxs + newidx_loc - 1))
    end subroutine C_BF_New2Old_Col
 
 !>**** C interface of matrix construction via entry evaluation and using it for gram distance
@@ -2330,7 +2330,7 @@ contains
       endif
       if (ptree%MyID == Main_ID .and. option%verbosity >= 0) write (*, *) 'OMP_NUM_THREADS=', threads_num
 #ifdef HAVE_OPENMP
-      call OMP_set_num_threads(threads_num)
+      call OMP_set_num_threads(checked_c_int(threads_num))
 #endif
 
       !>**** create a random seed
@@ -2382,7 +2382,7 @@ contains
          if (msh%pretree(ii) == 0) msh%pretree(ii) = 1
       enddo
       ! write(*,*)'after adjustment:',msh%pretree
-      tree(1:2**Maxlevel) = msh%pretree(1:2**Maxlevel)
+      tree(1:2**Maxlevel) = checked_c_int(msh%pretree(1:2**Maxlevel))
 
       !>**** the geometry points are provided by user
       if (option%nogeo == 0 .or. option%nogeo == 4) then
@@ -2424,10 +2424,10 @@ contains
       endif
 
       !>**** return the permutation vector
-      N_loc = msh%idxe - msh%idxs + 1
+      N_loc = checked_c_int(msh%idxe - msh%idxs + 1)
       if (ptree%MyID == Main_ID) then
          do edge = 1, N
-            Permutation(edge) = msh%new2old(edge)
+            Permutation(edge) = checked_c_int(msh%new2old(edge))
          enddo
       endif
 
@@ -2559,8 +2559,8 @@ contains
       endif
       call init_random_seed()
       call BP_Construct_Init_from_mshrc(int(M,kind(0)), int(N,kind(0)), M_loc_core, N_loc_core, mshr, mshc, handle%BP, option, stats, msh, ker, ptree, nns_m, nns_n)
-      M_loc = int(M_loc_core,c_int)
-      N_loc = int(N_loc_core,c_int)
+      M_loc = checked_c_int(M_loc_core)
+      N_loc = checked_c_int(N_loc_core)
       bp_Cptr = c_loc(handle)
       msh_Cptr = c_loc(msh)
       ker_Cptr = c_loc(ker)
@@ -2769,8 +2769,8 @@ contains
 
       call ComputeParallelIndices(blocks, blocks%pgno, ptree, msh)
 
-      M_loc = blocks%M_loc
-      N_loc = blocks%N_loc
+      M_loc = checked_c_int(blocks%M_loc)
+      N_loc = checked_c_int(blocks%N_loc)
 
       !>**** return the C address of BPACK structures to C caller
       bf_Cptr = c_loc(blocks)
@@ -3226,7 +3226,7 @@ contains
       call GetLocalBlockRange_MD(ptree, blocks%pgno, levelm, level_butterfly, int(Ndim,kind(0)), 1, idx_r, inc_r, nr, idx_c, inc_c, nc, 'R')
       call assert(product(inc_c)==1,'inc_c has to be 1 for matrixblock_MD type')
 
-      nc_m = nc
+      nc_m = checked_c_int(nc)
       idx_c_m = idx_c
       group_n = blocks%col_group
       group_n = group_n*2**(level_butterfly-levelm) + idx_c_m - 1
@@ -3236,10 +3236,10 @@ contains
          do index_j=1,nc_m(dim_i)
             cnt = cnt + 1
             group_n1 = group_n(dim_i) + index_j -1
-            head_array(cnt) =  msh(dim_i)%basis_group(group_n1)%head - msh(dim_i)%idxs + 1
+            head_array(cnt) = checked_c_int(msh(dim_i)%basis_group(group_n1)%head - msh(dim_i)%idxs + 1)
          enddo
          cnt = cnt + 1
-         head_array(cnt) = msh(dim_i)%basis_group(group_n1)%tail+1 - msh(dim_i)%idxs + 1
+         head_array(cnt) = checked_c_int(msh(dim_i)%basis_group(group_n1)%tail+1 - msh(dim_i)%idxs + 1)
          ! write(*,*)ptree%MyID, head_array(cnt-nc_m(dim_i):cnt)
       enddo
 
@@ -3288,7 +3288,7 @@ contains
       call build_balanced_ranges(int(N,kind(0)), maxlevel_range, group_head, group_tail)
 
       call compute_simple_mesh_range(int(N,kind(0)), maxlevel_range, group_head, group_tail, mesh_range_core)
-      mesh_range = int(mesh_range_core,c_int)
+      mesh_range = checked_c_int(mesh_range_core)
 
       nblock_capacity = nblock
       diag_perm_capacity = diag_perm_size
@@ -3308,20 +3308,20 @@ contains
                tail_g = group_tail(group_n(1)) + 1
                lhead_g = max(head_g, mesh_range_core(1))
                ltail_g = min(tail_g, mesh_range_core(2))
-               block_info(pos + 1) = head_g
-               block_info(pos + 2) = tail_g
-               block_info(pos + 3) = lhead_g
-               block_info(pos + 4) = ltail_g
-               block_info(pos + 5) = ptree%pgrp(pgno)%head
-               block_info(pos + 6) = ptree%pgrp(pgno)%nproc
-               block_info(pos + 7) = pgno
-               block_info(pos + 8) = bb
+               block_info(pos + 1) = checked_c_int(head_g)
+               block_info(pos + 2) = checked_c_int(tail_g)
+               block_info(pos + 3) = checked_c_int(lhead_g)
+               block_info(pos + 4) = checked_c_int(ltail_g)
+               block_info(pos + 5) = checked_c_int(ptree%pgrp(pgno)%head)
+               block_info(pos + 6) = checked_c_int(ptree%pgrp(pgno)%nproc)
+               block_info(pos + 7) = checked_c_int(pgno)
+               block_info(pos + 8) = checked_c_int(bb)
             endif
          endif
       enddo
 
-      nblock = cnt
-      diag_perm_size = perm_needed
+      nblock = checked_c_int(cnt)
+      diag_perm_size = checked_c_int(perm_needed)
       if (nblock_capacity < cnt .or. diag_perm_capacity < perm_needed .or. route_capacity < nlocal_active) then
          deallocate(group_head)
          deallocate(group_tail)
@@ -3504,7 +3504,7 @@ contains
          allocate(diag_perm_core(diag_perm_size))
          call MPI_Scatterv(perm_tensor_send, perm_counts, perm_displs, MPI_INTEGER, diag_perm_core, int(diag_perm_size,kind(0)), &
             MPI_INTEGER, Main_ID, ptree%Comm, ierr)
-         diag_tensor_perm(1:diag_perm_size) = int(diag_perm_core,c_int)
+         diag_tensor_perm(1:diag_perm_size) = checked_c_int(diag_perm_core)
          deallocate(perm_tensor_send)
          deallocate(perm_displs)
          deallocate(perm_counts)
@@ -3585,13 +3585,13 @@ contains
 
          call MPI_Scatterv(route_root_all, recv_counts, recv_displs, MPI_INTEGER, route_core, int(nlocal_active,kind(0)), &
             MPI_INTEGER, Main_ID, ptree%Comm, ierr)
-         local_diag_root(1:nlocal_active) = int(route_core,c_int)
+         local_diag_root(1:nlocal_active) = checked_c_int(route_core)
          call MPI_Scatterv(route_gid_all, recv_counts, recv_displs, MPI_INTEGER, route_core, int(nlocal_active,kind(0)), &
             MPI_INTEGER, Main_ID, ptree%Comm, ierr)
-         local_diag_gid(1:nlocal_active) = int(route_core,c_int)
+         local_diag_gid(1:nlocal_active) = checked_c_int(route_core)
          call MPI_Scatterv(route_pos_all, recv_counts, recv_displs, MPI_INTEGER, route_core, int(nlocal_active,kind(0)), &
             MPI_INTEGER, Main_ID, ptree%Comm, ierr)
-         local_diag_pos(1:nlocal_active) = int(route_core,c_int)
+         local_diag_pos(1:nlocal_active) = checked_c_int(route_core)
 
          deallocate(route_pos_all)
          deallocate(route_gid_all)
@@ -3659,8 +3659,8 @@ contains
       endif
       call assert(diag_level >= 0 .and. diag_level <= maxlevel_mat, 'invalid level in C_BPACK_Get_Anylevel_Blocks')
 
-      mesh_range(1) = msh%idxs
-      mesh_range(2) = msh%idxe + 1
+      mesh_range(1) = checked_c_int(msh%idxs)
+      mesh_range(2) = checked_c_int(msh%idxe + 1)
 
       nblock_capacity = nblock
       info_stride = 8
@@ -3679,19 +3679,19 @@ contains
                lhead_g = max(head_g, msh%idxs)
                ltail_g = min(tail_g, msh%idxe + 1)
 
-               block_info(pos + 1) = head_g
-               block_info(pos + 2) = tail_g
-               block_info(pos + 3) = lhead_g
-               block_info(pos + 4) = ltail_g
-               block_info(pos + 5) = ptree%pgrp(pgno)%head
-               block_info(pos + 6) = ptree%pgrp(pgno)%nproc
-               block_info(pos + 7) = pgno
-               block_info(pos + 8) = bb
+               block_info(pos + 1) = checked_c_int(head_g)
+               block_info(pos + 2) = checked_c_int(tail_g)
+               block_info(pos + 3) = checked_c_int(lhead_g)
+               block_info(pos + 4) = checked_c_int(ltail_g)
+               block_info(pos + 5) = checked_c_int(ptree%pgrp(pgno)%head)
+               block_info(pos + 6) = checked_c_int(ptree%pgrp(pgno)%nproc)
+               block_info(pos + 7) = checked_c_int(pgno)
+               block_info(pos + 8) = checked_c_int(bb)
             endif
          endif
       enddo
 
-      nblock = cnt
+      nblock = checked_c_int(cnt)
 
    end subroutine C_BPACK_Get_Anylevel_Blocks
 
@@ -3751,8 +3751,8 @@ contains
       call assert(diag_level >= 0 .and. diag_level <= maxlevel_mat, 'invalid level in C_BPACK_MD_Get_Anylevel_Blocks')
 
       do dim_i=1,Ndim
-         mesh_range(dim_i) = msh(dim_i)%idxs
-         mesh_range(Ndim+dim_i) = msh(dim_i)%idxe + 1
+         mesh_range(dim_i) = checked_c_int(msh(dim_i)%idxs)
+         mesh_range(Ndim+dim_i) = checked_c_int(msh(dim_i)%idxe + 1)
       enddo
 
       nblock_capacity = nblock
@@ -3774,20 +3774,20 @@ contains
                   lhead_g(dim_i) = max(head_g(dim_i), msh(dim_i)%idxs)
                   ltail_g(dim_i) = min(tail_g(dim_i), msh(dim_i)%idxe + 1)
 
-                  block_info(pos + dim_i) = head_g(dim_i)
-                  block_info(pos + Ndim + dim_i) = tail_g(dim_i)
-                  block_info(pos + 2*Ndim + dim_i) = lhead_g(dim_i)
-                  block_info(pos + 3*Ndim + dim_i) = ltail_g(dim_i)
+                  block_info(pos + dim_i) = checked_c_int(head_g(dim_i))
+                  block_info(pos + Ndim + dim_i) = checked_c_int(tail_g(dim_i))
+                  block_info(pos + 2*Ndim + dim_i) = checked_c_int(lhead_g(dim_i))
+                  block_info(pos + 3*Ndim + dim_i) = checked_c_int(ltail_g(dim_i))
                enddo
-               block_info(pos + 4*Ndim + 1) = ptree%pgrp(pgno)%head
-               block_info(pos + 4*Ndim + 2) = ptree%pgrp(pgno)%nproc
-               block_info(pos + 4*Ndim + 3) = pgno
-               block_info(pos + 4*Ndim + 4) = bb
+               block_info(pos + 4*Ndim + 1) = checked_c_int(ptree%pgrp(pgno)%head)
+               block_info(pos + 4*Ndim + 2) = checked_c_int(ptree%pgrp(pgno)%nproc)
+               block_info(pos + 4*Ndim + 3) = checked_c_int(pgno)
+               block_info(pos + 4*Ndim + 4) = checked_c_int(bb)
             endif
          endif
       enddo
 
-      nblock = cnt
+      nblock = checked_c_int(cnt)
 
       ! if(ptree%MyID == Main_ID .and. option%verbosity >= 0) then
       !    if(nblock_capacity >= nblock) then
@@ -4848,9 +4848,9 @@ contains
       integer :: major_core, minor_core, bugfix_core
 
       call BPACK_GetVersionNumber(major_core, minor_core, bugfix_core)
-      v_major = int(major_core,c_int)
-      v_minor = int(minor_core,c_int)
-      v_bugfix = int(bugfix_core,c_int)
+      v_major = checked_c_int(major_core)
+      v_minor = checked_c_int(minor_core)
+      v_bugfix = checked_c_int(bugfix_core)
 
    end subroutine C_BPACK_GetVersionNumber
 
@@ -4875,7 +4875,7 @@ contains
          l_or_r = 0
       endif
 
-      idx_child = 2**level_c + nth_c - 1
+      idx_child = checked_c_int(2**level_c + nth_c - 1)
       if (l_or_r == 0) idx_child = -idx_child
 
    end subroutine C_BPACK_TreeIndex_Merged2Child

@@ -1,0 +1,1334 @@
+#include "sBPACK_wrapper.h"
+#ifdef HAVE_MPI
+#include "butterfly_integration.hpp"
+#include <mpi.h>
+#endif
+#include <cassert>
+#include <cmath>
+#include <complex>
+#include <cstdint>
+#include <iostream>
+#include <vector>
+#include <memory>
+#include <cstring>
+#include <getopt.h>
+#include <iomanip>
+#include <stdlib.h>
+#include <type_traits>
+
+using namespace std;
+
+
+static inline int product(int arr[], int n) {
+  int out = 1;  // Initialize product to 1
+  for (int i = 0; i < n; i++) {
+      out *= arr[i];
+  }
+  return out;
+}
+
+#ifndef HAVE_MPI
+[[noreturn]] static void format7_requires_mpi(const char* caller) {
+  throw std::runtime_error(
+    std::string(caller) +
+    ": format=7 requires a build with MPI support (enable_mpi=ON)");
+}
+#endif
+
+#ifdef HAVE_MPI
+static void require_symmetric_h2_option(
+    F2Cptr* option,
+    MPI_Comm comm,
+    const char* caller) {
+  double sym_d = 0.0;
+  s_c_bpack_getoption(option, "sym", &sym_d);
+  const int sym = static_cast<int>(std::llround(sym_d));
+  if (sym == 1) return;
+
+  const std::string message = std::string(caller) +
+    ": ButterflyPACK H2 (format=7) currently requires option%sym=1 "
+    "for a transpose-symmetric matrix; received option%sym=" +
+    std::to_string(sym);
+  int rank = 0;
+  MPI_Comm_rank(comm, &rank);
+  if (rank == 0) std::cerr << message << std::endl;
+  MPI_Abort(comm, 1);
+  throw std::runtime_error(message);
+}
+
+template<typename CoordType, typename DataType>
+int sync_h2_verbosity(
+    F2Cptr* option,
+    butterfly::H2<CoordType, DataType>* solver) {
+  double verbosity_d = 0.0;
+  s_c_bpack_getoption(option, "verbosity", &verbosity_d);
+  solver->options.verbosity = static_cast<int>(std::llround(verbosity_d));
+  return solver->options.verbosity;
+}
+
+template<typename CoordType, typename DataType>
+void compress_h2_and_update_stats(
+    butterfly::H2<CoordType, DataType>* solver,
+    F2Cptr* stats) {
+  if (solver->build_state == butterfly::H2BuildState::H2_COMPRESSED) {
+    return;
+  }
+
+  double compression_time = 0.0;
+  double entryeval_time = 0.0;
+  butterfly::butterfly_compression_parallel(
+    solver, &compression_time, &entryeval_time);
+
+  s_c_bpack_setstats(stats, "Time_Fill", &compression_time);
+  s_c_bpack_setstats(stats, "Time_Entry", &entryeval_time);
+
+  double rank_max = static_cast<double>(solver->last_factor_rankmax);
+  s_c_bpack_setstats(stats, "Rank_max_Constr", &rank_max);
+
+  double compression_memory_mb =
+    solver->factorization_memory / (1024.0 * 1024.0);
+  s_c_bpack_setstats(stats, "Mem_Comp_for", &compression_memory_mb);
+
+  if (solver->options.verbosity >= 0) {
+    (void)butterfly::h2_compression_quick_verification(
+      solver->tree.get(), &solver->kernel);
+  }
+}
+#endif
+
+// The command line parser for the example related parameters
+void s_c_bpack_set_option_from_command_line(int argc, const char* const* cargv,F2Cptr option0) {
+
+	struct OptionHelp {
+		const char* name;
+		const char* description;
+	};
+
+	static const OptionHelp option_help_table[] = {
+		{"nmin_leaf",       "leafsize in the hierarchical partitioning"},
+		{"tol_comp",        "relative tolerance for matrix construction"},
+		{"tol_rand",        "relative tolerance for matrix inversion"},
+		{"tol_Rdetect",     "relative tolerance for rank detection during matrix inversion"},
+		{"tol_itersol",     "convergence tolerance for the iterative solver (format-7 precon=2 uses H2 BiCGSTAB)"},
+		{"n_iter",          "maximum iteration count for the iterative solver"},
+		{"IR_HODLR", "maximum HODLR direct-solve refinement steps; 0 disables refinement"},
+		{"level_check",     "the level in the hierarchical partitioning where the randomized construction algorithm is tested, set to 10000 by default (no checking)"},
+		{"precon",          "the use mode of butterflypack: 1: as a direct solver 2: as an iterative solver (compress the matrix and use it without a preconditioner), 3: as a preconditioned iterative solver (compress and invert the matrix, using the approximate inverse as a preconditioner)"},
+		{"xyzsort",         "the hierarchical partitioning algorithm: 0: no permutation 1: permutation based on KD-tree 2: permutation based on cobble-like partitioning"},
+		{"lrlevel",         "the level in the hierarchical partitioning (top-down numbered) above which butterfly is used and below which low-rank is used"},
+		{"sym",             "matrix symmetry flag; sym=1 is required by format-7 H2 and selects symmetric HODLR when format=1"},
+		{"h2_use_sketch",   "format-7 H2 ID mode: 1 uses sparse sketching, 0 applies RRQR to the full 2-hop workspace"},
+		{"h2_id_radius",    "format-7 H2 mandatory ID neighborhood radius; 2 keeps the standard workspace"},
+		{"h2_id_proxy",     "format-7 H2 proxy mode: 0 none, 1 geometric surface, 2 adaptive row sampling"},
+		{"h2_id_proxy_points", "geometric surface samples when h2_id_proxy=1"},
+		{"errfillfull",     "errfillfull: a slow (n^2), thorough error checking is performed after the compression of each block"},
+		{"baca_batch",      "block size in batched ACA when reclr_leaf=4 or 5; adaptive H2 rows per spatial node when h2_id_proxy=2"},
+		{"reclr_leaf",      "low-rank compression algorithms 1:SVD 2:RRQR 3:ACA 4:BACA 5:BACA_improved 6:Pseudo-skeleton 7: ACA with naive parallelization"},
+		{"nogeo",           "whether there is geometry information provided 1: is no geometry (xyzsort can not be 1 or 2), 0: there is geometry"},
+		{"less_adapt",      "1: improved randomized butterfly construction, default to 1"},
+		{"errsol",          "1: generating an artificial true solution vector, compute the RHS with compressed matrix, solve the system, and compare with true solution vector"},
+		{"lr_blk_num",      "sqrt of #of subblocks in H-BACA, default to 1"},
+		{"rank0",           "initial rank guess in the randomized butterfly algorithm, default to 32"},
+		{"rankrate",        "increasing ratio of the rank guess in each iteration, default to 2"},
+		{"itermax",         "maximum number of iterations in the randomized butterfly algorithm, default to 10"},
+		{"powiter",         "order of power iteration in the randomized low-rank construction"},
+		{"ilu",             "whether symmetric gauss-seidel is used when format=2"},
+		{"nbundle",         "multiply nbundle sets of vectors together in randomized butterfly algorithm for better flop performance, default to 1"},
+		{"near_para",       "admissibility parameter when format=2/3/4/5, strong admissibility typically requires near_para>2.0"},
+		{"format",          "the hierarchical matrix format: 1: HODLR/HODBF 2: H matrix 3: HSSBF/SHNBF 4: HSSBF_MD/SHNBF_MD 5: block-LR/BF"},
+		{"verbosity",       "-1 suppresses output, 0 prints summaries, and 1 or greater prints details"},
+		{"rmax",            "preestimate of the maximum rank for allocating buffers, default to 1000"},
+		{"sample_para",     "oversampling factor in the nlogn entry-evaluation-based butterfly algorithm, default to 2"},
+		{"pat_comp",        "pattern of entry-evaluation-based butterfly compression: 1 from right to left, 2 from left to right, 3 from outer to inner"},
+		{"knn",             "nearest neighbouring points used in improved BACA and entry-evaluation-based butterfly compression"},
+		{"knn_near_para",   "admissibility parameter for guiding the nearest neighbouring points search"},
+		{"forwardN15flag",  "whether to use N15 or NlogN algorithm for entry-evaluation-based matrix butterfly compression"},
+		{"sample_para_outer","oversampling factor for the outtermost factor matrices in the nlogn entry-evaluation-based butterfly algorithm, default to 2"},
+		{"elem_extract",    "0: evaluating entries one by one 1: evaluating entries block by block (may requires communication inside the callback function) 2: evaluating entries block by block (no communication allowed inside the callback function)"},
+		{"fastsample_tensor","0: uniformly sample each dimension. 1: uniformly sample the rows of the unfolded matrices on top of 0. 2: use translation invariance"},
+		{"trans_invariant", "1: reuse HTENSOR blocks for translational-invariant tensor kernels on uniform Cartesian grids"},
+		{"htensor_mvp_level_batch", "number of HTENSOR levels grouped per MVP call; 1 keeps level-by-level memory"},
+		{"use_fft_circulant","whether to use FFT-based circulant representative blocks"},
+		{"fftw_plan_mode",  "FFTW apply-plan mode: 0 estimate, 1 measure, 2 patient, 3 exhaustive"},
+		{"use_zfp",         "whether to use zfp compression"},
+		{"use_qtt",         "whether to use qtt compression"},
+		{"hextralevel",         "HMAT: extra levels for top partitioning of the H matrix based on MPI counts. BLR: Maxlevel-hextralevel is the level for defining B-LR/B-BF blocks"},
+		{"iter_solver",         "The choice of iterative solvers. 1: TFQMR, 2: GMRES, 3: IterativeRefinement, or 4: CG"},
+		{"help",            "print this help message"}
+	};
+
+	double opt_d;
+	int opt_i;
+	std::vector<std::unique_ptr<char[]>> argv_data(argc);
+	std::vector<char*> argv(argc);
+	for (int i=0; i<argc; i++) {
+		argv_data[i].reset(new char[strlen(cargv[i])+1]);
+		argv[i] = argv_data[i].get();
+		strcpy(argv[i], cargv[i]);
+	}
+	option long_options[] =
+		{
+		{"help",             no_argument,       0, 1000},
+		{"nmin_leaf",                     required_argument, 0, 1},
+		{"tol_comp",                   required_argument, 0, 2},
+		{"tol_rand",                   required_argument, 0, 3},
+		{"tol_Rdetect",             required_argument, 0, 4},
+		{"tol_itersol",             required_argument, 0, 5},
+		{"n_iter",          required_argument, 0, 6},
+		{"level_check",         required_argument, 0, 7},
+		{"precon",                  required_argument, 0, 8},
+		{"xyzsort",                  required_argument, 0, 9},
+		{"lrlevel",     required_argument, 0, 10},
+		{"errfillfull",       required_argument, 0, 11},
+		{"baca_batch",      required_argument, 0, 12},
+		{"reclr_leaf",      required_argument, 0, 13},
+		{"nogeo",     required_argument, 0, 14},
+		{"less_adapt",            required_argument, 0, 15},
+		{"errsol",           required_argument, 0, 16},
+		{"lr_blk_num",                  required_argument, 0, 17},
+		{"rank0",  required_argument, 0, 18},
+		{"rankrate", required_argument, 0, 19},
+		{"itermax",               required_argument, 0, 20},
+		{"powiter",  required_argument, 0, 21},
+		{"ilu", required_argument, 0, 22},
+		{"nbundle",     required_argument, 0, 23},
+		{"near_para",  required_argument, 0, 24},
+		{"format",  required_argument, 0, 25},
+		{"verbosity", required_argument, 0, 26},
+		{"rmax", required_argument, 0, 27},
+		{"sample_para", required_argument, 0, 28},
+		{"pat_comp",    required_argument, 0, 29},
+		{"knn",         required_argument, 0, 30},
+		{"knn_near_para",         required_argument, 0, 31},
+		{"forwardN15flag",         required_argument, 0, 32},
+		{"sample_para_outer",         required_argument, 0, 33},
+		{"elem_extract",         required_argument, 0, 34},
+		{"fastsample_tensor",         required_argument, 0, 35},
+		{"use_zfp",         required_argument, 0, 36},
+		{"use_qtt",         required_argument, 0, 37},
+		{"hextralevel",         required_argument, 0, 38},
+		{"iter_solver",         required_argument, 0, 39},
+		{"trans_invariant",         required_argument, 0, 40},
+			{"htensor_mvp_level_batch", required_argument, 0, 41},
+		{"use_fft_circulant",         required_argument, 0, 42},
+		{"fftw_plan_mode",         required_argument, 0, 43},
+		{"fft_plan_mode",         required_argument, 0, 44},
+		{"sym",         required_argument, 0, 45},
+		{"IR_HODLR", required_argument, 0, 46},
+		{"h2_use_sketch", required_argument, 0, 47},
+		{"H2_use_sketch", required_argument, 0, 47},
+		{"h2_id_radius", required_argument, 0, 48},
+		{"H2_ID_radius", required_argument, 0, 48},
+		{"h2_id_proxy", required_argument, 0, 49},
+		{"H2_ID_proxy", required_argument, 0, 49},
+		{"h2_id_proxy_points", required_argument, 0, 50},
+		{"H2_ID_proxy_points", required_argument, 0, 50},
+		{NULL, 0, NULL, 0}
+		};
+	int c, option_index = 0;
+	// bool unrecognized_options = false;
+	opterr = optind = 0;
+	while ((c = getopt_long_only
+			(argc, argv.data(), "",
+			long_options, &option_index)) != -1) {
+		switch (c) {
+		case 1000: {
+		std::cout << "Available ButterflyPACK Command-Line Options:\n";
+		for (const auto& opt : option_help_table) {
+			std::cout << "  --" << std::setw(20) << std::left << opt.name
+						<< " : " << opt.description << "\n";
+		}
+		} break;
+		case 1: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "Nmin_leaf", opt_i);
+		} break;
+		case 2: {
+		std::istringstream iss(optarg);
+		iss >> opt_d;
+		s_c_bpack_set_D_option(&option0, "tol_comp", opt_d);
+		s_c_bpack_set_D_option(&option0, "tol_rand", opt_d);
+		s_c_bpack_set_D_option(&option0, "tol_Rdetect", opt_d*0.1);
+		} break;
+		case 3: {
+		std::istringstream iss(optarg);
+		iss >> opt_d;
+		s_c_bpack_set_D_option(&option0, "tol_rand", opt_d);
+		} break;
+		case 4: {
+		std::istringstream iss(optarg);
+		iss >> opt_d;
+		s_c_bpack_set_D_option(&option0, "tol_Rdetect", opt_d);
+		} break;
+		case 5: {
+		std::istringstream iss(optarg);
+		iss >> opt_d;
+		s_c_bpack_set_D_option(&option0, "tol_itersol", opt_d);
+		} break;
+		case 6: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "n_iter", opt_i);
+		} break;
+		case 7: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "level_check", opt_i);
+		} break;
+		case 8: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "precon", opt_i);
+		} break;
+		case 9: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "xyzsort", opt_i);
+		} break;
+		case 10: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "LRlevel", opt_i);
+		} break;
+		case 11: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "ErrFillFull", opt_i);
+		} break;
+		case 12: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "BACA_Batch", opt_i);
+		} break;
+		case 13: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "RecLR_leaf", opt_i);
+		} break;
+		case 14: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "nogeo", opt_i);
+		} break;
+		case 15: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "less_adapt", opt_i);
+		} break;
+		case 16: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "ErrSol", opt_i);
+		} break;
+		case 17: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "LR_BLK_NUM", opt_i);
+		} break;
+		case 18: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "rank0", opt_i);
+		} break;
+		case 19: {
+		std::istringstream iss(optarg);
+		iss >> opt_d;
+		s_c_bpack_set_D_option(&option0, "rankrate", opt_d);
+		} break;
+		case 20: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "itermax", opt_i);
+		} break;
+		case 21: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "powiter", opt_i);
+		} break;
+		case 22: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "ILU", opt_i);
+		} break;
+		case 23: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "Nbundle", opt_i);
+		} break;
+		case 24: {
+		std::istringstream iss(optarg);
+		iss >> opt_d;
+		s_c_bpack_set_D_option(&option0, "near_para", opt_d);
+		} break;
+		case 25: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "format", opt_i);
+		} break;
+		case 26: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "verbosity", opt_i);
+		} break;
+		case 27: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "rmax", opt_i);
+		} break;
+		case 28: {
+		std::istringstream iss(optarg);
+		iss >> opt_d;
+		s_c_bpack_set_D_option(&option0, "sample_para", opt_d);
+		} break;
+		case 29: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "pat_comp", opt_i);
+		} break;
+		case 30: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "knn", opt_i);
+		} break;
+		case 31: {
+		std::istringstream iss(optarg);
+		iss >> opt_d;
+		s_c_bpack_set_D_option(&option0, "knn_near_para", opt_d);
+		} break;
+		case 32: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "forwardN15flag", opt_i);
+		} break;
+		case 33: {
+		std::istringstream iss(optarg);
+		iss >> opt_d;
+		s_c_bpack_set_D_option(&option0, "sample_para_outer", opt_d);
+		} break;
+		case 34: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "elem_extract", opt_i);
+		} break;
+		case 35: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "fastsample_tensor", opt_i);
+		} break;
+		case 40: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "trans_invariant", opt_i);
+		} break;
+			case 41: {
+			std::istringstream iss(optarg);
+			iss >> opt_i;
+			s_c_bpack_set_I_option(&option0, "htensor_mvp_level_batch", opt_i);
+			} break;
+		case 42: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "use_fft_circulant", opt_i);
+		} break;
+		case 43:
+		case 44: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "fftw_plan_mode", opt_i);
+		} break;
+		case 45: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "sym", opt_i);
+		} break;
+		case 46: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "IR_HODLR", opt_i);
+		} break;
+		case 47: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "H2_use_sketch", opt_i);
+		} break;
+		case 48: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "H2_ID_radius", opt_i);
+		} break;
+		case 49: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "H2_ID_proxy", opt_i);
+		} break;
+		case 50: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "H2_ID_proxy_points", opt_i);
+		} break;
+		case 36: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "use_zfp", opt_i);
+		} break;
+		case 37: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "use_qtt", opt_i);
+		} break;
+		case 38: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "hextralevel", opt_i);
+		} break;
+		case 39: {
+		std::istringstream iss(optarg);
+		iss >> opt_i;
+		s_c_bpack_set_I_option(&option0, "iter_solver", opt_i);
+		} break;
+		default: break;
+		}
+	}
+	}
+
+
+
+
+
+void s_c_bpack_vector_global2local(F2Cptr* ptree, F2Cptr* msh, int* nvec_p, float   *b_global, float   *b)
+{
+	int idxs, m_loc, fst_row, m, m_loc1, fst_row1;
+	int nvec = *nvec_p;
+
+    int iam, size;
+    int master_rank = 0;
+
+
+#ifdef HAVE_MPI
+
+	MPI_Comm comm;
+	int fcomm;
+	s_c_bpack_get_comm(ptree, &fcomm);
+	comm = MPI_Comm_f2c((MPI_Fint)fcomm);
+
+	MPI_Comm_size(comm, &size);
+    MPI_Comm_rank(comm, &iam);
+	MPI_Bcast( &nvec, 1, MPI_INT, 0, comm);
+	s_c_bpack_localindices(msh, &idxs, &m_loc, &m);
+	fst_row = idxs-1;
+
+	{
+	float* b_global_permed=NULL;
+	float* btmp= (float*)malloc(m_loc * nvec*sizeof(float));
+	int *counts = NULL, *displs = NULL;
+
+	if (iam == 0) {
+		counts = (int *) malloc(size*sizeof(int));
+		displs = (int *) malloc(size*sizeof(int));
+		b_global_permed= (float*)malloc(m * nvec*sizeof(float));
+		for (int j = 0; j < nvec; ++j) {
+			for (int i = 0; i < m; ++i) {
+				int i_old= i+1;
+				int i_new;
+				s_c_bpack_old2new(msh,&i_old,&i_new);
+				b_global_permed[j + (i_new-1) * nvec] = b_global[j * m + i];
+			}
+		}
+	}
+	m_loc1 = m_loc*nvec;
+	fst_row1 = fst_row*nvec;
+	MPI_Gather(&m_loc1, 1, MPI_INT, counts, 1, MPI_INT, 0, comm);
+	MPI_Gather(&fst_row1, 1, MPI_INT, displs, 1, MPI_INT, 0, comm);
+	MPI_Scatterv(b_global_permed, counts, displs, MPI_FLOAT ,  btmp, m_loc * nvec, MPI_FLOAT , 0, comm);
+
+	for (int j = 0; j < nvec; ++j)
+	{
+		for (int i = 0; i < m_loc; ++i)
+		{
+			b[j * m_loc + i] = btmp[j + i * nvec];
+		}
+	}
+	if (iam == 0) {
+		free(counts);
+		free(displs);
+		free(b_global_permed);
+	}
+	free(btmp);
+	}
+#else
+	s_c_bpack_localindices(msh, &idxs, &m_loc, &m);
+	for (int j = 0; j < nvec; ++j)
+	{
+		for (int i = 0; i < m; ++i)
+		{
+			b[j * m + i] = b_global[j * m + i];
+		}
+	}
+#endif
+
+}
+
+
+
+void s_c_bpack_vector_local2global(F2Cptr* ptree, F2Cptr* msh, int* nvec_p, float   *b, float   *b_global)
+{
+	int idxs, m_loc, fst_row, m, m_loc1, fst_row1;
+	int nvec = *nvec_p;
+    int iam, size;
+    int master_rank = 0;
+
+
+#ifdef HAVE_MPI
+	MPI_Comm comm;
+	int fcomm;
+	s_c_bpack_get_comm(ptree, &fcomm);
+	comm = MPI_Comm_f2c((MPI_Fint)fcomm);
+
+	MPI_Comm_size(comm, &size);
+    MPI_Comm_rank(comm, &iam);
+	MPI_Bcast( &nvec, 1, MPI_INT, 0, comm);
+	s_c_bpack_localindices(msh, &idxs, &m_loc, &m);
+	fst_row = idxs-1;
+
+	{
+	float* b_global_permed;
+	float* btmp= (float*)malloc(m_loc * nvec*sizeof(float));
+	for (int j = 0; j < nvec; ++j)
+	{
+		for (int i = 0; i < m_loc; ++i)
+		{
+			btmp[j + i * nvec] = b[j * m_loc + i];
+		}
+	}
+	int *counts = NULL, *displs = NULL;
+	if (iam == 0) {
+		counts = (int *) malloc(size*sizeof(int));
+		displs = (int *) malloc(size*sizeof(int));
+		b_global_permed= (float*)malloc(m * nvec*sizeof(float));
+	}
+	m_loc1 = m_loc*nvec;
+	fst_row1 = fst_row*nvec;
+	MPI_Gather(&m_loc1, 1, MPI_INT, counts, 1, MPI_INT, 0, comm);
+	MPI_Gather(&fst_row1, 1, MPI_INT, displs, 1, MPI_INT, 0, comm);
+	MPI_Gatherv(btmp, m_loc * nvec, MPI_FLOAT , b_global_permed, counts, displs, MPI_FLOAT , 0, comm);
+	if (iam == 0) {
+		for (int j = 0; j < nvec; ++j) {
+			for (int i = 0; i < m; ++i) {
+				int i_old= i+1;
+				int i_new;
+				s_c_bpack_old2new(msh,&i_old,&i_new);
+				b_global[j * m + i] = b_global_permed[j + (i_new-1) * nvec];
+			}
+		}
+		free(counts);
+		free(displs);
+		free(b_global_permed);
+	}
+	free(btmp);
+	}
+#else
+
+	s_c_bpack_localindices(msh, &idxs, &m_loc, &m);
+	for (int j = 0; j < nvec; ++j)
+	{
+		for (int i = 0; i < m; ++i)
+		{
+			b_global[j * m + i] = b[j * m + i];
+		}
+	}
+
+#endif
+
+}
+
+
+void s_c_bpack_md_vector_local2global(F2Cptr* ptree, F2Cptr* msh, int* ndim_p, int* nvec_p, float   *b, float   *b_global)
+{
+
+	int nvec = *nvec_p;
+	int Ndim= *ndim_p;
+    int iam, size;
+    int master_rank = 0;
+
+
+	int *idxs = (int *) malloc(Ndim*sizeof(int));
+	int *m_loc = (int *) malloc(Ndim*sizeof(int));
+	int *m = (int *) malloc(Ndim*sizeof(int));
+
+#ifdef HAVE_MPI
+	MPI_Comm comm;
+	int fcomm;
+	s_c_bpack_get_comm(ptree, &fcomm);
+	comm = MPI_Comm_f2c((MPI_Fint)fcomm);
+
+	MPI_Comm_size(comm, &size);
+    MPI_Comm_rank(comm, &iam);
+	MPI_Bcast( &nvec, 1, MPI_INT, 0, comm);
+	s_c_bpack_md_localindices(&Ndim, msh, idxs, m_loc, m);
+	size_t m_scalar = product(m,Ndim);
+	int m_loc1 = product(m_loc,Ndim)*nvec;
+
+	int *counts = NULL, *displs = NULL, *m_locs=NULL, *idxss=NULL;
+	float *b_global_tmp = NULL;
+	if (iam == 0) {
+		counts = (int *) malloc(size*sizeof(int));
+		displs = (int *) malloc(size*sizeof(int));
+		m_locs = (int *) malloc(Ndim*size*sizeof(int));
+		idxss = (int *) malloc(Ndim*size*sizeof(int));
+		b_global_tmp= (float*)malloc(m_scalar * nvec*sizeof(float));
+	}
+
+	MPI_Gather(m_loc, Ndim, MPI_INT, m_locs, Ndim, MPI_INT, 0, comm);
+	MPI_Gather(idxs, Ndim, MPI_INT, idxss, Ndim, MPI_INT, 0, comm);
+	MPI_Gather(&m_loc1, 1, MPI_INT, counts, 1, MPI_INT, 0, comm);
+	if (iam == 0) {
+		displs[0] = 0;
+		for (int i = 1; i < size; i++) {
+			displs[i] = displs[i-1] + counts[i-1];
+		}
+	}
+	MPI_Gatherv(b, m_loc1, MPI_FLOAT , b_global, counts, displs, MPI_FLOAT , 0, comm);
+
+	if (iam == 0) {
+		//Converting from the "stacked" order (rank 0's data, then rank 1's, etc.) to the permuted global ordering
+		for (int s=0;s<size;s++){
+			int m_loc_1vec = product(&(m_locs[s*Ndim]),Ndim);
+			for (int i=0; i<m_loc_1vec; i++){
+				int i_new_scalar = i+1;
+				int i_new_md[Ndim];
+				s_c_bpack_singleindex_to_multiindex(&Ndim,&(m_locs[s*Ndim]),&i_new_scalar,i_new_md);
+				for (int j=0;j<Ndim;j++){
+					i_new_md[j]=i_new_md[j]+idxss[s*Ndim+j]-1;
+				}
+				s_c_bpack_multiindex_to_singleindex(&Ndim,m,&i_new_scalar,i_new_md);
+				for (int nth=0; nth<nvec; nth++){
+					b_global_tmp[(i_new_scalar-1)+m_scalar*nth] = b_global[displs[s]+i+m_loc_1vec*nth];
+				}
+			}
+		}
+
+		//Converting from permuted global ordering to the original ordering
+		for (int i = 0; i < m_scalar; ++i) {
+			int i_old_scalar=i+1;
+			int i_new_scalar;
+			int i_old_md[Ndim];
+			int i_new_md[Ndim];
+			s_c_bpack_singleindex_to_multiindex(&Ndim,m,&i_old_scalar,i_old_md);
+			s_c_bpack_md_old2new(&Ndim, msh, i_old_md, i_new_md);
+			s_c_bpack_multiindex_to_singleindex(&Ndim,m,&i_new_scalar,i_new_md);
+			for (int nth=0; nth<nvec; nth++){
+				b_global[nth * m_scalar + i] = b_global_tmp[nth * m_scalar + (i_new_scalar-1)];
+			}
+		}
+
+		free(counts);
+		free(displs);
+		free(m_locs);
+		free(idxss);
+		free(b_global_tmp);
+	}
+#else
+
+	s_c_bpack_md_localindices(&Ndim, msh, idxs, m_loc, m);
+	size_t m_scalar = product(m,Ndim);
+	for (int j = 0; j < nvec; ++j)
+	{
+		for (int i = 0; i < m_scalar; ++i)
+		{
+			b_global[j * m_scalar + i] = b[j * m_scalar + i];
+		}
+	}
+#endif
+
+free(idxs);
+free(m_loc);
+free(m);
+
+}
+
+void s_c_bpack_construct_init(int* Npo, int* Ndim, double* Locations, int* nns, int* nlevel, int* tree, int* perms,
+	int* Npo_loc, F2Cptr* bmat, F2Cptr* option,F2Cptr* stats,F2Cptr* msh,F2Cptr* ker,F2Cptr* ptree,
+	void (*C_FuncDistmn)(int*, int*, double*,C2Fptr),
+	void (*C_FuncNearFar)(int*, int*, int*,C2Fptr), C2Fptr C_QuantApp){
+	// To Do: need to compute msh (idxs, idxe, new2old), Npo_locs, perms
+    // C_FuncDistmn: defines distance
+	// C_FuncNearFar:
+
+  // correspond to create_uniform_tree
+  // arguments in create_uniform_tree:
+  //   point_coords: null_ptr (assign uniform grid) or a pointer to an array of points on the grid
+  //   num_points: N, the dimension of the matrix
+  //   num_levels: number of levels for factorization
+  //   global_bounds: bounding min and max of all dimensions
+  //   dimension: 2D, or 3D problem
+  //   comm: some form of MPI info, gets mpi_rank, mpi_size
+  //   reduction_threshold: only uniform reduction pattern is supported, so really there is only one option which is uniform
+  //   pattern: only uniform reduction pattern is supported, so really there is only one option which is uniform
+  //   returns: tree structure
+
+  //   can also create HierarchicalFactorization object
+  //   * @param N Total number of points in the problem
+  //   * @param prop Matrix property (symmetric, hermitian, or nonsymmetric)
+  //   * @param kernel_func Kernel evaluator
+  //   * @param dim Spatial dimension (2 or 3)
+  //   * @param factorization_type Method for factorizing/inverting matrices (default: CHOLESKY)
+  //   * @param num_proxy Number of proxy points (-1 uses default 32 for 2D, 256 for 3D)
+  //   * @param tol Compression tolerance (default: 1e-6)
+  //   * @param proxy_factor Proxy surface radius factor (default: 2.5)
+
+  // ProgramOptions
+  // int num_levels = nlevel;
+  // int64_t N = Npo;
+  // int64_t grid_size = 0;
+  // double tolerance = 0.0;
+  // fmm::KernelKind kernel_kind = fmm::KernelKind::LAPLACE;
+  // NumberKind number_kind = NumberKind::REAL;
+  // int dimension = Ndim;
+  // int64_t reduction_threshold = 0;
+  // int num_proxy = -1;
+  // double wave_divisor = 32.0;
+  // double length_scale = 0.1;   // Matérn length scale ℓ
+  // double nugget = 1e-6;        // Matérn diagonal nugget σ_n²
+  // double kappa = 10.0;         // Yukawa screening parameter κ
+  // int cond_samples = 0;        // Power iteration samples for condition number estimate (0 = skip)
+
+  // Butterflypack end: need some definition of proxy points
+
+  //   Npo: pass into num_points
+  //   Ndim: pass into dimension
+  //   Locations: pass into point_coords
+  //   nns:
+  //   nlevel: pass into num_levels
+  //   tree: type difference with tree returned by create_uniform_tree
+  //   perms: permutation vector?
+  //   Npo_loc:
+  //   bmat: this stores the h2 solver struct, h2 tree, kernel, etc.
+  //   option:
+  //   stats:
+  //   msh
+  //   ker: kernel types from FMM?
+  //   ptree: mpi communicator needed, otherwise not relevant
+  //   C_FuncDistmn
+  //   C_FuncNearFar
+  //   C_QuantApp
+
+
+  double tmp;
+  s_c_bpack_getoption(option, "format", &tmp);
+  int format=(int)tmp;
+  if(format==7){
+#ifdef HAVE_MPI
+	int fcomm;
+	s_c_bpack_get_comm(ptree, &fcomm);
+	MPI_Comm mpi_comm = MPI_Comm_f2c((MPI_Fint)fcomm);
+	require_symmetric_h2_option(option, mpi_comm, "s_c_bpack_construct_init");
+
+	// use datatype float
+    // construct H2 solver
+	// auto H2_solver = std::make_unique<H2<double, float>>();
+	using H2Data = typename butterfly::fmm_data<float>::type;
+    butterfly::H2<double, H2Data>* H2_solver = new butterfly::H2<double, H2Data>();
+
+    H2_solver->comm = mpi_comm;
+    //*bmat = static_cast<F2Cptr>(H2_solver.release());
+
+	int rank = 0;
+    int size = 1;
+	MPI_Comm_rank(H2_solver->comm, &rank);
+    MPI_Comm_size(H2_solver->comm, &size);
+
+    // // parse options and throw error if any requirements are not satisfied
+    // for (int i = 1; i < argc; ++i) {
+    //   const std::string arg = argv[i];
+    //   if (arg == "--help" || arg == "-h") {
+    //     if (rank == 0) {
+    //       print_usage(argv[0]);
+    //     }
+    //     MPI_Finalize();
+    //     return 0;
+    //   }
+    // }
+
+    butterfly::ProgramOptions H2_options;
+    try {
+      double tolerance;
+      double reduction_threshold_d;
+      double Nmin_leaf_d;
+      double precon_d;
+      double verbosity_d;
+      double CA_level_d;
+      double H2_use_sketch_d;
+      double H2_ID_radius_d;
+      double H2_ID_proxy_d;
+      double H2_ID_proxy_points_d;
+      double BACA_Batch_d;
+      s_c_bpack_getoption(option, "tol_comp", &tolerance);
+      s_c_bpack_getoption(option, "reduction_threshold", &reduction_threshold_d);
+      s_c_bpack_getoption(option, "Nmin_leaf", &Nmin_leaf_d);
+      s_c_bpack_getoption(option, "precon", &precon_d);
+      s_c_bpack_getoption(option, "verbosity", &verbosity_d);
+      s_c_bpack_getoption(option, "CA_level", &CA_level_d);
+      s_c_bpack_getoption(option, "H2_use_sketch", &H2_use_sketch_d);
+      s_c_bpack_getoption(option, "H2_ID_radius", &H2_ID_radius_d);
+      s_c_bpack_getoption(option, "H2_ID_proxy", &H2_ID_proxy_d);
+      s_c_bpack_getoption(option, "H2_ID_proxy_points", &H2_ID_proxy_points_d);
+      s_c_bpack_getoption(option, "BACA_Batch", &BACA_Batch_d);
+      int64_t reduction_threshold = (int64_t)reduction_threshold_d;
+      int64_t Nmin_leaf = (int64_t)Nmin_leaf_d;
+      const int CA_level = static_cast<int>(std::llround(CA_level_d));
+      const int H2_use_sketch = static_cast<int>(std::llround(H2_use_sketch_d));
+      const int H2_ID_radius = static_cast<int>(std::llround(H2_ID_radius_d));
+      const int H2_ID_proxy = static_cast<int>(std::llround(H2_ID_proxy_d));
+      const int H2_ID_proxy_points =
+          static_cast<int>(std::llround(H2_ID_proxy_points_d));
+      const int BACA_Batch = static_cast<int>(std::llround(BACA_Batch_d));
+      if (H2_use_sketch != 0 && H2_use_sketch != 1) {
+        throw std::invalid_argument("H2_use_sketch must be 0 or 1");
+      }
+      if (H2_ID_radius < 2) {
+        throw std::invalid_argument("H2_ID_radius must be at least 2");
+      }
+      if (H2_ID_proxy < 0 || H2_ID_proxy > 2) {
+        throw std::invalid_argument("H2_ID_proxy must be 0, 1, or 2");
+      }
+      if (H2_ID_proxy == 1 && H2_ID_proxy_points <= 0) {
+        throw std::invalid_argument(
+            "H2_ID_proxy_points must be positive when H2_ID_proxy=1");
+      }
+      if (H2_ID_proxy == 2 && BACA_Batch <= 0) {
+        throw std::invalid_argument(
+            "BACA_Batch must be positive when H2_ID_proxy=2");
+      }
+      H2_options = butterfly::parse_program_options(
+          Npo, Ndim, Locations, tolerance, reduction_threshold, Nmin_leaf, CA_level);
+      H2_options.precon = static_cast<int>(std::llround(precon_d));
+      H2_options.verbosity = static_cast<int>(std::llround(verbosity_d));
+      H2_options.use_sketch = H2_use_sketch != 0;
+      H2_options.id_neighborhood_radius = H2_ID_radius;
+      H2_options.id_proxy_mode = H2_ID_proxy;
+      if (H2_ID_proxy == 1) {
+        H2_options.id_proxy_points = H2_ID_proxy_points;
+      } else if (H2_ID_proxy == 2) {
+        H2_options.id_adaptive_batch = BACA_Batch;
+      }
+      if (H2_options.precon == 2) {
+        H2_options.CA_level = H2_options.num_levels;
+      }
+      H2_solver->options = H2_options;
+    } catch (const std::exception& e) {
+      if (rank == 0) {
+        std::cerr << "Argument error: " << e.what() << std::endl;
+      }
+      throw;
+    }
+
+    try {
+      if (rank == 0 && H2_options.verbosity >= 1) {
+        std::cout << "ButterflyPACK H2, number_type=" << butterfly::number_kind_to_string(H2_options.number_kind)
+                  << ", dimension=" << H2_options.dimension
+                  << ", reduction_threshold=" << H2_options.reduction_threshold
+                  << ", CA_level=" << H2_options.CA_level
+                  << ", h2_use_sketch=" << (H2_options.use_sketch ? 1 : 0)
+                  << ", h2_id_radius=" << H2_options.id_neighborhood_radius
+                  << ", h2_id_proxy=" << H2_options.id_proxy_mode;
+        if (H2_options.id_proxy_mode == 1) {
+          std::cout << ", h2_id_proxy_points=" << H2_options.id_proxy_points;
+        } else if (H2_options.id_proxy_mode == 2) {
+          std::cout << ", baca_batch=" << H2_options.id_adaptive_batch;
+        }
+        std::cout << std::endl;
+      }
+
+	  // Setting up mesh and permutation variables
+      std::vector<int> new2old;
+	  int idxs = 0;
+	  int idxe = -1;
+
+      butterfly::h2_initiate<double, H2Data>(H2_solver, H2_options, Locations, rank, new2old, idxs, idxe);
+	  // convert to perms and Npo_loc
+	  s_c_bpack_set_mesh_h2(Npo, new2old.data(), &idxs, &idxe, msh);
+	  *Npo_loc=idxe-idxs+1;
+	  if (perms != nullptr) {
+		std::copy(new2old.begin(), new2old.end(), perms);
+	  }
+	  new2old.clear();
+
+
+    } catch (const std::exception& e) {
+        std::cerr << "Error on rank " << rank << ": " << e.what() << std::endl;
+        MPI_Abort(H2_solver->comm, 1);
+    }
+
+	H2_solver->kernel.entryeval_time_per_thread.assign(omp_get_max_threads(), 0.0);
+
+	double zero = 0.0;
+	s_c_bpack_setstats(stats, "Time_C_Mult_Wrapper", &zero);   // stats bare (already F2Cptr*), &zero
+	s_c_bpack_wrap_h2(bmat, static_cast<C2Fptr>(H2_solver));   // *bmat now = c_loc(Fortran Bmatrix)
+#else
+	format7_requires_mpi("s_c_bpack_construct_init");
+#endif
+  }else{
+	  s_c_bpack_construct_init_fortran(Npo, Ndim, Locations, nns, nlevel, tree, perms, Npo_loc, bmat, option, stats, msh, ker, ptree, C_FuncDistmn, C_FuncNearFar, C_QuantApp);
+  }
+}
+
+
+void s_c_bpack_construct_element_compute(F2Cptr* bmat, F2Cptr* option,F2Cptr* stats,F2Cptr* msh,
+	F2Cptr* ker,F2Cptr* ptree, void (*C_FuncZmn)(int*, int*, float*,C2Fptr),
+	void (*C_FuncZmnBlock)(int*, int*, int*, int64_t*, int*, int*, float*, int*, int*, int*, int*, int*, C2Fptr),
+	C2Fptr C_QuantApp){
+  // these functions are important to define
+  // C_FuncZmn: returns value at (i,j)th element of matrix -- need to update this to work for kernel
+  // C_FuncZmnBlock: returns a block, low priority
+
+  // To do: need to define stats and msh or else need to redefine s_c_bpack_delete for these to pointers
+  double tmp;
+  s_c_bpack_getoption(option, "format", &tmp);
+  int format=(int)tmp;
+  if(format==7){
+#ifdef HAVE_MPI
+	using H2Data = typename butterfly::fmm_data<float>::type;
+	static_assert(std::is_same_v<C2Fptr, void*>, "H2::kernel assumes C2Fptr == void*; update butterfly_integration.hpp if this changes");
+	void* H2_raw = nullptr;
+	s_c_bpack_get_h2(*bmat, &H2_raw);
+	butterfly::H2<double, H2Data>* H2_solver = static_cast<butterfly::H2<double, H2Data>*>(H2_raw);
+	require_symmetric_h2_option(
+	  option, H2_solver->comm, "s_c_bpack_construct_element_compute");
+	H2_solver->kernel.kernel = C_FuncZmn;
+	double elem_extract_d = 0.0;
+	s_c_bpack_getoption(option, "elem_extract", &elem_extract_d);
+	const int elem_extract = static_cast<int>(std::llround(elem_extract_d));
+	H2_solver->kernel.block_kernel =
+	  (elem_extract == 2) ? C_FuncZmnBlock : nullptr;
+	MPI_Comm_rank(MPI_COMM_WORLD, &H2_solver->kernel.block_callback_pid);
+	H2_solver->kernel.quant = C_QuantApp;
+#else
+	format7_requires_mpi("s_c_bpack_construct_element_compute");
+#endif
+  }else{
+	s_c_bpack_construct_element_compute_fortran(bmat, option, stats, msh, ker, ptree, C_FuncZmn, C_FuncZmnBlock, C_QuantApp);
+  }
+}
+
+
+void s_c_bpack_factor(F2Cptr*bmat, F2Cptr*option, F2Cptr*stats, F2Cptr*ptree, F2Cptr*msh){
+
+  // Correspond to hierarchical_factorization_parallel, arguments
+  // tree:
+  // kernel: kernel from factorizer
+  // tolerance:
+  // is_symmetric: bool -- works for general helmholtz and V3D
+  // is_hermitian: bool, not supported right now
+  // factorization_method: provided by factorizer, factorization_type
+  // unit_proxy_points:
+  // num_proxy:
+  // proxy_radius:
+
+  // bmat: can contain tree, and kernel function
+  double tmp;
+  s_c_bpack_getoption(option, "format", &tmp);
+  int format=(int)tmp;
+  if(format==7){
+#ifdef HAVE_MPI
+    using H2Data = typename butterfly::fmm_data<float>::type;
+    void* H2_raw = nullptr;
+    s_c_bpack_get_h2(*bmat, &H2_raw);
+    butterfly::H2<double, H2Data>* H2_solver = static_cast<butterfly::H2<double, H2Data>*>(H2_raw);
+	require_symmetric_h2_option(option, H2_solver->comm, "s_c_bpack_factor");
+
+    int rank = 0;
+    MPI_Comm_rank(H2_solver->comm, &rank);
+
+    try {
+      sync_h2_verbosity(option, H2_solver);
+      double precon_d = 1.0;
+	  s_c_bpack_getoption(option, "precon", &precon_d);
+	  H2_solver->options.precon = static_cast<int>(std::llround(precon_d));
+	  if (H2_solver->options.precon == 2) {
+		compress_h2_and_update_stats(H2_solver, stats);
+	  } else {
+		double factorization_time = 0.0;
+		double entryeval_time = 0.0;
+		butterfly::butterfly_factorization_parallel(
+		  H2_solver, &factorization_time, &entryeval_time);
+		s_c_bpack_setstats(stats, "Time_Factor", &factorization_time);
+		s_c_bpack_setstats(stats, "Time_Entry", &entryeval_time);
+
+		double rank_max = static_cast<double>(H2_solver->last_factor_rankmax);
+		s_c_bpack_setstats(stats, "Rank_max", &rank_max);
+
+		double factorization_memory_MB = H2_solver->factorization_memory/(1024.0 * 1024.0);
+		s_c_bpack_setstats(stats, "Mem_Factor", &factorization_memory_MB);
+	  }
+
+    } catch (const std::exception& e) {
+        std::cerr << "Error on rank " << rank << ": " << e.what() << std::endl;
+        throw;
+    }
+#else
+	format7_requires_mpi("s_c_bpack_factor");
+#endif
+  }else{
+	s_c_bpack_factor_fortran(bmat, option, stats, ptree, msh);
+  }
+}
+
+void s_c_bpack_solve(float*x, float*b, int*Nloc, int*Nrhs, F2Cptr*bmat, F2Cptr*option, F2Cptr*stats, F2Cptr*ptree){
+  // correspond to hierarchical_solve_parallel, arguments:
+  //   tree:
+  //   rhs: pass in b
+  //   solve_data: SolveDataRequest type, accumulates distributes solution / communication requests during the tree level sweep
+  //   verbose: printing
+
+  // and gather_solution_to_root, arguments:
+  //   tree
+  //   solve_data: pass in from hierarchical_solve_parallel
+  //   solution: pass into x
+  //   aggregated_rhs:
+
+  // Ax = b
+  // x: final solution
+  // b: provided rhs
+  // Hloc:
+  // Nrhs: number of rhs columns
+  // bmat: factored matrix, do we need this? because it's in tree
+  // option
+  // stat
+  // ptree
+
+  // note to self: figure out aggregated_rhs, solution, solve_data; and mpi stuff (mpi stuff probably ask Tianyu)
+  // need to redistribute x into H2, and then call mul_parallel, then extract mul_data, the nredistribute to Butterfly
+  double tmp;
+  s_c_bpack_getoption(option, "format", &tmp);
+  int format=(int)tmp;
+  if(format==7){
+#ifdef HAVE_MPI
+    if (*Nrhs <= 0) {
+      throw std::invalid_argument(
+        "s_c_bpack_solve (format 7): Nrhs must be positive");
+    }
+    using H2Data = typename butterfly::fmm_data<float>::type;
+    void* H2_raw = nullptr;
+    s_c_bpack_get_h2(*bmat, &H2_raw);
+    butterfly::H2<double, H2Data>* H2_solver = static_cast<butterfly::H2<double, H2Data>*>(H2_raw);
+	require_symmetric_h2_option(option, H2_solver->comm, "s_c_bpack_solve");
+
+    int rank = 0;
+    MPI_Comm_rank(H2_solver->comm, &rank);
+
+    try {
+      const int verbosity = sync_h2_verbosity(option, H2_solver);
+      const H2Data* b_h2 = reinterpret_cast<const H2Data*>(b);
+      std::vector<H2Data> rhs(b_h2, b_h2 + (*Nloc) * (*Nrhs));
+	  double precon_d = 1.0;
+	  s_c_bpack_getoption(option, "precon", &precon_d);
+	  H2_solver->options.precon = static_cast<int>(std::llround(precon_d));
+
+	  double t0 = MPI_Wtime();
+	  if (H2_solver->options.precon == 2) {
+		if (H2_solver->build_state == butterfly::H2BuildState::UNBUILT) {
+		  throw std::runtime_error(
+			"s_c_bpack_solve (format 7): call s_c_bpack_factor before solving");
+		}
+		if (H2_solver->build_state != butterfly::H2BuildState::H2_COMPRESSED) {
+		  throw std::runtime_error(
+			"s_c_bpack_solve (format 7): precon=2 requires a compression-only H2 representation");
+		}
+
+		double tolerance = 0.0;
+		double max_iterations_d = 0.0;
+		s_c_bpack_getoption(option, "tol_itersol", &tolerance);
+		s_c_bpack_getoption(option, "n_iter", &max_iterations_d);
+		std::vector<H2Data> iterative_solution;
+		int iterations = 0;
+		double residual = 0.0;
+		butterfly::hierarchical_h2_bicgstab_parallel(
+		  H2_solver->tree.get(), rhs, iterative_solution, *Nrhs,
+		  tolerance, static_cast<int>(std::llround(max_iterations_d)),
+		  &iterations, &residual, verbosity >= 1);
+		std::copy(
+		  iterative_solution.begin(), iterative_solution.end(),
+		  reinterpret_cast<H2Data*>(x));
+	  } else {
+		if (H2_solver->build_state != butterfly::H2BuildState::RS_FACTORIZED) {
+		  throw std::runtime_error(
+			"s_c_bpack_solve (format 7): direct solve requires s_c_bpack_factor first");
+		}
+		std::vector<std::vector<fmm::SolveDataRequest<double, H2Data>>> solve_data(
+		  H2_solver->options.num_levels);
+		butterfly::hierarchical_solve_parallel(
+		  H2_solver->tree.get(), rhs, solve_data, *Nrhs, verbosity);
+		butterfly::gather_local_solution(
+		  H2_solver->tree.get(), solve_data,
+		  reinterpret_cast<H2Data*>(x), Nloc, *Nrhs);
+	  }
+
+	  double t_solve = MPI_Wtime() - t0;
+	  MPI_Allreduce(MPI_IN_PLACE, &t_solve, 1, MPI_DOUBLE, MPI_MAX, H2_solver->comm);
+	  s_c_bpack_setstats(stats, "Time_Solve", &t_solve);
+    } catch (const std::exception& e) {
+        std::cerr << "Error on rank " << rank << ": " << e.what() << std::endl;
+        MPI_Abort(MPI_COMM_WORLD, 1);
+    }
+#else
+	format7_requires_mpi("s_c_bpack_solve");
+#endif
+  }else{
+	s_c_bpack_solve_fortran(x, b, Nloc, Nrhs, bmat, option, stats, ptree);
+  }
+}
+
+void s_c_bpack_mult(char const * trans, float const * xin,
+	float* xout, int* Ninloc, int* Noutloc, int* Ncol,
+	F2Cptr* bmat,F2Cptr* option,F2Cptr* stats,F2Cptr* ptree){
+
+  // F * xin = xout, where F is the approximated matrix from hierarchical decomposition
+  //
+
+  // can call fft_matvec for uniform grid
+
+
+
+  double tmp;
+  s_c_bpack_getoption(option, "format", &tmp);
+  int format=(int)tmp;
+  if(format==7){
+#ifdef HAVE_MPI
+    using H2Data = typename butterfly::fmm_data<float>::type;
+    void* H2_raw = nullptr;
+    s_c_bpack_get_h2(*bmat, &H2_raw);
+    butterfly::H2<double, H2Data>* H2_solver = static_cast<butterfly::H2<double, H2Data>*>(H2_raw);
+	require_symmetric_h2_option(option, H2_solver->comm, "s_c_bpack_mult");
+
+    int rank = 0;
+    MPI_Comm_rank(H2_solver->comm, &rank);
+
+    if (*Ncol <= 0) {
+      throw std::invalid_argument(
+        "s_c_bpack_mult (format 7): Ncol must be positive");
+    }
+
+    // Only F·x is implemented for format 7 (transpose/conj-transpose not yet supported).
+    const char op = (trans && trans[0]) ? trans[0] : 'N';
+    if (op != 'N' && op != 'n') {
+      throw std::runtime_error(
+          "s_c_bpack_mult (format 7): only trans == 'N' is currently supported; got '" +
+          std::string(1, op) + "'");
+    }
+
+    try {
+      const int verbosity = sync_h2_verbosity(option, H2_solver);
+      double precon_d = 1.0;
+	  s_c_bpack_getoption(option, "precon", &precon_d);
+      H2_solver->options.precon = static_cast<int>(std::llround(precon_d));
+
+      if (H2_solver->build_state == butterfly::H2BuildState::UNBUILT) {
+		throw std::runtime_error(
+		  "s_c_bpack_mult (format 7): call s_c_bpack_factor before multiplication");
+      }
+
+      const H2Data* xin_h2 = reinterpret_cast<const H2Data*>(xin);
+      std::vector<H2Data> lhs(xin_h2, xin_h2 + (*Ninloc) * (*Ncol));
+	  std::vector<H2Data> compressed_output;
+	  std::vector<std::vector<fmm::SolveDataRequest<double, H2Data>>> mul_data;
+
+	  double t0 = MPI_Wtime();
+	  if (H2_solver->build_state == butterfly::H2BuildState::H2_COMPRESSED) {
+		butterfly::hierarchical_h2_mul_parallel(
+		  H2_solver->tree.get(), lhs, compressed_output,
+		  *Ncol, verbosity >= 1);
+	  } else {
+		mul_data.resize(H2_solver->options.num_levels);
+		butterfly::hierarchical_mul_parallel(
+		  H2_solver->tree.get(), lhs, mul_data,
+		  *Ncol, verbosity >= 1);
+	  }
+
+	  double t_mult = MPI_Wtime() - t0;
+	  MPI_Allreduce(MPI_IN_PLACE, &t_mult, 1, MPI_DOUBLE, MPI_MAX, H2_solver->comm);
+
+	  double prev = 0.0;
+	  s_c_bpack_getstats(stats, "Time_C_Mult_Wrapper", &prev);   // read-modify-write
+	  double total = prev + t_mult;
+	  s_c_bpack_setstats(stats, "Time_C_Mult_Wrapper", &total);
+
+	  if (H2_solver->build_state == butterfly::H2BuildState::H2_COMPRESSED) {
+		if (compressed_output.size() !=
+		    static_cast<size_t>(*Noutloc) * static_cast<size_t>(*Ncol)) {
+		  throw std::runtime_error(
+			"s_c_bpack_mult (format 7): compression-only output length mismatch");
+		}
+		std::copy(
+		  compressed_output.begin(), compressed_output.end(),
+		  reinterpret_cast<H2Data*>(xout));
+	  } else {
+		butterfly::gather_local_solution(
+		  H2_solver->tree.get(), mul_data,
+		  reinterpret_cast<H2Data*>(xout), Noutloc, *Ncol);
+	  }
+
+    } catch (const std::exception& e) {
+        std::cerr << "Error on rank " << rank << ": " << e.what() << std::endl;
+        MPI_Abort(MPI_COMM_WORLD, 1);
+    }
+#else
+	format7_requires_mpi("s_c_bpack_mult");
+#endif
+  }else{
+	s_c_bpack_mult_fortran(trans, xin, xout, Ninloc, Noutloc, Ncol, bmat, option, stats, ptree);
+  }
+}
+
+
+void s_c_bpack_logdet(float* phase, float* logabsdet, F2Cptr* option, F2Cptr* bmat){
+  double tmp;
+  s_c_bpack_getoption(option, "format", &tmp);
+  int format=(int)tmp;
+  if(format==7){
+#ifdef HAVE_MPI
+	using H2Data = typename butterfly::fmm_data<float>::type;
+    void* H2_raw = nullptr;
+    s_c_bpack_get_h2(*bmat, &H2_raw);
+    butterfly::H2<double, H2Data>* H2_solver = static_cast<butterfly::H2<double, H2Data>*>(H2_raw);
+	require_symmetric_h2_option(option, H2_solver->comm, "s_c_bpack_logdet");
+
+
+	if (H2_solver->build_state != butterfly::H2BuildState::RS_FACTORIZED) {
+	  throw std::runtime_error(
+		"s_c_bpack_logdet (format 7): log-determinant requires an RS-S factorization");
+	}
+	double logabs_d = 0.0;
+	butterfly::hierarchical_logdet_parallel(H2_solver->tree.get(), &logabs_d, reinterpret_cast<H2Data*>(phase));
+	*logabsdet = static_cast<float>(logabs_d);
+#else
+	format7_requires_mpi("s_c_bpack_logdet");
+#endif
+  }else{
+	s_c_bpack_logdet_fortran(phase, logabsdet, option, bmat);
+  }
+}
+
+extern "C" void s_c_bpack_h2_delete(C2Fptr h2_ptr) {
+#ifdef HAVE_MPI
+	using H2Data = typename butterfly::fmm_data<float>::type;
+    delete static_cast<butterfly::H2<double,H2Data>*>(h2_ptr);
+#else
+	(void)h2_ptr;
+#endif
+}
+
+
+// void s_c_bpack_delete(F2Cptr* option, F2Cptr*bmat) {
+//   double tmp;
+//   s_c_bpack_getoption(option, "format", &tmp);
+//   int format=(int)tmp;
+//   if(format==7){
+// 	butterfly::H2<double, float>* H2_solver = static_cast<butterfly::H2<double, float>*>(*bmat);
+// 	delete H2_solver;
+// 	H2_solver = nullptr;
+// 	*bmat = nullptr;
+//   }else{
+// 	s_c_bpack_delete_fortran(bmat);
+//   }
+// }

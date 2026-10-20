@@ -13,6 +13,8 @@
 #endif
 
 typedef int64_t i8;
+_Static_assert(sizeof(MPI_Count) >= sizeof(i8), "MPI_Count must hold INTEGER(kind=8)");
+_Static_assert(sizeof(MPI_Aint) >= sizeof(i8), "MPI_Aint must hold INTEGER(kind=8) displacements");
 extern i8 bpack_mpi_in_place, bpack_mpi_bottom;
 extern i8 bpack_mpi_status_ignore[], bpack_mpi_statuses_ignore[];
 extern i8 bpack_mpi_status_size;
@@ -94,7 +96,7 @@ static void retain_vectors(struct vectors *v, MPI_Request request)
     pending = v;
     unlock_pending();
 }
-static void release_vectors(MPI_Fint request)
+static struct vectors *detach_vectors(MPI_Fint request)
 {
     struct vectors *found = NULL;
     lock_pending();
@@ -106,7 +108,11 @@ static void release_vectors(MPI_Fint request)
         }
     }
     unlock_pending();
-    free_vectors(found);
+    return found;
+}
+static void finish_vectors(struct vectors *v, MPI_Request request)
+{
+    if (v) retain_vectors(v, request);
 }
 
 static int vector_size(MPI_Comm c, int *n)
@@ -355,16 +361,16 @@ void bpack_mpi_recv_(void *buf, const i8 *count, const i8 *type, const i8 *peer,
 {
     INT_ARG(peer);
     INT_ARG(tag);
-    MPI_Status s;
+    MPI_Status s = {0};
     *ierr = MPI_Recv_c(buffer(buf), (MPI_Count)*count, datatype(type), c_peer, c_tag,
                        comm(c), ignore_status(status) ? MPI_STATUS_IGNORE : &s);
-    if (*ierr == MPI_SUCCESS) status_out(&s, status);
+    status_out(&s, status);
 }
 void bpack_mpi_probe_(const i8 *peer, const i8 *tag, const i8 *c, i8 *status, i8 *ierr)
 {
     INT_ARG(peer);
     INT_ARG(tag);
-    MPI_Status s;
+    MPI_Status s = {0};
     *ierr = MPI_Probe(c_peer, c_tag, comm(c), ignore_status(status) ? MPI_STATUS_IGNORE : &s);
     if (*ierr == MPI_SUCCESS) status_out(&s, status);
 }
@@ -372,7 +378,7 @@ void bpack_mpi_iprobe_(const i8 *peer, const i8 *tag, const i8 *c, i8 *flag, i8 
 {
     INT_ARG(peer);
     INT_ARG(tag);
-    MPI_Status s;
+    MPI_Status s = {0};
     int value = 0;
     *ierr = MPI_Iprobe(c_peer, c_tag, comm(c), &value,
                        ignore_status(status) ? MPI_STATUS_IGNORE : &s);
@@ -381,7 +387,7 @@ void bpack_mpi_iprobe_(const i8 *peer, const i8 *tag, const i8 *c, i8 *flag, i8 
 }
 void bpack_mpi_get_count_(const i8 *status, const i8 *type, i8 *count, i8 *ierr)
 {
-    MPI_Status s;
+    MPI_Status s = {0};
     MPI_Count value = 0;
     status_in(status, &s);
     *ierr = MPI_Get_count_c(&s, datatype(type), &value);
@@ -391,23 +397,31 @@ void bpack_mpi_wait_(i8 *request, i8 *status, i8 *ierr)
 {
     MPI_Fint old = (MPI_Fint)*request;
     MPI_Request value = MPI_Request_f2c(old);
-    MPI_Status s;
+    /* Detach before MPI can complete and recycle this native handle. */
+    struct vectors *v = detach_vectors(old);
+    MPI_Status s = {0};
     *ierr = MPI_Wait(&value, ignore_status(status) ? MPI_STATUS_IGNORE : &s);
     *request = MPI_Request_c2f(value);
-    if (value == MPI_REQUEST_NULL) release_vectors(old);
-    if (*ierr == MPI_SUCCESS) status_out(&s, status);
+    finish_vectors(v, value);
+    status_out(&s, status);
 }
-static int requests_in(int n, const i8 *f, MPI_Request **out)
+static int requests_in(int n, const i8 *f, MPI_Request **out, struct vectors ***metadata)
 {
     *out = malloc((size_t)(n ? n : 1) * sizeof(**out));
     if (!*out) return MPI_ERR_NO_MEM;
+    *metadata = malloc((size_t)(n ? n : 1) * sizeof(**metadata));
+    if (!*metadata) { free(*out); return MPI_ERR_NO_MEM; }
     for (int j = 0; j < n; ++j) (*out)[j] = MPI_Request_f2c((MPI_Fint)f[j]);
     return MPI_SUCCESS;
 }
-static void requests_out(int n, const MPI_Request *values, i8 *f)
+static void requests_detach(int n, const i8 *f, struct vectors **metadata)
+{
+    for (int j = 0; j < n; ++j) metadata[j] = detach_vectors((MPI_Fint)f[j]);
+}
+static void requests_out(int n, const MPI_Request *values, i8 *f, struct vectors **metadata)
 {
     for (int j = 0; j < n; ++j) {
-        if (values[j] == MPI_REQUEST_NULL) release_vectors((MPI_Fint)f[j]);
+        finish_vectors(metadata[j], values[j]);
         f[j] = MPI_Request_c2f(values[j]);
     }
 }
@@ -416,19 +430,22 @@ void bpack_mpi_waitall_(const i8 *n, i8 *requests, i8 *statuses, i8 *ierr)
     INT_ARG(n);
     if (c_n < 0) { *ierr = MPI_ERR_COUNT; return; }
     MPI_Request *values;
+    struct vectors **metadata;
     MPI_Status *s = NULL;
-    if ((*ierr = requests_in(c_n, requests, &values)) != MPI_SUCCESS) return;
+    if ((*ierr = requests_in(c_n, requests, &values, &metadata)) != MPI_SUCCESS) return;
     if (!ignore_status(statuses)) {
         s = calloc((size_t)(c_n ? c_n : 1), sizeof(*s));
-        if (!s) { free(values); *ierr = MPI_ERR_NO_MEM; return; }
+        if (!s) { free(metadata); free(values); *ierr = MPI_ERR_NO_MEM; return; }
     }
+    requests_detach(c_n, requests, metadata);
     *ierr = MPI_Waitall(c_n, values, s ? s : MPI_STATUSES_IGNORE);
-    requests_out(c_n, values, requests);
+    requests_out(c_n, values, requests, metadata);
     int error_class = MPI_SUCCESS;
     if (*ierr != MPI_SUCCESS) MPI_Error_class((int)*ierr, &error_class);
     if (s && (*ierr == MPI_SUCCESS || error_class == MPI_ERR_IN_STATUS))
         for (int j = 0; j < c_n; ++j) status_out(&s[j], statuses + j * bpack_mpi_status_size);
     free(s);
+    free(metadata);
     free(values);
 }
 void bpack_mpi_waitany_(const i8 *n, i8 *requests, i8 *index, i8 *status, i8 *ierr)
@@ -436,13 +453,16 @@ void bpack_mpi_waitany_(const i8 *n, i8 *requests, i8 *index, i8 *status, i8 *ie
     INT_ARG(n);
     if (c_n < 0) { *ierr = MPI_ERR_COUNT; return; }
     MPI_Request *values;
-    MPI_Status s;
+    struct vectors **metadata;
+    MPI_Status s = {0};
     int value = MPI_UNDEFINED;
-    if ((*ierr = requests_in(c_n, requests, &values)) != MPI_SUCCESS) return;
+    if ((*ierr = requests_in(c_n, requests, &values, &metadata)) != MPI_SUCCESS) return;
+    requests_detach(c_n, requests, metadata);
     *ierr = MPI_Waitany(c_n, values, &value, ignore_status(status) ? MPI_STATUS_IGNORE : &s);
-    requests_out(c_n, values, requests);
+    requests_out(c_n, values, requests, metadata);
     *index = value == MPI_UNDEFINED ? MPI_UNDEFINED : (i8)value + 1;
-    if (*ierr == MPI_SUCCESS) status_out(&s, status);
+    status_out(&s, status);
+    free(metadata);
     free(values);
 }
 double bpack_mpi_wtime_(void) { return MPI_Wtime(); }

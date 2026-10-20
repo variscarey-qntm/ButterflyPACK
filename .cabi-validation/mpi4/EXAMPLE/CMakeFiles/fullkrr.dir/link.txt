@@ -1,0 +1,1 @@
+/usr/bin/mpicxx.mpich -DHAVE_MPI  -g -Wl,--dependency-file=CMakeFiles/fullkrr.dir/link.d CMakeFiles/fullkrr.dir/FULLMATKERREG_Driver.f90.o -o fullkrr  ../libbutterflypack.a /usr/lib/x86_64-linux-gnu/libscalapack-mpich.so /usr/lib/x86_64-linux-gnu/liblapack64.so /usr/lib/x86_64-linux-gnu/libblas64.so -lm -lmpichfort -lgfortran -lquadmath

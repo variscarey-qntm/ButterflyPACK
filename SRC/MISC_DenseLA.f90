@@ -2804,7 +2804,8 @@ contains
       if (present(flop)) flop = flops_ztrsm(side, m, n)
    end subroutine ctrsmf90
 
-#if defined(HAVE_MKL) || defined(HAVE_OPENBLAS_BATCH)
+! Vendor batch integer ABIs are not supported in MPI4; use ordinary ILP64 GEMM.
+#if (defined(HAVE_MKL) || defined(HAVE_OPENBLAS_BATCH)) && !defined(MPI4)
    subroutine gemm_batch_mkl(transa_array, transb_array, m_array, n_array, k_array, alpha_array, a_array, lda_array, b_array, ldb_array, beta_array, c_array, ldc_array, group_count, group_size, flop, transa_iwork, transb_iwork)
       character*1::transa_array(:),transb_array(:)
       DT::alpha_array(:),beta_array(:)

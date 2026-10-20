@@ -1,0 +1,1 @@
+/usr/bin/mpicxx.mpich -DHAVE_MPI  -g -Wl,--dependency-file=CMakeFiles/ctest_simple_newapi.dir/link.d CMakeFiles/ctest_simple_newapi.dir/InterfaceTest_simple_newapi.cpp.o -o ctest_simple_newapi  ../libbutterflypack.a /usr/lib/x86_64-linux-gnu/libscalapack-mpich.so /usr/lib/x86_64-linux-gnu/liblapack64.so /usr/lib/x86_64-linux-gnu/libblas64.so -lm -lmpichfort -lgfortran -lquadmath

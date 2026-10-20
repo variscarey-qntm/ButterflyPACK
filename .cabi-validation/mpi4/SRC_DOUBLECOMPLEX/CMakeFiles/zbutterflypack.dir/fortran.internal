@@ -1,0 +1,19 @@
+# The fortran modules provided by this target.
+provides
+ z_bpack_block_sendrecv.mod
+ z_bpack_constr.mod
+ z_bpack_defs.mod
+ z_bpack_factor.mod
+ z_bpack_linkedlist.mod
+ z_bpack_randommvp.mod
+ z_bpack_solve_mul.mod
+ z_bpack_structure.mod
+ z_bpack_utilities.mod
+ z_bpack_wrapper.mod
+ z_bplus_compress.mod
+ z_bplus_factor.mod
+ z_bplus_randomizedop.mod
+ z_bplus_utilities.mod
+ z_magma_utilities.mod
+ z_misc_densela.mod
+ z_misc_utilities.mod

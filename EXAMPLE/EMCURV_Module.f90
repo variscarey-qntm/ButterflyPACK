@@ -1127,15 +1127,17 @@ end subroutine EM_solve_CURV
 	!MPIcomm: user-provided MPI communicator
 subroutine C_EMCURV_Init(Npo,Locations,quant_emcurv_Cptr, model2d, wavelength, MPIcomm) bind(c, name="c_emcurv_init")
 	implicit none
-	integer Npo,Dimn
+	integer(c_int) Npo
+	integer Dimn
 	real(kind=8) Locations(*)
 	type(c_ptr) :: quant_emcurv_Cptr
 	! type(c_ptr) :: ptree_Cptr
 	! type(z_proctree),pointer::ptree
 	type(quant_EMCURV),pointer::quant
-	integer model2d
+	integer(c_int) model2d
 	real(kind=8) wavelength
-	integer MPIcomm
+	integer(c_int) MPIcomm
+	integer comm_f
 
 	real(kind=8),parameter :: BPACK_cd = 299792458d0
 	integer seed_myid(50)
@@ -1145,7 +1147,8 @@ subroutine C_EMCURV_Init(Npo,Locations,quant_emcurv_Cptr, model2d, wavelength, M
 	character(len=1024)  :: strings
 	integer MyID,ierr
 
-	call MPI_Comm_rank(MPIcomm,MyID,ierr)
+	comm_f = int(MPIcomm,kind(0))
+	call MPI_Comm_rank(comm_f,MyID,ierr)
 
 	!**** allocate EMCURV structures
 	allocate(quant)
@@ -1176,7 +1179,7 @@ subroutine C_EMCURV_Init(Npo,Locations,quant_emcurv_Cptr, model2d, wavelength, M
 
 	t1 = MPI_Wtime()
     if(MyID==Main_ID)write(*,*) "geometry modeling......"
-    call geo_modeling_CURV(quant,MPIcomm)
+    call geo_modeling_CURV(quant,comm_f)
 
 	! generate the z_list of points for clustering
 	do edge=1, quant%Nunk
@@ -1202,7 +1205,7 @@ end subroutine C_EMCURV_Init
 	!value: (output) Z_mn
 subroutine C_EMCURV_Sample(m,n,value,quant_emcurv_Cptr) bind(c, name="c_emcurv_sample")
 	implicit none
-	integer m,n
+	integer(c_int) m,n
 	complex(kind=8) value
 	type(c_ptr),value :: quant_emcurv_Cptr
 	type(quant_EMCURV),pointer::quant
@@ -1211,10 +1214,9 @@ subroutine C_EMCURV_Sample(m,n,value,quant_emcurv_Cptr) bind(c, name="c_emcurv_s
 	call c_f_pointer(quant_emcurv_Cptr, quant)
 	QuantApp=>quant
 	!!!!!  m,n changed to m+1,n+1 because Zelem_EMCURV assumes indices staring from 1
-	call Zelem_EMCURV(m+1,n+1,value,QuantApp)
+	call Zelem_EMCURV(int(m,kind(0))+1,int(n,kind(0))+1,value,QuantApp)
 end subroutine C_EMCURV_Sample
 
 
 
 end module EMCURV_MODULE
-

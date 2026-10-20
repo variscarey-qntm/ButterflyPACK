@@ -10911,7 +10911,7 @@ contains
    call BF_block_MVP_dat_batch_magma(blocks, chara, M, N, Nrnd, random1, ldi, random2, ldo, a, b, ptree, stats)
 #else
 
-#if defined(HAVE_MKL) || defined(HAVE_OPENBLAS_BATCH)
+#if (defined(HAVE_MKL) || defined(HAVE_OPENBLAS_BATCH)) && !defined(MPI4)
       if (batch_mode == -1) then
          batch_env = ''
          call get_environment_variable('BPACK_BF_MVP_BATCH', batch_env, status=env_status)
@@ -11880,7 +11880,7 @@ contains
 
 
 
-#if defined(HAVE_MKL) || defined(HAVE_OPENBLAS_BATCH)
+#if (defined(HAVE_MKL) || defined(HAVE_OPENBLAS_BATCH)) && !defined(MPI4)
 
    subroutine BF_block_MVP_dat_batch_mkl(blocks, chara, M, N, Nrnd, random1, ldi, random2, ldo, a, b, ptree, stats)
 
@@ -21899,7 +21899,7 @@ end subroutine BF_block_extraction_multiply_oneblock_last
             enddo
             value_e = 0
             if(option%cpp == 1)then
-               call proc1_c(Ndim, idx_r, idx_c, value_e, ker%C_QuantApp)
+               call proc1_c(checked_c_int(Ndim), checked_c_int(idx_r), checked_c_int(idx_c), value_e, ker%C_QuantApp)
             else
                call proc1(Ndim, idx_r, idx_c, value_e, ker%QuantApp)
             endif
@@ -21939,8 +21939,9 @@ end subroutine BF_block_extraction_multiply_oneblock_last
          if(option%cpp == 1)then
             call c_f_procpointer(ker%C_FuncZmnBlock_MD, proc_c)
             pgidx = pgidx - 1
-            call proc_c(Ndim, Ninter, Nrow_max, Ncol_max, idx_dat, allrows, allcols, &
-               alldat_loc, rowidx, colidx, pgidx, 1, pmaps, ker%C_QuantApp)
+            call proc_c(checked_c_int(Ndim), checked_c_int(Ninter), checked_c_int(Nrow_max), checked_c_int(Ncol_max), idx_dat, &
+               checked_c_int(allrows), checked_c_int(allcols), alldat_loc, checked_c_int(rowidx), checked_c_int(colidx), &
+               checked_c_int(pgidx), 1_c_int, checked_c_int(pmaps), ker%C_QuantApp)
          else
             proc => ker%FuncZmnBlock_MD
             call proc(Ndim, Ninter, allrows, allcols, alldat_loc, rowidx, colidx, pgidx, &
@@ -22994,7 +22995,7 @@ end subroutine BF_block_extraction_multiply_oneblock_last
                jj = (ij - 1)/nrow + 1
                ii = mod(ij - 1, nrow) + 1
                value_e = 0
-               call proc1_C(msh%new2old(mrange(ii)), msh%new2old(nrange(jj)), value_e, ker%C_QuantApp)
+               call proc1_C(checked_c_int(msh%new2old(mrange(ii))), checked_c_int(msh%new2old(nrange(jj))), value_e, ker%C_QuantApp)
                value_e = value_e*option%scale_factor
                values(ii, jj) = value_e
             enddo
@@ -23164,7 +23165,7 @@ end subroutine BF_block_extraction_multiply_oneblock_last
                   allcols(jj) = abs(msh%new2old(allcols(jj)))
                enddo
                pgidx = pgidx - 1
-               call proc_C(Ninter, idx_row, idx_col, idx_dat, allrows, allcols, alldat_loc, rowidx, colidx, pgidx, Npmap, pmaps, ker%C_QuantApp)
+               call proc_C(checked_c_int(Ninter), checked_c_int(idx_row), checked_c_int(idx_col), idx_dat, checked_c_int(allrows), checked_c_int(allcols), alldat_loc, checked_c_int(rowidx), checked_c_int(colidx), checked_c_int(pgidx), checked_c_int(Npmap), checked_c_int(pmaps), ker%C_QuantApp)
             else
                proc => ker%FuncZmnBlock
                ! !>***** parallel extraction of the data
@@ -23355,7 +23356,7 @@ end subroutine BF_block_extraction_multiply_oneblock_last
                   jj = (ij - 1)/submats1(nn)%nr + 1
                   ii = mod(ij - 1, submats1(nn)%nr) + 1
                   value_e = 0
-                  call proc1_C(msh%new2old(submats1(nn)%rows(ii)), msh%new2old(submats1(nn)%cols(jj)), value_e, ker%C_QuantApp)
+                  call proc1_C(checked_c_int(msh%new2old(submats1(nn)%rows(ii))), checked_c_int(msh%new2old(submats1(nn)%cols(jj))), value_e, ker%C_QuantApp)
                   value_e = value_e*option%scale_factor
                   submats(new2old_sub(nn))%dat(submats1(nn)%mmap(ii), submats1(nn)%nmap(jj)) = value_e
                enddo
@@ -23570,7 +23571,7 @@ end subroutine BF_block_extraction_multiply_oneblock_last
                   allcols(jj) = abs(msh%new2old(allcols(jj)))
                enddo
                pgidx = pgidx - 1
-               call proc_C(Ninter, idx_row, idx_col, idx_dat, allrows, allcols, alldat_loc, rowidx, colidx, pgidx, Npmap, pmaps, ker%C_QuantApp)
+               call proc_C(checked_c_int(Ninter), checked_c_int(idx_row), checked_c_int(idx_col), idx_dat, checked_c_int(allrows), checked_c_int(allcols), alldat_loc, checked_c_int(rowidx), checked_c_int(colidx), checked_c_int(pgidx), checked_c_int(Npmap), checked_c_int(pmaps), ker%C_QuantApp)
             else
                proc => ker%FuncZmnBlock
                ! !>***** parallel extraction of the data
@@ -23688,7 +23689,7 @@ end subroutine BF_block_extraction_multiply_oneblock_last
                   allcols(jj) = abs(msh%new2old(allcols(jj)))
                enddo
                pgidx = pgidx - 1
-               call proc_C(Ninter, idx_row, idx_col, idx_dat, allrows, allcols, alldat_loc, rowidx, colidx, pgidx, Npmap, pmaps, ker%C_QuantApp)
+               call proc_C(checked_c_int(Ninter), checked_c_int(idx_row), checked_c_int(idx_col), idx_dat, checked_c_int(allrows), checked_c_int(allcols), alldat_loc, checked_c_int(rowidx), checked_c_int(colidx), checked_c_int(pgidx), checked_c_int(Npmap), checked_c_int(pmaps), ker%C_QuantApp)
             else
                proc => ker%FuncZmnBlock
                ! !>***** parallel extraction of the data
@@ -23849,7 +23850,7 @@ integer, save:: my_tid = 0
 
                      value_e = 0
                      if (option%cpp == 1) then
-                        call proc1_C(Ndim, idxs(1:Ndim,my_tid+1), idxs(1+Ndim:2*Ndim,my_tid+1),value_e, ker%C_QuantApp)
+                        call proc1_C(checked_c_int(Ndim), checked_c_int(idxs(1:Ndim,my_tid+1)), checked_c_int(idxs(1+Ndim:2*Ndim,my_tid+1)),value_e, ker%C_QuantApp)
                      else
                         call proc1(Ndim, idxs(1:Ndim,my_tid+1), idxs(1+Ndim:2*Ndim,my_tid+1),value_e, ker%QuantApp)
                      endif
@@ -23958,7 +23959,7 @@ integer, save:: my_tid = 0
             if (option%cpp == 1) then
                call c_f_procpointer(ker%C_FuncZmnBlock_MD, proc_C)
                pgidx = pgidx - 1
-               call proc_C(Ndim, Ninter, Nrow_max, Ncol_max, idx_dat, allrows, allcols, alldat_loc, rowidx, colidx, pgidx, Npmap, pmaps, ker%C_QuantApp)
+               call proc_C(checked_c_int(Ndim), checked_c_int(Ninter), checked_c_int(Nrow_max), checked_c_int(Ncol_max), idx_dat, checked_c_int(allrows), checked_c_int(allcols), alldat_loc, checked_c_int(rowidx), checked_c_int(colidx), checked_c_int(pgidx), checked_c_int(Npmap), checked_c_int(pmaps), ker%C_QuantApp)
             else
                proc => ker%FuncZmnBlock_MD
                call proc(Ndim, Ninter, allrows, allcols, alldat_loc, rowidx, colidx, pgidx, Npmap, pmaps, ker%QuantApp)

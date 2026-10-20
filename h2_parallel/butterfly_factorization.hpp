@@ -1885,7 +1885,7 @@ void hierarchical_factorization_parallel(
                     "hierarchical_factorization_parallel: Bunch-Kaufman root workspace query failed with INFO = " +
                     std::to_string(info));
             }
-            lwork = std::max(1, static_cast<int>(std::real(work[0])));
+            lwork = bpack_lapack_workspace_size(work[0]);
             work.resize(static_cast<size_t>(lwork));
             sytrf_(&uplo, &nn, root_box.X_RR.data.data(), &nn,
                    root_box.X_RR_pivots.data(), work.data(), &lwork, &info);
