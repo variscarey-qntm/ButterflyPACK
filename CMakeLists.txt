@@ -23,6 +23,30 @@ option(enable_toplevel_openmp    "Use OpenMP at top levels of the solver" OFF)
 option(enable_mpi    "Build with MPI support" ON)
 option(enable_python "Enable Python" OFF)
 option(enable_fftw "Build FFTW" OFF)
+option(MPI4 "Use MPI-4 large counts and ILP64 numerical libraries (GNU Fortran)" OFF)
+
+if(MPI4)
+  if(NOT enable_mpi)
+    message(FATAL_ERROR "MPI4 requires enable_mpi=ON")
+  endif()
+  if(NOT CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+    message(FATAL_ERROR "MPI4 currently requires GNU Fortran")
+  endif()
+  if(TPL_MAGMA_LIBRARIES OR TPL_ARPACK_LIBRARIES OR enable_parsec OR
+     TPL_ZFP_LIBRARIES OR enable_fftw)
+    message(FATAL_ERROR "MPI4 does not support MAGMA, ARPACK, PaRSEC, ZFP or FFTW interfaces")
+  endif()
+  if(NOT TPL_SCALAPACK_LIBRARIES)
+    message(FATAL_ERROR "MPI4 requires explicit TPL_SCALAPACK_LIBRARIES pointing to an ILP64 ScaLAPACK build")
+  endif()
+  if(CMAKE_VERSION VERSION_LESS 3.22 AND
+     (NOT TPL_BLAS_LIBRARIES OR NOT TPL_LAPACK_LIBRARIES))
+    message(FATAL_ERROR "MPI4 requires explicit ILP64 BLAS/LAPACK libraries with CMake older than 3.22")
+  endif()
+  set(BLA_SIZEOF_INTEGER 8)
+  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -DMPI4 -fdefault-integer-8")
+  add_compile_definitions(MPI4)
+endif()
 
 ######################################################################
 #
@@ -371,6 +395,34 @@ if(MPI_Fortran_FOUND)
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${MPI_C_LINK_FLAGS}")
 endif()
 
+if(MPI4)
+  if(NOT MPI_C_FOUND OR NOT MPI_Fortran_FOUND)
+    message(FATAL_ERROR "MPI4 requires MPI C and Fortran bindings")
+  endif()
+  include(CheckCSourceCompiles)
+  set(CMAKE_REQUIRED_INCLUDES_SAVE "${CMAKE_REQUIRED_INCLUDES}")
+  set(CMAKE_REQUIRED_LIBRARIES_SAVE "${CMAKE_REQUIRED_LIBRARIES}")
+  set(CMAKE_REQUIRED_INCLUDES ${MPI_C_INCLUDE_DIRS})
+  set(CMAKE_REQUIRED_LIBRARIES MPI::MPI_C)
+  check_c_source_compiles("
+#include <mpi.h>
+#if MPI_VERSION < 4
+#error MPI4 requires MPI-4 large-count APIs
+#endif
+int main(void) {
+  MPI_Request request;
+  return MPI_Ibcast_c(0, (MPI_Count)0, MPI_BYTE, 0, MPI_COMM_WORLD, &request);
+}" BUTTERFLYPACK_HAS_MPI4)
+  set(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES_SAVE}")
+  set(CMAKE_REQUIRED_LIBRARIES "${CMAKE_REQUIRED_LIBRARIES_SAVE}")
+  if(NOT BUTTERFLYPACK_HAS_MPI4)
+    message(FATAL_ERROR "MPI4 requires an MPI implementation with MPI-4 large-count C APIs")
+  endif()
+  if(NOT BLAS_FOUND OR NOT LAPACK_FOUND OR NOT SCALAPACK_FOUND)
+    message(FATAL_ERROR "MPI4 requires ILP64 BLAS, LAPACK and ScaLAPACK")
+  endif()
+endif()
+
 # Test MPI3
 check_cxx_source_compiles(
 "#include <mpi.h>
@@ -521,6 +573,11 @@ endif()
 if(NOT enable_mpi)
 add_subdirectory(MPI_DUMMY)
 endif()
+if(MPI4)
+  add_subdirectory(MPI4)
+  include_directories(${ButterflyPACK_SOURCE_DIR}/MPI4
+                      ${ButterflyPACK_BINARY_DIR}/MPI4)
+endif()
 add_subdirectory(SRC_DOUBLE)
 add_subdirectory(SRC_DOUBLECOMPLEX)
 add_subdirectory(SRC_SINGLE)
@@ -535,6 +592,11 @@ add_library(butterflypack
   $<TARGET_OBJECTS:sbutterflypack>
   $<TARGET_OBJECTS:cbutterflypack>
   $<TARGET_OBJECTS:butterflypack_cpp>)
+
+if(MPI4)
+  target_sources(butterflypack PRIVATE $<TARGET_OBJECTS:bpack_mpi4>)
+  target_link_libraries(butterflypack PUBLIC ${MPI_C_LIBRARIES})
+endif()
 
 if (enable_mpi)
   target_link_libraries(butterflypack PUBLIC

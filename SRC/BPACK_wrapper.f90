@@ -70,9 +70,9 @@ contains
 
       call c_f_procpointer(ker%C_FuncHMatVec, proc)
       if (trans == 'N') then  ! note that C_HMatVec takes Nin Nout, instead of takes M,N, so if statement is needed here
-         call proc(trans//c_null_char, N, M, num_vect, Vin, Vout, ker%C_QuantApp)
+         call proc(trans//c_null_char, int(N,c_int), int(M,c_int), int(num_vect,c_int), Vin, Vout, ker%C_QuantApp)
       else
-         call proc(trans//c_null_char, M, N, num_vect, Vin, Vout, ker%C_QuantApp)
+         call proc(trans//c_null_char, int(M,c_int), int(N,c_int), int(num_vect,c_int), Vin, Vout, ker%C_QuantApp)
       endif
       return
 
@@ -91,9 +91,9 @@ contains
 
       call c_f_procpointer(ker%C_FuncHPreconMatVec, proc)
       if (trans == 'N') then
-         call proc(trans//c_null_char, N, M, num_vect, Vin, Vout, ker%C_QuantApp)
+         call proc(trans//c_null_char, int(N,c_int), int(M,c_int), int(num_vect,c_int), Vin, Vout, ker%C_QuantApp)
       else
-         call proc(trans//c_null_char, M, N, num_vect, Vin, Vout, ker%C_QuantApp)
+         call proc(trans//c_null_char, int(M,c_int), int(N,c_int), int(num_vect,c_int), Vin, Vout, ker%C_QuantApp)
       endif
       return
 
@@ -121,9 +121,9 @@ contains
 
       call c_f_procpointer(ker%C_FuncHMatVec_MD, proc)
       if (trans == 'N') then  ! note that C_HMatVec takes Nin Nout, instead of takes M,N, so if statement is needed here
-         call proc(Ndim, trans//c_null_char, N, M, num_vect, Vin, Vout, ker%C_QuantApp)
+         call proc(int(Ndim,c_int), trans//c_null_char, int(N,c_int), int(M,c_int), int(num_vect,c_int), Vin, Vout, ker%C_QuantApp)
       else
-         call proc(Ndim, trans//c_null_char, M, N, num_vect, Vin, Vout, ker%C_QuantApp)
+         call proc(int(Ndim,c_int), trans//c_null_char, int(M,c_int), int(N,c_int), int(num_vect,c_int), Vin, Vout, ker%C_QuantApp)
       endif
       return
 
@@ -143,9 +143,9 @@ contains
 
       call c_f_procpointer(ker%C_FuncHPreconMatVec_MD, proc)
       if (trans == 'N') then
-         call proc(Ndim, trans//c_null_char, N, M, num_vect, Vin, Vout, ker%C_QuantApp)
+         call proc(int(Ndim,c_int), trans//c_null_char, int(N,c_int), int(M,c_int), int(num_vect,c_int), Vin, Vout, ker%C_QuantApp)
       else
-         call proc(Ndim, trans//c_null_char, M, N, num_vect, Vin, Vout, ker%C_QuantApp)
+         call proc(int(Ndim,c_int), trans//c_null_char, int(M,c_int), int(N,c_int), int(num_vect,c_int), Vin, Vout, ker%C_QuantApp)
       endif
       return
 
@@ -187,9 +187,9 @@ contains
       type is (kernelquant)
          call c_f_procpointer(ker%C_FuncBMatVec, proc)
          if (trans == 'N') then  ! note that C_HMatVec takes Nin Nout, instead of takes M,N, so if statement is needed here
-            call proc(trans//c_null_char, N, M, num_vect, Vin, Vout, ker%C_QuantApp, a, b)
+            call proc(trans//c_null_char, int(N,c_int), int(M,c_int), int(num_vect,c_int), Vin, Vout, ker%C_QuantApp, a, b)
          else
-            call proc(trans//c_null_char, M, N, num_vect, Vin, Vout, ker%C_QuantApp, a, b)
+            call proc(trans//c_null_char, int(M,c_int), int(N,c_int), int(num_vect,c_int), Vin, Vout, ker%C_QuantApp, a, b)
          endif
       end select
    end subroutine Bmatvec_user_C
@@ -201,14 +201,14 @@ contains
    !> @param ptree_Cptr: the structure containing process tree
    subroutine C_BPACK_Createptree(nmpi, groupmembers, MPIcomm, ptree_Cptr) bind(c, name="c_bpack_createptree")
       implicit none
-      integer nmpi
-      integer MPIcomm
-      integer:: groupmembers(*)
+      integer(c_int) nmpi
+      integer(c_int) MPIcomm
+      integer(c_int):: groupmembers(*)
       type(c_ptr):: ptree_Cptr
       type(proctree), pointer::ptree
 
       allocate (ptree)
-      call CreatePtree(nmpi, groupmembers, MPIcomm, ptree)
+      call CreatePtree(int(nmpi,kind(0)), int(groupmembers(1:nmpi),kind(0)), int(MPIcomm,kind(0)), ptree)
       ptree_Cptr = c_loc(ptree)
    end subroutine C_BPACK_Createptree
 
@@ -682,14 +682,14 @@ contains
       type(Bmatrix), pointer::bmat
       type(Hstat), pointer::stats
       type(proctree), pointer::ptree
-      integer inverse
+      integer(c_int) inverse
 
       call c_f_pointer(stats_Cptr, stats)
       call c_f_pointer(ptree_Cptr, ptree)
       call c_f_pointer(bmat_Cptr, bmat)
       call c_f_pointer(option_Cptr, option)
       !>**** print statistics variables
-      call BPACK_PrintStructure(bmat, inverse, option, stats, ptree)
+      call BPACK_PrintStructure(bmat, int(inverse,kind(0)), option, stats, ptree)
 
    end subroutine C_BPACK_PrintStructure
 
@@ -1061,7 +1061,7 @@ contains
       type(Hoption), pointer::option
       ! character::nam(:)
       type(c_ptr), value :: val_Cptr
-      integer, pointer::val_i
+      integer(c_int), pointer::val_i
       real(kind=8), pointer::val_d
       integer strlen
       character(len=:), allocatable :: str
@@ -1544,7 +1544,8 @@ contains
       real(kind=8) tolerance, h, lam
       integer Primary_block, nn, mm, MyID_old, Maxlevel, give, need
       integer i, j, k, ii, edge, threads_num, nth, Dimn, nmpi, ninc, acam
-      integer level,Ndim
+      integer level
+      integer(c_int) Ndim
       integer groupm
       type(c_ptr) :: bmat_Cptr
       type(c_ptr) :: option_Cptr
@@ -1582,7 +1583,7 @@ contains
 
       t1 = MPI_Wtime()
       !>**** computation of the construction phase
-      call BPACK_MD_construction_Element(Ndim, bmat, option, stats, msh, ker, ptree)
+      call BPACK_MD_construction_Element(int(Ndim,kind(0)), bmat, option, stats, msh, ker, ptree)
       ! call BPACK_CheckError(bmat,option,msh,ker,stats,ptree)
       t2 = MPI_Wtime()
 
@@ -1628,18 +1629,19 @@ contains
    !> @param C_QuantApp: the C_pointer to user-defined quantities required to for entry evaluation,sampling,distance and compressibility test (in)
    subroutine C_BPACK_Construct_Init(N, Ndim, Locations, nns, nlevel, tree, Permutation, N_loc, bmat_Cptr, option_Cptr, stats_Cptr, msh_Cptr, ker_Cptr, ptree_Cptr, C_FuncDistmn, C_FuncNearFar, C_QuantApp) bind(c, name="c_bpack_construct_init_fortran")
       implicit none
-      integer N, Ndim
+      integer(c_int) N, Ndim
       real(kind=8) Locations(*)
-      integer nns(*)
+      integer(c_int) nns(*)
       real(kind=8) para
       real(kind=8) tolerance, h, lam
       integer Primary_block, nn, mm, MyID_old, Maxlevel, give, need
       integer i, j, k, ii, edge, threads_num, nth, Dimn, nmpi, ninc, acam
       real(kind=8), parameter :: BPACK_cd = 299792458d0
       integer, allocatable:: groupmembers(:)
-      integer nlevel, level
-      integer Permutation(N), tree(*)
-      integer N_loc
+      integer(c_int) nlevel
+      integer level
+      integer(c_int) Permutation(N), tree(*)
+      integer(c_int) N_loc
       ! type(matricesblock), pointer :: blocks_i
       integer groupm
       type(c_ptr) :: bmat_Cptr
@@ -1857,9 +1859,9 @@ contains
 
    subroutine C_BPACK_Set_Mesh_H2(N, new2old, idxs, idxe,msh_Cptr) bind(c, name="c_bpack_set_mesh_h2")
       implicit none
-      integer N
-      integer new2old(N)
-      integer idxs, idxe
+      integer(c_int) N
+      integer(c_int) new2old(N)
+      integer(c_int) idxs, idxe
       type(c_ptr) :: msh_Cptr
       type(mesh), pointer::msh
       integer ii
@@ -1895,8 +1897,8 @@ contains
    !> @param C_QuantApp: the C_pointer to user-defined quantities required to for entry evaluation,sampling,distance and compressibility test (in)
    subroutine C_BPACK_MD_Construct_Init(Ns, Nmax, Ndim, Locations, Permutation, N_loc, bmat_Cptr, option_Cptr, stats_Cptr, msh_Cptr, ker_Cptr, ptree_Cptr, C_FuncNearFar_MD, C_QuantApp) bind(c, name="c_bpack_md_construct_init")
       implicit none
-      integer Ndim,Nmax
-      integer Ns(Ndim)
+      integer(c_int) Ndim,Nmax
+      integer(c_int) Ns(Ndim)
       real(kind=8) Locations(*)
       real(kind=8) para
       real(kind=8) tolerance, h, lam
@@ -1905,8 +1907,8 @@ contains
       real(kind=8), parameter :: BPACK_cd = 299792458d0
       integer, allocatable:: groupmembers(:)
       integer nlevel, level, dim_i
-      integer Permutation(Nmax*Ndim)
-      integer N_loc(Ndim)
+      integer(c_int) Permutation(Nmax*Ndim)
+      integer(c_int) N_loc(Ndim)
       ! type(matricesblock), pointer :: blocks_i
       integer groupm
       type(c_ptr) :: bmat_Cptr
@@ -2008,8 +2010,8 @@ contains
 
       t1 = MPI_Wtime()
       if (ptree%MyID == Main_ID .and. option%verbosity >= 0) write (*, *) "Hierarchical format......"
-      call Cluster_partition_MD(Ndim, bmat, option, msh, ker, stats, ptree)
-      call BPACK_structuring_MD(Ndim, bmat, option, msh, ker, ptree, stats)
+      call Cluster_partition_MD(int(Ndim,kind(0)), bmat, option, msh, ker, stats, ptree)
+      call BPACK_structuring_MD(int(Ndim,kind(0)), bmat, option, msh, ker, ptree, stats)
       t2 = MPI_Wtime()
       structure_time = t2 - t1
       call MPI_Allreduce(structure_time, structure_time_max, 1, MPI_DOUBLE_PRECISION, MPI_MAX, ptree%Comm, i)
@@ -2047,7 +2049,7 @@ contains
    !> @param msh_Cptr: the structure containing points and ordering information
    subroutine C_BPACK_New2Old(msh_Cptr, newidx_loc, oldidx) bind(c, name="c_bpack_new2old")
       implicit none
-      integer newidx_loc,oldidx
+      integer(c_int) newidx_loc,oldidx
       type(c_ptr) :: msh_Cptr
       type(mesh), pointer::msh
 
@@ -2064,7 +2066,7 @@ contains
    !> @param msh_Cptr: the structure containing points and ordering information
    subroutine C_BPACK_Old2New(msh_Cptr, oldidx, newidx) bind(c, name="c_bpack_old2new")
       implicit none
-      integer newidx,oldidx
+      integer(c_int) newidx,oldidx
       type(c_ptr) :: msh_Cptr
       type(mesh), pointer::msh
 
@@ -2079,7 +2081,7 @@ contains
    !> @param msh_Cptr: the structure containing points and ordering information
    subroutine C_BPACK_LocalIndices(msh_Cptr, idxs, Nlocal, Nglobal) bind(c, name="c_bpack_localindices")
       implicit none
-      integer idxs, Nlocal, Nglobal
+      integer(c_int) idxs, Nlocal, Nglobal
       type(c_ptr) :: msh_Cptr
       type(mesh), pointer::msh
 
@@ -2099,8 +2101,9 @@ contains
    !> @param msh_Cptr: the structure containing points and ordering information
    subroutine C_BPACK_MD_New2Old(Ndim, msh_Cptr, newidx_loc, oldidx) bind(c, name="c_bpack_md_new2old")
       implicit none
-      integer Ndim,dim_i
-      integer newidx_loc(Ndim),oldidx(Ndim)
+      integer(c_int) Ndim
+      integer dim_i
+      integer(c_int) newidx_loc(Ndim),oldidx(Ndim)
       type(c_ptr) :: msh_Cptr
       type(mesh), pointer::msh(:)
 
@@ -2115,8 +2118,9 @@ contains
 !>**** C interface of converting from new,global index to old, global index. Both newidx_glo and oldidx are Ndim dimensional.
    subroutine C_BPACK_MD_Global_New2Old(Ndim, msh_Cptr, newidx_glo, oldidx) bind(c, name="c_bpack_md_global_new2old")
       implicit none
-      integer Ndim,dim_i
-      integer newidx_glo(Ndim),oldidx(Ndim)
+      integer(c_int) Ndim
+      integer dim_i
+      integer(c_int) newidx_glo(Ndim),oldidx(Ndim)
       type(c_ptr) :: msh_Cptr
       type(mesh), pointer::msh(:)
 
@@ -2136,8 +2140,9 @@ contains
    !> @param msh_Cptr: the structure containing points and ordering information
    subroutine C_BPACK_MD_Old2New(Ndim, msh_Cptr, oldidx, newidx) bind(c, name="c_bpack_md_old2new")
       implicit none
-      integer Ndim,dim_i
-      integer newidx(Ndim),oldidx(Ndim)
+      integer(c_int) Ndim
+      integer dim_i
+      integer(c_int) newidx(Ndim),oldidx(Ndim)
       type(c_ptr) :: msh_Cptr
       type(mesh), pointer::msh(:)
 
@@ -2154,8 +2159,9 @@ contains
    !> @param msh_Cptr: the structure containing points and ordering information
    subroutine C_BPACK_MD_LocalIndices(Ndim,msh_Cptr, idxs, Nlocal, Nglobal) bind(c, name="c_bpack_md_localindices")
       implicit none
-      integer Ndim,dim_i
-      integer idxs(Ndim),Nlocal(Ndim),Nglobal(Ndim)
+      integer(c_int) Ndim
+      integer dim_i
+      integer(c_int) idxs(Ndim),Nlocal(Ndim),Nglobal(Ndim)
       type(c_ptr) :: msh_Cptr
       type(mesh), pointer::msh(:)
 
@@ -2179,10 +2185,12 @@ contains
    !>**** convert single index to multi-index, assuming first index is the fastest
    subroutine C_SingleIndexToMultiIndex(Ndim,dims, single_index_in, multi_index)bind(c, name="c_bpack_singleindex_to_multiindex")
       implicit none
-      integer:: Ndim
-      integer:: dims(Ndim)
-      integer :: single_index_in, multi_index(Ndim)
-      call SingleIndexToMultiIndex(Ndim,dims, single_index_in, multi_index)
+      integer(c_int):: Ndim
+      integer(c_int):: dims(Ndim)
+      integer(c_int) :: single_index_in, multi_index(Ndim)
+      integer :: multi_index_core(Ndim)
+      call SingleIndexToMultiIndex(int(Ndim,kind(0)),int(dims,kind(0)), int(single_index_in,kind(0)), multi_index_core)
+      multi_index = int(multi_index_core,c_int)
    end subroutine C_SingleIndexToMultiIndex
 
 
@@ -2194,10 +2202,12 @@ contains
    !>**** convert single index to multi-index, assuming first index is the fastest
    subroutine C_MultiIndexToSingleIndex(Ndim,dims, single_index_in, multi_index)bind(c, name="c_bpack_multiindex_to_singleindex")
       implicit none
-      integer:: Ndim
-      integer:: dims(Ndim)
-      integer :: single_index_in, multi_index(Ndim)
-      call MultiIndexToSingleIndex(Ndim,dims, single_index_in, multi_index)
+      integer(c_int):: Ndim
+      integer(c_int):: dims(Ndim)
+      integer(c_int) :: single_index_in, multi_index(Ndim)
+      integer :: single_index_core
+      call MultiIndexToSingleIndex(int(Ndim,kind(0)),int(dims,kind(0)), single_index_core, int(multi_index,kind(0)))
+      single_index_in = int(single_index_core,c_int)
    end subroutine C_MultiIndexToSingleIndex
 
 
@@ -2208,7 +2218,7 @@ contains
    !> @param mshr_Cptr: the structure containing points and ordering information for the row dimension (in)
    subroutine C_BF_New2Old_Row(mshr_Cptr, newidx_loc, oldidx) bind(c, name="c_bf_new2old_row")
       implicit none
-      integer newidx_loc,oldidx
+      integer(c_int) newidx_loc,oldidx
       type(c_ptr) :: msh_Cptr
       type(c_ptr) :: mshr_Cptr
       type(mesh), pointer::msh,mshr
@@ -2223,7 +2233,7 @@ contains
    !> @param mshr_Cptr: the structure containing points and ordering information for the column dimension (in)
    subroutine C_BF_New2Old_Col(mshc_Cptr, newidx_loc, oldidx) bind(c, name="c_bf_new2old_col")
       implicit none
-      integer newidx_loc,oldidx
+      integer(c_int) newidx_loc,oldidx
       type(c_ptr) :: msh_Cptr
       type(c_ptr) :: mshc_Cptr
       type(mesh), pointer::msh,mshc
@@ -2252,18 +2262,19 @@ contains
    !> @param C_QuantApp: the C_pointer to user-defined quantities required to for entry evaluation,sampling,distance and compressibility test (in)
    subroutine C_BPACK_Construct_Init_Gram(N, Ndim, Locations, nns, nlevel, tree, Permutation, N_loc, bmat_Cptr, option_Cptr, stats_Cptr, msh_Cptr, ker_Cptr, ptree_Cptr, C_FuncZmn, C_FuncZmnBlock, C_QuantApp) bind(c, name="c_bpack_construct_init_gram")
       implicit none
-      integer N, Ndim
+      integer(c_int) N, Ndim
       real(kind=8) Locations(*)
-      integer nns(*)
+      integer(c_int) nns(*)
       real(kind=8) para
       real(kind=8) tolerance, h, lam
       integer Primary_block, nn, mm, MyID_old, Maxlevel, give, need
       integer i, j, k, ii, edge, threads_num, nth, Dimn, nmpi, ninc, acam
       real(kind=8), parameter :: BPACK_cd = 299792458d0
       integer, allocatable:: groupmembers(:)
-      integer nlevel, level
-      integer Permutation(N), tree(*)
-      integer N_loc
+      integer(c_int) nlevel
+      integer level
+      integer(c_int) Permutation(N), tree(*)
+      integer(c_int) N_loc
       ! type(matricesblock), pointer :: blocks_i
       integer groupm
       type(c_ptr) :: bmat_Cptr
@@ -2507,7 +2518,8 @@ contains
    !> msh/ker are new handles; mshr/mshc remain owned by the caller.
    subroutine C_BP_Construct_Init(M, N, M_loc, N_loc, nnsr, nnsc, mshr_Cptr, mshc_Cptr, bp_Cptr, option_Cptr, stats_Cptr, msh_Cptr, ker_Cptr, ptree_Cptr, C_FuncDistmn, C_FuncNearFar, C_QuantApp) bind(c, name="c_bp_construct_init")
       implicit none
-      integer :: M, N, M_loc, N_loc, nnsr(*), nnsc(*)
+      integer(c_int) :: M, N, M_loc, N_loc, nnsr(*), nnsc(*)
+      integer :: M_loc_core, N_loc_core
       type(c_ptr) :: mshr_Cptr, mshc_Cptr, bp_Cptr, option_Cptr, stats_Cptr
       type(c_ptr) :: msh_Cptr, ker_Cptr, ptree_Cptr
       type(c_ptr), intent(in), target :: C_QuantApp
@@ -2546,7 +2558,9 @@ contains
          nns_n = reshape(nnsc(1:option%knn*N), shape(nns_n))
       endif
       call init_random_seed()
-      call BP_Construct_Init_from_mshrc(M, N, M_loc, N_loc, mshr, mshc, handle%BP, option, stats, msh, ker, ptree, nns_m, nns_n)
+      call BP_Construct_Init_from_mshrc(int(M,kind(0)), int(N,kind(0)), M_loc_core, N_loc_core, mshr, mshc, handle%BP, option, stats, msh, ker, ptree, nns_m, nns_n)
+      M_loc = int(M_loc_core,c_int)
+      N_loc = int(N_loc_core,c_int)
       bp_Cptr = c_loc(handle)
       msh_Cptr = c_loc(msh)
       ker_Cptr = c_loc(ker)
@@ -2600,14 +2614,14 @@ contains
    !> @param C_QuantApp: the C_pointer to user-defined quantities required to for entry evaluation,sampling,distance and compressibility test (in)
    subroutine C_BF_Construct_Init(M, N, M_loc, N_loc, nnsr, nnsc, mshr_Cptr, mshc_Cptr, bf_Cptr, option_Cptr, stats_Cptr, msh_Cptr, ker_Cptr, ptree_Cptr, C_FuncDistmn, C_FuncNearFar, C_QuantApp) bind(c, name="c_bf_construct_init")
       implicit none
-      integer M, N
+      integer(c_int) M, N
 
       integer Maxlevel
       integer i, j, k, ii, edge, threads_num, nth, Dimn, nmpi, ninc, acam
       integer, allocatable:: groupmembers(:)
       integer level
-      integer M_loc, N_loc
-      integer nnsr(*), nnsc(*)
+      integer(c_int) M_loc, N_loc
+      integer(c_int) nnsr(*), nnsc(*)
       type(c_ptr) :: bf_Cptr
       type(c_ptr) :: option_Cptr
       type(c_ptr) :: stats_Cptr
@@ -3032,7 +3046,7 @@ contains
    subroutine C_BPACK_Solve(x, b, Nloc, Nrhs, bmat_Cptr, option_Cptr, stats_Cptr, ptree_Cptr) bind(c, name="c_bpack_solve_fortran")
       implicit none
 
-      integer Nloc, Nrhs
+      integer(c_int) Nloc, Nrhs
       DT::x(Nloc, Nrhs), b(Nloc, Nrhs)
       real(kind=8)::tmpnorm,vtmp
       integer ierr
@@ -3060,20 +3074,20 @@ contains
       if (ptree%MyID == Main_ID .and. option%verbosity >= 0) write (*, *) "Solve ......"
 
       if(option%verbosity >=2)then
-         tmpnorm = (fnorm(b,Nloc,Nrhs))**2d0
+         tmpnorm = (fnorm(b,int(Nloc,kind(0)),int(Nrhs,kind(0))))**2d0
          vtmp = tmpnorm
          call MPI_ALLREDUCE(vtmp, tmpnorm, 1, MPI_DOUBLE_PRECISION, MPI_SUM, ptree%Comm, ierr)
          if(ptree%MyID==0)write(*,*)'norm B',tmpnorm
       endif
 
       if (option%ErrSol == 1) then
-         call BPACK_Test_Solve_error(bmat, Nloc, option, ptree, stats)
+         call BPACK_Test_Solve_error(bmat, int(Nloc,kind(0)), option, ptree, stats)
       endif
 
-      call BPACK_Solution(bmat, x, b, Nloc, Nrhs, option, ptree, stats)
+      call BPACK_Solution(bmat, x, b, int(Nloc,kind(0)), int(Nrhs,kind(0)), option, ptree, stats)
 
       if(option%verbosity >=2)then
-         tmpnorm = (fnorm(x,Nloc,Nrhs))**2d0
+         tmpnorm = (fnorm(x,int(Nloc,kind(0)),int(Nrhs,kind(0))))**2d0
          vtmp = tmpnorm
          call MPI_ALLREDUCE(vtmp, tmpnorm, 1, MPI_DOUBLE_PRECISION, MPI_SUM, ptree%Comm, ierr)
          if(ptree%MyID==0)write(*,*)'norm X',tmpnorm
@@ -3098,8 +3112,8 @@ contains
    !> @param msh_Cptr: the structure containing points and ordering information
    subroutine C_BPACK_MD_Solve(Ndim, x, b, Nloc, Nrhs, bmat_Cptr, option_Cptr, stats_Cptr, ptree_Cptr, msh_Cptr) bind(c, name="c_bpack_md_solve")
       implicit none
-      integer Ndim
-      integer Nloc(Ndim), Nrhs
+      integer(c_int) Ndim
+      integer(c_int) Nloc(Ndim), Nrhs
       DT::x(product(Nloc), Nrhs), b(product(Nloc), Nrhs)
 
       real(kind=8)::tmpnorm,vtmp
@@ -3135,16 +3149,16 @@ contains
          write(*,*)'not yet implemented BPACK_MD_Test_Solve_error'
       endif
       if(option%verbosity >=2)then
-         tmpnorm = (fnorm(b,product(Nloc),Nrhs))**2d0
+         tmpnorm = (fnorm(b,product(int(Nloc,kind(0))),int(Nrhs,kind(0))))**2d0
          vtmp=tmpnorm
          call MPI_ALLREDUCE(vtmp, tmpnorm, 1, MPI_DOUBLE_PRECISION, MPI_SUM, ptree%Comm, ierr)
          if(ptree%MyID==0)write(*,*)'norm B',tmpnorm
       endif
 
-      call BPACK_MD_Solution(Ndim,bmat, x, b, Nloc, Nrhs, option, ptree, stats,msh)
+      call BPACK_MD_Solution(int(Ndim,kind(0)),bmat, x, b, int(Nloc,kind(0)), int(Nrhs,kind(0)), option, ptree, stats,msh)
 
       if(option%verbosity >=2)then
-         tmpnorm = (fnorm(x,product(Nloc),Nrhs))**2d0
+         tmpnorm = (fnorm(x,product(int(Nloc,kind(0))),int(Nrhs,kind(0))))**2d0
          vtmp = tmpnorm
          call MPI_ALLREDUCE(vtmp, tmpnorm, 1, MPI_DOUBLE_PRECISION, MPI_SUM, ptree%Comm, ierr)
          if(ptree%MyID==0)write(*,*)'norm X',tmpnorm
@@ -3168,8 +3182,9 @@ contains
    !> @param msh_Cptr: the structure containing points and ordering information
    subroutine C_BPACK_MD_Get_Local_Midlevel_Blocks(Ndim, nc_m, head_array,bmat_Cptr, option_Cptr, ptree_Cptr, msh_Cptr) bind(c, name="c_bpack_md_get_local_midlevel_blocks")
       implicit none
-      integer Ndim
-      integer nc_m(Ndim), Nrhs, head_array(*)
+      integer(c_int) Ndim
+      integer(c_int) nc_m(Ndim), head_array(*)
+      integer Nrhs
       integer idx_r(Ndim), inc_r(Ndim), nr(Ndim), idx_c(Ndim), inc_c(Ndim), nc(Ndim), group_n(Ndim), idx_c_m(Ndim)
       integer levelm,level_butterfly,index_j,group_n1,cnt,dim_i
 
@@ -3208,7 +3223,7 @@ contains
       end select
 
 
-      call GetLocalBlockRange_MD(ptree, blocks%pgno, levelm, level_butterfly, Ndim, 1, idx_r, inc_r, nr, idx_c, inc_c, nc, 'R')
+      call GetLocalBlockRange_MD(ptree, blocks%pgno, levelm, level_butterfly, int(Ndim,kind(0)), 1, idx_r, inc_r, nr, idx_c, inc_c, nc, 'R')
       call assert(product(inc_c)==1,'inc_c has to be 1 for matrixblock_MD type')
 
       nc_m = nc
@@ -3239,16 +3254,16 @@ contains
       nblock, block_info, diag_perm_size, diag_tensor_perm, mesh_range, route_capacity, local_diag_root, local_diag_gid, &
       local_diag_pos, option_Cptr, ptree_Cptr) bind(c, name="c_bpack_construct_init_diaglevel_simple")
       implicit none
-      integer N, Ndim, level, nlocal_active, nblock, diag_perm_size, route_capacity
+      integer(c_int) N, Ndim, level, nlocal_active, nblock, diag_perm_size, route_capacity
       real(kind=8) Locations(*)
-      integer ScatterTensor(*), local_tensor_old(*), block_info(*), diag_tensor_perm(*), mesh_range(2)
-      integer local_diag_root(*), local_diag_gid(*), local_diag_pos(*)
+      integer(c_int) ScatterTensor(*), local_tensor_old(*), block_info(*), diag_tensor_perm(*), mesh_range(2)
+      integer(c_int) local_diag_root(*), local_diag_gid(*), local_diag_pos(*)
       type(c_ptr), intent(in) :: option_Cptr
       type(c_ptr), intent(in) :: ptree_Cptr
 
       type(Hoption), pointer :: option
       type(proctree), pointer :: ptree
-      integer :: maxlevel_range, maxgroup, ngroup, info_stride, nblock_capacity, diag_perm_capacity
+      integer :: maxlevel_range, maxgroup, ngroup, info_stride, nblock_capacity, diag_perm_capacity, mesh_range_core(2)
       integer :: group_n(1), bb, cnt, perm_needed, pgno, pos, head_g, tail_g, lhead_g, ltail_g
       integer :: ierr, rr, ii, total_active, route_counts_dummy
       integer, allocatable :: group_head(:), group_tail(:), perm(:), old2new(:)
@@ -3266,13 +3281,14 @@ contains
       call assert(option%xyzsort == NATURAL .or. option%xyzsort == CKD, &
          'C_BPACK_Construct_Init_Diaglevel_Simple supports NATURAL or CKD ordering')
 
-      maxlevel_range = max(level, ptree%nlevel)
+      maxlevel_range = max(int(level,kind(0)), ptree%nlevel)
       maxgroup = 2**(maxlevel_range + 1) - 1
       allocate(group_head(maxgroup))
       allocate(group_tail(maxgroup))
-      call build_balanced_ranges(N, maxlevel_range, group_head, group_tail)
+      call build_balanced_ranges(int(N,kind(0)), maxlevel_range, group_head, group_tail)
 
-      call compute_simple_mesh_range(N, maxlevel_range, group_head, group_tail, mesh_range)
+      call compute_simple_mesh_range(int(N,kind(0)), maxlevel_range, group_head, group_tail, mesh_range_core)
+      mesh_range = int(mesh_range_core,c_int)
 
       nblock_capacity = nblock
       diag_perm_capacity = diag_perm_size
@@ -3290,8 +3306,8 @@ contains
                pos = (cnt - 1)*info_stride
                head_g = group_head(group_n(1))
                tail_g = group_tail(group_n(1)) + 1
-               lhead_g = max(head_g, mesh_range(1))
-               ltail_g = min(tail_g, mesh_range(2))
+               lhead_g = max(head_g, mesh_range_core(1))
+               ltail_g = min(tail_g, mesh_range_core(2))
                block_info(pos + 1) = head_g
                block_info(pos + 2) = tail_g
                block_info(pos + 3) = lhead_g
@@ -3314,7 +3330,7 @@ contains
 
       if (ptree%MyID == Main_ID) then
          allocate(perm(N))
-         call build_root_permutation(N, Ndim, Locations, level, group_head, group_tail, perm)
+         call build_root_permutation(int(N,kind(0)), int(Ndim,kind(0)), Locations, int(level,kind(0)), group_head, group_tail, perm)
          allocate(old2new(N))
          do ii = 1, N
             old2new(perm(ii)) = ii
@@ -3443,6 +3459,7 @@ contains
       subroutine scatter_diag_permutation()
          implicit none
          integer :: rank_i, bb_i, group_idx, pgno_i, count_i, displ_i, total_perm
+         integer, allocatable :: diag_perm_core(:)
 
          allocate(perm_counts(ptree%nproc))
          allocate(perm_displs(ptree%nproc))
@@ -3484,8 +3501,10 @@ contains
             allocate(perm_tensor_send(1))
          endif
 
-         call MPI_Scatterv(perm_tensor_send, perm_counts, perm_displs, MPI_INTEGER, diag_tensor_perm, diag_perm_size, &
+         allocate(diag_perm_core(diag_perm_size))
+         call MPI_Scatterv(perm_tensor_send, perm_counts, perm_displs, MPI_INTEGER, diag_perm_core, int(diag_perm_size,kind(0)), &
             MPI_INTEGER, Main_ID, ptree%Comm, ierr)
+         diag_tensor_perm(1:diag_perm_size) = int(diag_perm_core,c_int)
          deallocate(perm_tensor_send)
          deallocate(perm_displs)
          deallocate(perm_counts)
@@ -3494,10 +3513,11 @@ contains
       subroutine route_local_scatterers()
          implicit none
          integer :: item, old_idx, tensor_idx, new_idx, route_bb, lo, hi, mid, group_idx
+         integer, allocatable :: local_tensor_core(:), route_core(:)
 
          allocate(recv_counts(ptree%nproc))
          allocate(recv_displs(ptree%nproc))
-         call MPI_Gather(nlocal_active, 1, MPI_INTEGER, recv_counts, 1, MPI_INTEGER, Main_ID, ptree%Comm, ierr)
+         call MPI_Gather(int(nlocal_active,kind(0)), 1, MPI_INTEGER, recv_counts, 1, MPI_INTEGER, Main_ID, ptree%Comm, ierr)
          total_active = 0
          if (ptree%MyID == Main_ID) then
             do rr = 1, ptree%nproc
@@ -3516,7 +3536,9 @@ contains
             allocate(route_pos_all(1))
          endif
 
-         call MPI_Gatherv(local_tensor_old, nlocal_active, MPI_INTEGER, active_tensor_all, recv_counts, recv_displs, &
+         local_tensor_core = int(local_tensor_old(1:nlocal_active),kind(0))
+         allocate(route_core(nlocal_active))
+         call MPI_Gatherv(local_tensor_core, int(nlocal_active,kind(0)), MPI_INTEGER, active_tensor_all, recv_counts, recv_displs, &
             MPI_INTEGER, Main_ID, ptree%Comm, ierr)
 
          if (ptree%MyID == Main_ID) then
@@ -3561,12 +3583,15 @@ contains
             enddo
          endif
 
-         call MPI_Scatterv(route_root_all, recv_counts, recv_displs, MPI_INTEGER, local_diag_root, nlocal_active, &
+         call MPI_Scatterv(route_root_all, recv_counts, recv_displs, MPI_INTEGER, route_core, int(nlocal_active,kind(0)), &
             MPI_INTEGER, Main_ID, ptree%Comm, ierr)
-         call MPI_Scatterv(route_gid_all, recv_counts, recv_displs, MPI_INTEGER, local_diag_gid, nlocal_active, &
+         local_diag_root(1:nlocal_active) = int(route_core,c_int)
+         call MPI_Scatterv(route_gid_all, recv_counts, recv_displs, MPI_INTEGER, route_core, int(nlocal_active,kind(0)), &
             MPI_INTEGER, Main_ID, ptree%Comm, ierr)
-         call MPI_Scatterv(route_pos_all, recv_counts, recv_displs, MPI_INTEGER, local_diag_pos, nlocal_active, &
+         local_diag_gid(1:nlocal_active) = int(route_core,c_int)
+         call MPI_Scatterv(route_pos_all, recv_counts, recv_displs, MPI_INTEGER, route_core, int(nlocal_active,kind(0)), &
             MPI_INTEGER, Main_ID, ptree%Comm, ierr)
+         local_diag_pos(1:nlocal_active) = int(route_core,c_int)
 
          deallocate(route_pos_all)
          deallocate(route_gid_all)
@@ -3588,7 +3613,7 @@ contains
    !> @param mesh_range: global local-mesh range for this rank, [idxs, idxe+1]
    subroutine C_BPACK_Get_Anylevel_Blocks(level, nblock, block_info, mesh_range, bmat_Cptr, option_Cptr, ptree_Cptr, msh_Cptr) bind(c, name="c_bpack_get_anylevel_blocks")
       implicit none
-      integer level, nblock, block_info(*), mesh_range(2)
+      integer(c_int) level, nblock, block_info(*), mesh_range(2)
       integer group_n(1), head_g, tail_g, lhead_g, ltail_g
       integer levelm, level_butterfly, diag_level, maxlevel_mat, bb, cnt, pgno, info_stride, pos, nblock_capacity
 
@@ -3681,8 +3706,8 @@ contains
    !> @param mesh_range: global local-mesh range for this rank, [idxs(dim)], [idxe(dim)+1]
    subroutine C_BPACK_MD_Get_Anylevel_Blocks(Ndim, level, nblock, block_info, mesh_range, bmat_Cptr, option_Cptr, ptree_Cptr, msh_Cptr) bind(c, name="c_bpack_md_get_anylevel_blocks")
       implicit none
-      integer Ndim
-      integer level, nblock, block_info(*), mesh_range(2*Ndim)
+      integer(c_int) Ndim
+      integer(c_int) level, nblock, block_info(*), mesh_range(2*Ndim)
       integer idx_block(Ndim), dims(Ndim), group_n(Ndim), head_g(Ndim), tail_g(Ndim), lhead_g(Ndim), ltail_g(Ndim)
       integer levelm, level_butterfly, diag_level, maxlevel_mat, bb, cnt, dim_i, pgno, info_stride, pos, nblock_capacity
 
@@ -3736,9 +3761,9 @@ contains
       cnt = 0
 
       do bb = 1, product(dims)
-         call SingleIndexToMultiIndex(Ndim, dims, bb, idx_block)
+         call SingleIndexToMultiIndex(int(Ndim,kind(0)), dims, bb, idx_block)
          group_n = blocks%col_group*2**diag_level + idx_block - 1
-         pgno = GetMshGroup_Pgno(ptree, Ndim, group_n)
+         pgno = GetMshGroup_Pgno(ptree, int(Ndim,kind(0)), group_n)
          if (IOwnPgrp(ptree, pgno)) then
             cnt = cnt + 1
             if (cnt <= nblock_capacity) then
@@ -3791,7 +3816,7 @@ contains
    subroutine C_BPACK_Iter_Usermatvec_Precon(x, b, Nloc, Nrhs, option_Cptr, stats_Cptr, ptree_Cptr, ker_Cptr, C_FuncHMatVec, C_FuncHPreconMatVec, C_QuantApp) bind(c, name="c_bpack_iter_usermatvec_precon")
       implicit none
 
-      integer Nloc, Nrhs
+      integer(c_int) Nloc, Nrhs
       DT::x(Nloc, Nrhs), b(Nloc, Nrhs)
 
       type(c_ptr), intent(in) :: ptree_Cptr
@@ -3829,7 +3854,7 @@ contains
       do ii = 1, Nrhs
          iter = 0
          rel_error = option%tol_itersol
-         call BPACK_Z_iter_usermatvec_precon(option%n_iter, Nloc, b(:, ii), x(:, ii), rel_error, iter, &
+         call BPACK_Z_iter_usermatvec_precon(option%n_iter, int(Nloc,kind(0)), b(:, ii), x(:, ii), rel_error, iter, &
             matvec_user_C, matvec_precon_user_C, ptree, option, stats, ker)
       end do
       n2 = MPI_Wtime()
@@ -3859,8 +3884,8 @@ contains
    !> @param C_FuncHPreconMatVec_MD: the C_pointer to user-provided function to apply the tensor preconditioner (in)
    subroutine C_BPACK_MD_Iter_Usermatvec_Precon(Ndim, x, b, Nloc, Nrhs, option_Cptr, stats_Cptr, ptree_Cptr, ker_Cptr, C_FuncHMatVec_MD, C_FuncHPreconMatVec_MD, C_QuantApp) bind(c, name="c_bpack_md_iter_usermatvec_precon")
       implicit none
-      integer Ndim
-      integer Nloc(Ndim), Nrhs
+      integer(c_int) Ndim
+      integer(c_int) Nloc(Ndim), Nrhs
       DT::x(product(Nloc), Nrhs), b(product(Nloc), Nrhs)
 
       type(c_ptr), intent(in) :: ptree_Cptr
@@ -3898,7 +3923,7 @@ contains
       do ii = 1, Nrhs
          iter = 0
          rel_error = option%tol_itersol
-         call BPACK_MD_Z_iter_usermatvec_precon(Ndim, option%n_iter, Nloc, b(:, ii), x(:, ii), rel_error, iter, &
+         call BPACK_MD_Z_iter_usermatvec_precon(int(Ndim,kind(0)), option%n_iter, int(Nloc,kind(0)), b(:, ii), x(:, ii), rel_error, iter, &
             matvec_user_C_MD, matvec_precon_user_C_MD, ptree, option, stats, ker)
       end do
       n2 = MPI_Wtime()
@@ -3928,7 +3953,7 @@ contains
    subroutine C_BF_Mult(trans, xin, xout, Ninloc, Noutloc, Ncol, bf_for_Cptr, option_Cptr, stats_Cptr, ptree_Cptr) bind(c, name="c_bf_mult")
       implicit none
       real(kind=8) t1, t2
-      integer Ninloc, Noutloc, Ncol
+      integer(c_int) Ninloc, Noutloc, Ncol
       DT::xin(Ninloc, Ncol), xout(Noutloc, Ncol)
 
       character(kind=c_char, len=1) :: trans(*)
@@ -4005,9 +4030,9 @@ contains
       stats%Time_C_Mult_FFT_Output = 0
       xout = 0
       if (trim(str) == 'N') then
-         call BF_block_MVP_dat(blocks, trim(str), Noutloc, Ninloc, Ncol, xin, Ninloc, xout,Noutloc, BPACK_cone, BPACK_czero, ptree, stats)
+         call BF_block_MVP_dat(blocks, trim(str), int(Noutloc,kind(0)), int(Ninloc,kind(0)), int(Ncol,kind(0)), xin, int(Ninloc,kind(0)), xout,int(Noutloc,kind(0)), BPACK_cone, BPACK_czero, ptree, stats)
       else
-         call BF_block_MVP_dat(blocks, trim(str), Ninloc, Noutloc, Ncol, xin, Ninloc, xout, Noutloc, BPACK_cone, BPACK_czero, ptree, stats)
+         call BF_block_MVP_dat(blocks, trim(str), int(Ninloc,kind(0)), int(Noutloc,kind(0)), int(Ncol,kind(0)), xin, int(Ninloc,kind(0)), xout, int(Noutloc,kind(0)), BPACK_cone, BPACK_czero, ptree, stats)
       endif
 
       t2 = MPI_Wtime()
@@ -4029,7 +4054,7 @@ contains
    subroutine C_BP_Mult(trans, xin, xout, Ninloc, Noutloc, Ncol, bp_Cptr, option_Cptr, stats_Cptr, ptree_Cptr) bind(c, name="c_bp_mult")
       implicit none
       character(kind=c_char, len=1) :: trans(*)
-      integer :: Ninloc, Noutloc, Ncol
+      integer(c_int) :: Ninloc, Noutloc, Ncol
       DT :: xin(Ninloc, Ncol), xout(Noutloc, Ncol)
       DT, allocatable :: xin_conj(:, :)
       type(c_ptr), intent(in) :: bp_Cptr, option_Cptr, stats_Cptr, ptree_Cptr
@@ -4107,13 +4132,13 @@ contains
 #if DAT==0 || DAT==2
          allocate(xin_conj(Ninloc, Ncol))
          xin_conj = conjg(xin)
-         call BP_Mult(handle%BP, 'T', xin_conj, xout, Ninloc, Noutloc, Ncol, ptree, stats)
+         call BP_Mult(handle%BP, 'T', xin_conj, xout, int(Ninloc,kind(0)), int(Noutloc,kind(0)), int(Ncol,kind(0)), ptree, stats)
          xout = conjg(xout)
 #else
-         call BP_Mult(handle%BP, 'T', xin, xout, Ninloc, Noutloc, Ncol, ptree, stats)
+         call BP_Mult(handle%BP, 'T', xin, xout, int(Ninloc,kind(0)), int(Noutloc,kind(0)), int(Ncol,kind(0)), ptree, stats)
 #endif
       else
-         call BP_Mult(handle%BP, op, xin, xout, Ninloc, Noutloc, Ncol, ptree, stats)
+         call BP_Mult(handle%BP, op, xin, xout, int(Ninloc,kind(0)), int(Noutloc,kind(0)), int(Ncol,kind(0)), ptree, stats)
       endif
       xout = xout/option%scale_factor
       t2 = MPI_Wtime()
@@ -4146,8 +4171,8 @@ contains
       type(intersect), allocatable::inters(:)
       real(kind=8)::n0, n1, n2, n3, n4, n5
       integer Ntest, passflag
-      integer Nallrows, Nallcols
-      integer*8 Nalldat_loc
+      integer(c_int) Nallrows, Nallcols
+      integer(c_int64_t) Nalldat_loc
       integer nsproc1, nsproc2, nprow, npcol, nprow1D, npcol1D, myrow, mycol, nprow1, npcol1, myrow1, mycol1, nprow2, npcol2, myrow2, mycol2, myArows, myAcols, rank1, rank2, ierr, MyID
       integer:: cridx, info
       integer, allocatable::rows(:), cols(:)
@@ -4164,12 +4189,14 @@ contains
       integer::head, tail, idx, pp, pgno, nr_loc, nc_loc
       type(matrixblock), pointer::blocks
       integer num_blocks, idx_row, idx_col, idx_dat
-      integer:: allrows(Nallrows), allcols(Nallcols)
+      integer(c_int):: allrows(Nallrows), allcols(Nallcols)
       integer, allocatable::datidx(:)
-      integer:: Ninter, nr, nc, ntot_loc
+      integer(c_int):: Ninter
+      integer nr, nc, ntot_loc
       DT,target::alldat_loc(Nalldat_loc)
-      integer::colidx(Ninter), rowidx(Ninter), pgidx(Ninter)
-      integer::Npmap, pmaps(Npmap, 3), flag2D
+      integer(c_int)::colidx(Ninter), rowidx(Ninter), pgidx(Ninter)
+      integer(c_int)::Npmap, pmaps(Npmap, 3)
+      integer flag2D
       type(iarray)::lst
       type(matrixblock), pointer::blocks_o
       integer, allocatable:: allrows1(:), allcols1(:), pgidx1(:)
@@ -4215,7 +4242,7 @@ contains
       ! write(*,*)'col',jj,allcols1(jj)
       ! enddo
 
-      call BF_ExtractElement(blocks_o, option, msh, stats, ptree, Ninter, allrows1, allcols1, alldat_loc, rowidx, colidx, pgidx1, Npmap, pmaps)
+      call BF_ExtractElement(blocks_o, option, msh, stats, ptree, int(Ninter,kind(0)), allrows1, allcols1, alldat_loc, int(rowidx,kind(0)), int(colidx,kind(0)), pgidx1, int(Npmap,kind(0)), int(pmaps,kind(0)))
 
       deallocate (allrows1)
       deallocate (allcols1)
@@ -4259,14 +4286,15 @@ contains
       type(Bmatrix), pointer::bmat
       type(proctree), pointer::ptree
       type(mesh), pointer::msh
-      integer*8 Nalldat_loc
-      integer Nallrows, Nallcols
-      integer:: allrows(Nallrows), allcols(Nallcols)
+      integer(c_int64_t) Nalldat_loc
+      integer(c_int) Nallrows, Nallcols
+      integer(c_int):: allrows(Nallrows), allcols(Nallcols)
       integer, allocatable:: allrows1(:), allcols1(:), pgidx1(:)
-      integer:: Ninter, idx_row, idx_col
+      integer(c_int):: Ninter
+      integer idx_row, idx_col
       DT,target::alldat_loc(Nalldat_loc)
-      integer::colidx(Ninter), rowidx(Ninter), pgidx(Ninter)
-      integer::Npmap, pmaps(Npmap, 3)
+      integer(c_int)::colidx(Ninter), rowidx(Ninter), pgidx(Ninter)
+      integer(c_int)::Npmap, pmaps(Npmap, 3)
       real(kind=8) t1, t2
 
       t1 = MPI_Wtime()
@@ -4289,7 +4317,7 @@ contains
       allocate (pgidx1(Ninter))
       pgidx1 = pgidx + 1
 
-      call BPACK_ExtractElement(bmat, option, msh, stats, ptree, Ninter, allrows1, allcols1, alldat_loc, rowidx, colidx, pgidx1, Npmap, pmaps)
+      call BPACK_ExtractElement(bmat, option, msh, stats, ptree, int(Ninter,kind(0)), allrows1, allcols1, alldat_loc, int(rowidx,kind(0)), int(colidx,kind(0)), pgidx1, int(Npmap,kind(0)), int(pmaps,kind(0)))
 
       deallocate (allrows1)
       deallocate (allcols1)
@@ -4316,7 +4344,7 @@ contains
    subroutine C_BPACK_Mult(trans, xin, xout, Ninloc, Noutloc, Ncol, bmat_Cptr, option_Cptr, stats_Cptr, ptree_Cptr) bind(c, name="c_bpack_mult_fortran")
       implicit none
       real(kind=8) t1, t2
-      integer Ninloc, Noutloc, Ncol
+      integer(c_int) Ninloc, Noutloc, Ncol
       DT::xin(Ninloc, Ncol), xout(Noutloc, Ncol)
 
       character(kind=c_char, len=1) :: trans(*)
@@ -4398,7 +4426,7 @@ contains
       ! if(ptree%MyID==Main_ID .and. option%verbosity>=0)write(*,*) "Multiply ......"
 
       call assert(Noutloc == Ninloc, "not square Z")
-      call BPACK_Mult(trim(str), Noutloc, Ncol, xin, xout, bmat, ptree, option, stats)
+      call BPACK_Mult(trim(str), int(Noutloc,kind(0)), int(Ncol,kind(0)), xin, xout, bmat, ptree, option, stats)
       ! need to use another Flop counter for this operation in future
 
       ! if(ptree%MyID==Main_ID .and. option%verbosity>=0)write(*,*) "Multiply finished"
@@ -4411,11 +4439,11 @@ contains
       stats%Flop_C_Mult = stats%Flop_C_Mult + stats%Flop_Tmp
 
       if(option%verbosity >=2)then
-         tmpnorm = (fnorm(xin,Ninloc,Ncol))**2d0
+         tmpnorm = (fnorm(xin,int(Ninloc,kind(0)),int(Ncol,kind(0))))**2d0
          vtmp = tmpnorm
          call MPI_ALLREDUCE(vtmp, tmpnorm, 1, MPI_DOUBLE_PRECISION, MPI_SUM, ptree%Comm, ierr)
          if(ptree%MyID==0)write(*,*)'norm xin',tmpnorm
-         tmpnorm = (fnorm(xout,Noutloc,Ncol))**2d0
+         tmpnorm = (fnorm(xout,int(Noutloc,kind(0)),int(Ncol,kind(0))))**2d0
          vtmp = tmpnorm
          call MPI_ALLREDUCE(vtmp, tmpnorm, 1, MPI_DOUBLE_PRECISION, MPI_SUM, ptree%Comm, ierr)
          if(ptree%MyID==0)write(*,*)'norm xout',tmpnorm
@@ -4445,8 +4473,8 @@ contains
    subroutine C_BPACK_MD_Mult(Ndim,trans, xin, xout, Ninloc, Noutloc, Ncol, bmat_Cptr, option_Cptr, stats_Cptr, ptree_Cptr, msh_Cptr) bind(c, name="c_bpack_md_mult")
       implicit none
       real(kind=8) t1, t2
-      integer Ndim
-      integer Ninloc(Ndim), Noutloc(Ndim), Ncol
+      integer(c_int) Ndim
+      integer(c_int) Ninloc(Ndim), Noutloc(Ndim), Ncol
       DT::xin(product(Ninloc), Ncol), xout(product(Noutloc), Ncol)
       real(kind=8)::tmpnorm,vtmp
       integer ierr
@@ -4531,14 +4559,14 @@ contains
       ! if(ptree%MyID==Main_ID .and. option%verbosity>=0)write(*,*) "Multiply ......"
 
       call assert(ALL(Noutloc == Ninloc), "not square Z")
-      call BPACK_MD_Mult(Ndim, trim(str), Noutloc, Ncol, xin, xout, bmat, ptree, option, stats, msh)
+      call BPACK_MD_Mult(int(Ndim,kind(0)), trim(str), int(Noutloc,kind(0)), int(Ncol,kind(0)), xin, xout, bmat, ptree, option, stats, msh)
 
       if(option%verbosity >=2)then
-         tmpnorm = (fnorm(xin,product(Ninloc),Ncol))**2d0
+         tmpnorm = (fnorm(xin,product(int(Ninloc,kind(0))),int(Ncol,kind(0))))**2d0
          vtmp=tmpnorm
          call MPI_ALLREDUCE(vtmp, tmpnorm, 1, MPI_DOUBLE_PRECISION, MPI_SUM, ptree%Comm, ierr)
          if(ptree%MyID==0)write(*,*)'norm xin',tmpnorm
-         tmpnorm = (fnorm(xout,product(Noutloc),Ncol))**2d0
+         tmpnorm = (fnorm(xout,product(int(Noutloc,kind(0))),int(Ncol,kind(0))))**2d0
          vtmp = tmpnorm
          call MPI_ALLREDUCE(vtmp, tmpnorm, 1, MPI_DOUBLE_PRECISION, MPI_SUM, ptree%Comm, ierr)
          if(ptree%MyID==0)write(*,*)'norm xout',tmpnorm
@@ -4575,7 +4603,7 @@ contains
    subroutine C_BPACK_Inv_Mult(trans, xin, xout, Ninloc, Noutloc, Ncol, bmat_Cptr, option_Cptr, stats_Cptr, ptree_Cptr) bind(c, name="c_bpack_inv_mult")
       implicit none
       real(kind=8) t1, t2
-      integer Ninloc, Noutloc, Ncol
+      integer(c_int) Ninloc, Noutloc, Ncol
       DT::xin(Ninloc, Ncol), xout(Noutloc, Ncol)
 
       character(kind=c_char, len=1) :: trans(*)
@@ -4655,7 +4683,7 @@ contains
       ! if(ptree%MyID==Main_ID .and. option%verbosity>=0)write(*,*) "Multiply ......"
 
       call assert(Noutloc == Ninloc, "not square Z")
-      call BPACK_Inv_Mult(trim(str), Noutloc, Ncol, xin, xout, bmat, ptree, option, stats)
+      call BPACK_Inv_Mult(trim(str), int(Noutloc,kind(0)), int(Ncol,kind(0)), xin, xout, bmat, ptree, option, stats)
       ! need to use another Flop counter for this operation in future
 
       ! if(ptree%MyID==Main_ID .and. option%verbosity>=0)write(*,*) "Multiply finished"
@@ -4721,7 +4749,8 @@ contains
       implicit none
       type(c_ptr), intent(inout) :: msh_Cptr
       type(mesh), pointer::msh(:)
-      integer :: Ndim, dim_i
+      integer(c_int) :: Ndim
+      integer dim_i
 
       call c_f_pointer(msh_Cptr, msh, [Ndim])
 
@@ -4815,9 +4844,13 @@ contains
 !> @param v_bugfix: bugfix version number
    subroutine C_BPACK_GetVersionNumber(v_major, v_minor, v_bugfix) bind(c, name="c_bpack_getversionnumber")
       implicit none
-      integer::v_major, v_minor, v_bugfix
+      integer(c_int)::v_major, v_minor, v_bugfix
+      integer :: major_core, minor_core, bugfix_core
 
-      call BPACK_GetVersionNumber(v_major, v_minor, v_bugfix)
+      call BPACK_GetVersionNumber(major_core, minor_core, bugfix_core)
+      v_major = int(major_core,c_int)
+      v_minor = int(minor_core,c_int)
+      v_bugfix = int(bugfix_core,c_int)
 
    end subroutine C_BPACK_GetVersionNumber
 
@@ -4826,11 +4859,11 @@ contains
 !> @param idx_child: node number in one of the two child trees
    subroutine C_BPACK_TreeIndex_Merged2Child(idx_merge, idx_child) bind(c, name="c_bpack_treeindex_merged2child")
       implicit none
-      integer idx_merge, idx_child ! node index in the merged and child tree
+      integer(c_int) idx_merge, idx_child ! node index in the merged and child tree
       integer level, nth  ! level and the order on that level in the merged tree
       integer level_c, nth_c ! level and the order on that level in the child tree
       integer l_or_r ! 1: left 0: right
-      level = GetTreelevel(idx_merge) - 1
+      level = GetTreelevel(int(idx_merge,kind(0))) - 1
       call assert(level >= 1, 'cannot convert the root node')
 
       level_c = level - 1

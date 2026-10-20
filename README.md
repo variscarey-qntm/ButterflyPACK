@@ -43,6 +43,41 @@ make install
 ( see example cmake script in example_scripts: run_cmake_build_gnu_ubuntu.sh, run_cmake_build_intel_ubuntu.sh, run_cmake_build_gnu_cori.sh, run_cmake_build_intel_cori.sh)
 ```
 
+### MPI-4 large counts and ILP64
+
+The opt-in CMake option `-DMPI4=ON` targets GNU Fortran and MPICH 5.0 or
+newer. It defines `MPI4` and compiles the Fortran components, including the
+bundled modified LAPACK/ScaLAPACK routines and Fortran examples, with
+`-fdefault-integer-8`. The default build is unchanged.
+
+Use matching ILP64 OpenBLAS, LAPACK and ScaLAPACK installations. In particular,
+build the MPI-4-capable `variscarey-qntm/scalapack` implementation with 8-byte
+Fortran integers against the same MPI and ILP64 BLAS/LAPACK. Ordinary LP64
+libraries are not interchangeable, even when they export the same symbols.
+The numerical libraries must expose the usual unsuffixed Fortran symbols
+(for example, `dgemm_`).
+
+```
+cmake -S . -B build-mpi4 \
+  -DMPI4=ON \
+  -DCMAKE_Fortran_COMPILER=mpifort \
+  -DCMAKE_C_COMPILER=mpicc \
+  -DCMAKE_CXX_COMPILER=mpicxx \
+  -DTPL_BLAS_LIBRARIES=/path/to/ilp64/libopenblas.so \
+  -DTPL_LAPACK_LIBRARIES=/path/to/ilp64/libopenblas.so \
+  -DTPL_SCALAPACK_LIBRARIES=/path/to/ilp64/libscalapack.so
+cmake --build build-mpi4
+```
+
+Use a fresh build directory when changing integer widths, and rebuild Fortran
+applications against the generated modules using `-fdefault-integer-8`.
+MPI ranks, tags, handles and status fields retain the MPI implementation's ABI;
+large-count operations must not pass default 8-byte integers to legacy MPI
+Fortran entry points. CMake checks for the MPI-4 C large-count API, but the
+user remains responsible for selecting matching ILP64 numerical libraries.
+MAGMA, ARPACK/PARPACK, PaRSEC, ZFP and FFTW integrations are currently rejected
+in this mode rather than assuming their integer interfaces are ILP64-compatible.
+
 ### Without MPI
 For users that don't want to use MPI, ButterflyPACK can be built with only shared-memory parallelism. The installation uses CMake build system and requires BLAS and LAPACK. Fortran and CPP examples for kernel ridge regression can be found at https://github.com/liuyangzhuan/ButterflyPACK/blob/master/EXAMPLE/KERREG_Driver_seq.f90 and https://github.com/liuyangzhuan/ButterflyPACK/blob/master/EXAMPLE/InterfaceTest_simple_seq.cpp 
 
@@ -121,5 +156,4 @@ make install
 [14] Y. Liu, "A comparative study of butterfly-enhanced direct integral and differential equation solvers for high-frequency electromagnetic analysis involving inhomogeneous dielectrics," 3rd URSI Atlantic Radio Science Meeting (AT-AP-RASC), 2022. 
 
 [15] Y. Liu, J. Song, R. Burridge, and J. Qian, "A fast butterfly-compressed Hadamard-Babich integrator for high-frequency inhomogenous Helmholtz equations in variable media," SIAM J. Multiscale Model. Simul., 2022. 
-
 

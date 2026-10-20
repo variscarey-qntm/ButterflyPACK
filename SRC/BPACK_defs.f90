@@ -21,7 +21,18 @@
 
 module BPACK_DEFS
 
-#ifdef MPIMODULE
+#if defined(MPI4) && defined(HAVE_MPI)
+    use bpack_mpi4_constants
+    use iso_c_binding
+#ifdef HAVE_ZFP
+    use zfp
+#endif
+#if __GNUC__ >= 5
+    use ieee_arithmetic
+#endif
+    use BPACK_linkedlist
+    implicit none
+#elif defined(MPIMODULE)
 #ifdef HAVE_MPI
     use MPI
 #endif
@@ -1105,7 +1116,7 @@ integer, allocatable::index_MD(:, :, :) !< an array of block offsets
         subroutine C_Compressibility_MD(Ndim,groupm, groupn, val, quant)
             USE, INTRINSIC :: ISO_C_BINDING
             type(c_ptr) :: quant
-            integer, INTENT(IN):: Ndim
+            integer(kind=C_INT), INTENT(IN):: Ndim
             integer(kind=C_INT), INTENT(IN):: groupm(Ndim), groupn(Ndim)
             integer(kind=C_INT)::val
         end subroutine C_Compressibility_MD
@@ -1196,7 +1207,7 @@ integer, allocatable::index_MD(:, :, :) !< an array of block offsets
         subroutine C_HMatVec_MD(Ndim, trans, Nin, Nout, num_vect, Vin, Vout, quant)
             USE, INTRINSIC :: ISO_C_BINDING
             import::mesh, proctree, Hstat
-            integer Ndim
+            integer(kind=C_INT) Ndim
             type(c_ptr) :: quant
             integer(kind=C_INT), INTENT(IN):: Nin(Ndim), Nout(Ndim), num_vect
             CBIND_DT::Vin(product(Nin), num_vect), Vout(product(Nout), num_vect)

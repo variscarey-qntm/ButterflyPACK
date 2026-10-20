@@ -126,6 +126,7 @@ while IFS= read -r line ; do
 done < "$TMP_FILE"
 echo "#endif" >> $MACRO_FILE
 echo "#endif" >> $MACRO_FILE
+cat "$ROOTDIR/MPI4/bpack_mpi4.fi" >> "$MACRO_FILE"
 rm -rf $TMP_FILE
 cp $MACRO_FILE $ROOTDIR/EXAMPLE/.   # keep a precision-independent ButterflyPACK_config.fi under the example folder
 
