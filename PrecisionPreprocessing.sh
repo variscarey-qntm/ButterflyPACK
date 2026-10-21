@@ -58,8 +58,13 @@ echo "#define C_SIZEOF_DT sizeof_complex16" >> $MACRO_FILE
 echo "#define CBIND_DT complex(kind=C_DOUBLE_COMPLEX)" >> $MACRO_FILE
 echo "#define C_DT _Complex double" >> $MACRO_FILE
 echo "#define C_RDT double" >> $MACRO_FILE
+echo "#ifdef MPI4" >> $MACRO_FILE
+echo "#define gemmf77 bpack_zgemm" >> $MACRO_FILE
+echo "#define copymatf77 bpack_zlacpy" >> $MACRO_FILE
+echo "#else" >> $MACRO_FILE
 echo "#define gemmf77 zgemm" >> $MACRO_FILE
 echo "#define copymatf77 zlacpy" >> $MACRO_FILE
+echo "#endif" >> $MACRO_FILE
 echo " " >> $MACRO_FILE
 while IFS= read -r line ; do
     echo "#define $line z_$line" >> $MACRO_FILE
@@ -78,8 +83,13 @@ echo "#define C_SIZEOF_DT sizeof_double" >> $MACRO_FILE
 echo "#define CBIND_DT real(kind=C_DOUBLE)" >> $MACRO_FILE
 echo "#define C_DT double" >> $MACRO_FILE
 echo "#define C_RDT double" >> $MACRO_FILE
+echo "#ifdef MPI4" >> $MACRO_FILE
+echo "#define gemmf77 bpack_dgemm" >> $MACRO_FILE
+echo "#define copymatf77 bpack_dlacpy" >> $MACRO_FILE
+echo "#else" >> $MACRO_FILE
 echo "#define gemmf77 dgemm" >> $MACRO_FILE
 echo "#define copymatf77 dlacpy" >> $MACRO_FILE
+echo "#endif" >> $MACRO_FILE
 echo " " >> $MACRO_FILE
 while IFS= read -r line ; do
     echo "#define $line d_$line" >> $MACRO_FILE
@@ -98,8 +108,13 @@ echo "#define C_SIZEOF_DT sizeof_complex" >> $MACRO_FILE
 echo "#define CBIND_DT complex(kind=C_FLOAT_COMPLEX)" >> $MACRO_FILE
 echo "#define C_DT _Complex float" >> $MACRO_FILE
 echo "#define C_RDT float" >> $MACRO_FILE
+echo "#ifdef MPI4" >> $MACRO_FILE
+echo "#define gemmf77 bpack_cgemm" >> $MACRO_FILE
+echo "#define copymatf77 bpack_clacpy" >> $MACRO_FILE
+echo "#else" >> $MACRO_FILE
 echo "#define gemmf77 cgemm" >> $MACRO_FILE
 echo "#define copymatf77 clacpy" >> $MACRO_FILE
+echo "#endif" >> $MACRO_FILE
 echo " " >> $MACRO_FILE
 while IFS= read -r line ; do
     echo "#define $line c_$line" >> $MACRO_FILE
@@ -118,15 +133,19 @@ echo "#define C_SIZEOF_DT sizeof_float" >> $MACRO_FILE
 echo "#define CBIND_DT real(kind=C_FLOAT)" >> $MACRO_FILE
 echo "#define C_DT float" >> $MACRO_FILE
 echo "#define C_RDT float" >> $MACRO_FILE
+echo "#ifdef MPI4" >> $MACRO_FILE
+echo "#define gemmf77 bpack_sgemm" >> $MACRO_FILE
+echo "#define copymatf77 bpack_slacpy" >> $MACRO_FILE
+echo "#else" >> $MACRO_FILE
 echo "#define gemmf77 sgemm" >> $MACRO_FILE
 echo "#define copymatf77 slacpy" >> $MACRO_FILE
+echo "#endif" >> $MACRO_FILE
 echo " " >> $MACRO_FILE
 while IFS= read -r line ; do
     echo "#define $line s_$line" >> $MACRO_FILE
 done < "$TMP_FILE"
 echo "#endif" >> $MACRO_FILE
 echo "#endif" >> $MACRO_FILE
-cat "$ROOTDIR/MPI4/bpack_mpi4.fi" >> "$MACRO_FILE"
 rm -rf $TMP_FILE
 cp $MACRO_FILE $ROOTDIR/EXAMPLE/.   # keep a precision-independent ButterflyPACK_config.fi under the example folder
 

@@ -1,0 +1,344 @@
+subroutine bpack_@P@getrf(m,n,a,lda,ipiv,info)
+  integer, intent(in) :: m,n,lda
+  @T@ :: a(lda,*)
+  integer, intent(out) :: ipiv(min(m,n)),info
+  integer(int64) :: piv64(max(0,min(m,n))),info64
+  external :: @P@getrf
+  call @P@getrf(int(m,int64),int(n,int64),a,int(lda,int64),piv64,info64)
+  info=bpack_int(info64)
+  if (info >= 0) ipiv=bpack_int(piv64)
+end subroutine
+
+subroutine bpack_@P@getrfmod(m,n,a,lda,thresh,ipiv,info)
+  integer, intent(in) :: m,n,lda
+  @T@ :: a(lda,*)
+  @R@, intent(in) :: thresh
+  integer, intent(out) :: ipiv(min(m,n)),info
+  integer(int64) :: piv64(max(0,min(m,n))),info64
+  external :: @P@getrfmod
+  call @P@getrfmod(int(m,int64),int(n,int64),a,int(lda,int64),thresh,piv64,info64)
+  info=bpack_int(info64)
+  if (info >= 0) ipiv=bpack_int(piv64)
+end subroutine
+
+subroutine bpack_@P@getrs(trans,n,nrhs,a,lda,ipiv,b,ldb,info)
+  character, intent(in) :: trans
+  integer, intent(in) :: n,nrhs,lda,ldb,ipiv(n)
+  @T@ :: a(lda,*),b(ldb,*)
+  integer, intent(out) :: info
+  integer(int64) :: piv64(max(0,n)),info64
+  external :: @P@getrs
+  piv64=int(ipiv,int64)
+  call @P@getrs(trans,int(n,int64),int(nrhs,int64),a,int(lda,int64),piv64,b,int(ldb,int64),info64)
+  info=bpack_int(info64)
+end subroutine
+
+subroutine bpack_@P@getri(n,a,lda,ipiv,work,lwork,info)
+  integer, intent(in) :: n,lda,lwork,ipiv(n)
+  @T@ :: a(lda,*),work(*)
+  integer, intent(out) :: info
+  integer(int64) :: piv64(max(0,n)),info64
+  external :: @P@getri
+  ! A workspace query does not reference the input pivots.
+  if (lwork /= -1) piv64=int(ipiv,int64)
+  call @P@getri(int(n,int64),a,int(lda,int64),piv64,work,int(lwork,int64),info64)
+  info=bpack_int(info64)
+end subroutine
+
+subroutine bpack_@P@sytrf(uplo,n,a,lda,ipiv,work,lwork,info)
+  character, intent(in) :: uplo
+  integer, intent(in) :: n,lda,lwork
+  @T@ :: a(lda,*),work(*)
+  integer, intent(inout) :: ipiv(n)
+  integer, intent(out) :: info
+  integer(int64) :: piv64(max(0,n)),info64
+  external :: @P@sytrf
+  call @P@sytrf(uplo,int(n,int64),a,int(lda,int64),piv64,work,int(lwork,int64),info64)
+  info=bpack_int(info64)
+  if (lwork /= -1 .and. info >= 0) ipiv=bpack_int(piv64)
+end subroutine
+
+subroutine bpack_@P@sytrs(uplo,n,nrhs,a,lda,ipiv,b,ldb,info)
+  character, intent(in) :: uplo
+  integer, intent(in) :: n,nrhs,lda,ldb,ipiv(n)
+  @T@ :: a(lda,*),b(ldb,*)
+  integer, intent(out) :: info
+  integer(int64) :: piv64(max(0,n)),info64
+  external :: @P@sytrs
+  piv64=int(ipiv,int64)
+  call @P@sytrs(uplo,int(n,int64),int(nrhs,int64),a,int(lda,int64),piv64,b,int(ldb,int64),info64)
+  info=bpack_int(info64)
+end subroutine
+
+subroutine bpack_@P@geqrf(m,n,a,lda,tau,work,lwork,info)
+  integer, intent(in) :: m,n,lda,lwork
+  @T@ :: a(lda,*),tau(*),work(*)
+  integer, intent(out) :: info
+  integer(int64) :: info64
+  external :: @P@geqrf
+  call @P@geqrf(int(m,int64),int(n,int64),a,int(lda,int64),tau,work,int(lwork,int64),info64)
+  info=bpack_int(info64)
+end subroutine
+
+subroutine bpack_@P@geqp3(m,n,a,lda,jpvt,tau,work,lwork, &
+#if @IS_COMPLEX@
+    rwork, &
+#endif
+    info)
+  integer, intent(in) :: m,n,lda,lwork
+  @T@ :: a(lda,*),tau(*),work(*)
+#if @IS_COMPLEX@
+  @R@ :: rwork(*)
+#endif
+  integer, intent(inout) :: jpvt(n)
+  integer, intent(out) :: info
+  integer(int64) :: piv64(max(0,n)),info64
+  external :: @P@geqp3
+  if (lwork /= -1) piv64=int(jpvt,int64)
+  call @P@geqp3(int(m,int64),int(n,int64),a,int(lda,int64),piv64,tau,work,int(lwork,int64), &
+#if @IS_COMPLEX@
+      rwork, &
+#endif
+      info64)
+  info=bpack_int(info64)
+  if (lwork /= -1 .and. info == 0) jpvt=bpack_int(piv64)
+end subroutine
+
+subroutine bpack_@P@geqp3mod(m,n,a,lda,jpvt,tau,work,lwork, &
+#if @IS_COMPLEX@
+    rwork, &
+#endif
+    info,rank,rtol,atol)
+  integer, intent(in) :: m,n,lda,lwork
+  @T@ :: a(lda,*),tau(*),work(*)
+  @R@, intent(in) :: rtol,atol
+#if @IS_COMPLEX@
+  @R@ :: rwork(*)
+#endif
+  integer, intent(inout) :: jpvt(n),rank
+  integer, intent(out) :: info
+  integer(int64) :: piv64(max(0,n)),info64,rank64
+  external :: @P@geqp3mod
+  ! The bundled routines return before defining RANK for an empty matrix.
+  rank64=0_int64
+  if (lwork /= -1) piv64=int(jpvt,int64)
+  call @P@geqp3mod(int(m,int64),int(n,int64),a,int(lda,int64),piv64,tau,work,int(lwork,int64), &
+#if @IS_COMPLEX@
+      rwork, &
+#endif
+      info64,rank64,rtol,atol)
+  info=bpack_int(info64)
+  if (lwork /= -1 .and. info == 0) then
+    jpvt=bpack_int(piv64)
+    rank=bpack_int(rank64)
+  end if
+end subroutine
+
+subroutine bpack_@P@@ORG@qr(m,n,k,a,lda,tau,work,lwork,info)
+  integer, intent(in) :: m,n,k,lda,lwork
+  @T@ :: a(lda,*),tau(*),work(*)
+  integer, intent(out) :: info
+  integer(int64) :: info64
+  external :: @P@@ORG@qr
+  call @P@@ORG@qr(int(m,int64),int(n,int64),int(k,int64),a,int(lda,int64),tau,work,int(lwork,int64),info64)
+  info=bpack_int(info64)
+end subroutine
+
+subroutine bpack_@P@@ORM@qr(side,trans,m,n,k,a,lda,tau,c,ldc,work,lwork,info)
+  character, intent(in) :: side,trans
+  integer, intent(in) :: m,n,k,lda,ldc,lwork
+  @T@ :: a(lda,*),tau(*),c(ldc,*),work(*)
+  integer, intent(out) :: info
+  integer(int64) :: info64
+  external :: @P@@ORM@qr
+  call @P@@ORM@qr(side,trans,int(m,int64),int(n,int64),int(k,int64),a,int(lda,int64), &
+      tau,c,int(ldc,int64),work,int(lwork,int64),info64)
+  info=bpack_int(info64)
+end subroutine
+
+subroutine bpack_@P@gesvd(jobu,jobvt,m,n,a,lda,s,u,ldu,vt,ldvt,work,lwork, &
+#if @IS_COMPLEX@
+    rwork, &
+#endif
+    info)
+  character, intent(in) :: jobu,jobvt
+  integer, intent(in) :: m,n,lda,ldu,ldvt,lwork
+  @T@ :: a(lda,*),u(ldu,*),vt(ldvt,*),work(*)
+  @R@ :: s(*)
+#if @IS_COMPLEX@
+  @R@ :: rwork(*)
+#endif
+  integer, intent(out) :: info
+  integer(int64) :: info64
+  external :: @P@gesvd
+  call @P@gesvd(jobu,jobvt,int(m,int64),int(n,int64),a,int(lda,int64),s,u,int(ldu,int64), &
+      vt,int(ldvt,int64),work,int(lwork,int64), &
+#if @IS_COMPLEX@
+      rwork, &
+#endif
+      info64)
+  info=bpack_int(info64)
+end subroutine
+
+subroutine bpack_@P@gesdd(jobz,m,n,a,lda,s,u,ldu,vt,ldvt,work,lwork, &
+#if @IS_COMPLEX@
+    rwork, &
+#endif
+    iwork,info)
+  character, intent(in) :: jobz
+  integer, intent(in) :: m,n,lda,ldu,ldvt,lwork
+  @T@ :: a(lda,*),u(ldu,*),vt(ldvt,*),work(*)
+  @R@ :: s(*)
+#if @IS_COMPLEX@
+  @R@ :: rwork(*)
+#endif
+  integer, intent(inout) :: iwork(8*min(m,n))
+  integer, intent(out) :: info
+  integer(int64) :: iw64(8*max(0,min(m,n))),info64
+  external :: @P@gesdd
+  ! Scratch is not initialized by the caller, nor fully defined by every job.
+  iw64=0_int64
+  call @P@gesdd(jobz,int(m,int64),int(n,int64),a,int(lda,int64),s,u,int(ldu,int64), &
+      vt,int(ldvt,int64),work,int(lwork,int64), &
+#if @IS_COMPLEX@
+      rwork, &
+#endif
+      iw64,info64)
+  info=bpack_int(info64)
+  if (lwork /= -1 .and. info >= 0) iwork=bpack_int(iw64)
+end subroutine
+
+subroutine bpack_@P@geev(jobvl,jobvr,n,a,lda, &
+#if @IS_COMPLEX@
+    w, &
+#else
+    wr,wi, &
+#endif
+    vl,ldvl,vr,ldvr,work,lwork, &
+#if @IS_COMPLEX@
+    rwork, &
+#endif
+    info)
+  character, intent(in) :: jobvl,jobvr
+  integer, intent(in) :: n,lda,ldvl,ldvr,lwork
+  @T@ :: a(lda,*),vl(ldvl,*),vr(ldvr,*),work(*)
+#if @IS_COMPLEX@
+  @T@ :: w(*)
+  @R@ :: rwork(*)
+#else
+  @R@ :: wr(*),wi(*)
+#endif
+  integer, intent(out) :: info
+  integer(int64) :: info64
+  external :: @P@geev
+  call @P@geev(jobvl,jobvr,int(n,int64),a,int(lda,int64), &
+#if @IS_COMPLEX@
+      w, &
+#else
+      wr,wi, &
+#endif
+      vl,int(ldvl,int64),vr,int(ldvr,int64),work,int(lwork,int64), &
+#if @IS_COMPLEX@
+      rwork, &
+#endif
+      info64)
+  info=bpack_int(info64)
+end subroutine
+
+subroutine bpack_@P@trevc3mod(side,howmny,select,n,t,ldt,vl,ldvl,vr,ldvr,mm,m,work,lwork, &
+#if @IS_COMPLEX@
+    rwork,lrwork, &
+#endif
+    info)
+  character, intent(in) :: side,howmny
+  integer, intent(in) :: n,ldt,ldvl,ldvr,mm,lwork
+  logical, intent(inout) :: select(n)
+  @T@ :: t(ldt,*),vl(ldvl,*),vr(ldvr,*),work(*)
+#if @IS_COMPLEX@
+  integer, intent(in) :: lrwork
+  @R@ :: rwork(*)
+#endif
+  integer, intent(inout) :: m
+  integer, intent(out) :: info
+  integer(int64) :: m64,info64
+  logical(kind=int64) :: select64(max(0,n))
+  external :: @P@trevc3mod
+  ! SELECT is unused (and often uninitialized) unless selected vectors are requested.
+  select64=.false.
+  if (howmny == 'S' .or. howmny == 's') select64=select
+  call @P@trevc3mod(side,howmny,select64,int(n,int64),t,int(ldt,int64),vl,int(ldvl,int64), &
+      vr,int(ldvr,int64),int(mm,int64),m64,work,int(lwork,int64), &
+#if @IS_COMPLEX@
+      rwork,int(lrwork,int64), &
+#endif
+      info64)
+  info=bpack_int(info64)
+  ! TREVC3 defines M and standardizes SELECT even for workspace queries.
+  if (info == 0) then
+    m=bpack_int(m64)
+    if (howmny == 'S' .or. howmny == 's') select=select64
+  end if
+end subroutine
+
+function bpack_@P@lange(norm,m,n,a,lda,work) result(value)
+  character, intent(in) :: norm
+  integer, intent(in) :: m,n,lda
+  @T@ :: a(lda,*)
+  @R@ :: work(*),value
+  @R@, external :: @P@lange
+  value=@P@lange(norm,int(m,int64),int(n,int64),a,int(lda,int64),work)
+end function
+
+subroutine bpack_@P@gemm(transa,transb,m,n,k,alpha,a,lda,b,ldb,beta,c,ldc)
+  use iso_c_binding, only: c_loc, c_f_pointer
+  character, intent(in) :: transa,transb
+  integer, intent(in) :: m,n,k,lda,ldb,ldc
+  @T@, intent(in) :: alpha,beta
+  @T@, target, contiguous, intent(in) :: a(..),b(..)
+  @T@, target, contiguous, intent(inout) :: c(..)
+  @T@, pointer :: ap,bp,cp
+  @T@, target :: empty
+  external :: @P@gemm
+  ! Existing callers also pass storage starting at scalar elements of assumed-shape arrays.
+  empty=0
+  call c_f_pointer(c_loc(a),ap)
+  call c_f_pointer(c_loc(b),bp)
+  call c_f_pointer(c_loc(c),cp)
+  if (.not.associated(ap)) ap=>empty
+  if (.not.associated(bp)) bp=>empty
+  if (.not.associated(cp)) cp=>empty
+  call @P@gemm(transa,transb,int(m,int64),int(n,int64),int(k,int64),alpha,ap,int(lda,int64), &
+      bp,int(ldb,int64),beta,cp,int(ldc,int64))
+end subroutine
+
+subroutine bpack_@P@lacpy(uplo,m,n,a,lda,b,ldb)
+  use iso_c_binding, only: c_loc, c_f_pointer
+  character, intent(in) :: uplo
+  integer, intent(in) :: m,n,lda,ldb
+  @T@, target, contiguous, intent(in) :: a(..)
+  @T@, target, contiguous, intent(inout) :: b(..)
+  @T@, pointer :: ap,bp
+  @T@, target :: empty
+  external :: @P@lacpy
+  empty=0
+  call c_f_pointer(c_loc(a),ap)
+  call c_f_pointer(c_loc(b),bp)
+  if (.not.associated(ap)) ap=>empty
+  if (.not.associated(bp)) bp=>empty
+  call @P@lacpy(uplo,int(m,int64),int(n,int64),ap,int(lda,int64),bp,int(ldb,int64))
+end subroutine
+
+subroutine bpack_@P@trsm(side,uplo,transa,diag,m,n,alpha,a,lda,b,ldb)
+  character, intent(in) :: side,uplo,transa,diag
+  integer, intent(in) :: m,n,lda,ldb
+  @T@ :: alpha,a(lda,*),b(ldb,*)
+  external :: @P@trsm
+  call @P@trsm(side,uplo,transa,diag,int(m,int64),int(n,int64),alpha,a,int(lda,int64),b,int(ldb,int64))
+end subroutine
+
+subroutine bpack_@P@axpy(n,alpha,x,incx,y,incy)
+  integer, intent(in) :: n,incx,incy
+  @T@ :: alpha,x(*),y(*)
+  external :: @P@axpy
+  call @P@axpy(int(n,int64),alpha,x,int(incx,int64),y,int(incy,int64))
+end subroutine

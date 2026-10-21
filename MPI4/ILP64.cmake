@@ -1,0 +1,60 @@
+set(_ilp64_source_dir "${ButterflyPACK_SOURCE_DIR}/MPI4")
+set(_ilp64_binary_dir "${ButterflyPACK_BINARY_DIR}/MPI4")
+file(MAKE_DIRECTORY "${_ilp64_binary_dir}")
+
+foreach(P IN ITEMS s d c z)
+  if(P STREQUAL "s" OR P STREQUAL "c")
+    set(R "real(kind=4)")
+  else()
+    set(R "real(kind=8)")
+  endif()
+  if(P STREQUAL "c" OR P STREQUAL "z")
+    set(IS_COMPLEX 1)
+    set(ORG "ung")
+    set(ORM "unm")
+    if(P STREQUAL "c")
+      set(T "complex(kind=4)")
+    else()
+      set(T "complex(kind=8)")
+    endif()
+  else()
+    set(IS_COMPLEX 0)
+    set(ORG "org")
+    set(ORM "orm")
+    set(T "${R}")
+  endif()
+  foreach(_library IN ITEMS lapack scalapack)
+    foreach(_part IN ITEMS interfaces wrappers)
+      configure_file(
+        "${_ilp64_source_dir}/ilp64_${_library}_${_part}.fi.in"
+        "${_ilp64_binary_dir}/${P}_${_library}_${_part}.fi" @ONLY)
+    endforeach()
+  endforeach()
+endforeach()
+
+add_library(bpack_ilp64 OBJECT "${_ilp64_source_dir}/bpack_ilp64.F90")
+set_target_properties(bpack_ilp64 PROPERTIES
+  POSITION_INDEPENDENT_CODE ON
+  Fortran_MODULE_DIRECTORY "${_ilp64_binary_dir}")
+target_include_directories(bpack_ilp64 PUBLIC "${_ilp64_binary_dir}")
+
+include(GNUInstallDirs)
+install(FILES "${_ilp64_binary_dir}/bpack_ilp64.mod"
+  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+
+if(BUILD_TESTING)
+  foreach(_library IN ITEMS lapack scalapack)
+    add_executable(test_ilp64_${_library}
+      "${_ilp64_source_dir}/test_ilp64_${_library}.f90")
+    add_dependencies(test_ilp64_${_library} bpack_ilp64)
+    target_include_directories(test_ilp64_${_library} PRIVATE "${_ilp64_binary_dir}")
+    target_link_libraries(test_ilp64_${_library} PRIVATE butterflypack)
+    add_test(NAME ilp64_${_library} COMMAND test_ilp64_${_library})
+    set_tests_properties(ilp64_${_library} PROPERTIES TIMEOUT 60)
+  endforeach()
+  foreach(_output IN ITEMS info pivot iwork descriptor grid numroc handle)
+    add_test(NAME ilp64_overflow_${_output}
+      COMMAND test_ilp64_scalapack overflow-${_output})
+    set_tests_properties(ilp64_overflow_${_output} PROPERTIES WILL_FAIL TRUE TIMEOUT 60)
+  endforeach()
+endif()

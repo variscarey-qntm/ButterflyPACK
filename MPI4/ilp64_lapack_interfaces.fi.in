@@ -1,0 +1,61 @@
+! Default-integer entry points; only the external numerical ABI is ILP64.
+interface @P@getrf
+  module procedure bpack_@P@getrf
+end interface
+interface @P@getrfmod
+  module procedure bpack_@P@getrfmod
+end interface
+interface @P@getrs
+  module procedure bpack_@P@getrs
+end interface
+interface @P@getri
+  module procedure bpack_@P@getri
+end interface
+interface @P@sytrf
+  module procedure bpack_@P@sytrf
+end interface
+interface @P@sytrs
+  module procedure bpack_@P@sytrs
+end interface
+interface @P@geqrf
+  module procedure bpack_@P@geqrf
+end interface
+interface @P@geqp3
+  module procedure bpack_@P@geqp3
+end interface
+interface @P@geqp3mod
+  module procedure bpack_@P@geqp3mod
+end interface
+interface @P@@ORG@qr
+  module procedure bpack_@P@@ORG@qr
+end interface
+interface @P@@ORM@qr
+  module procedure bpack_@P@@ORM@qr
+end interface
+interface @P@gesvd
+  module procedure bpack_@P@gesvd
+end interface
+interface @P@gesdd
+  module procedure bpack_@P@gesdd
+end interface
+interface @P@geev
+  module procedure bpack_@P@geev
+end interface
+interface @P@trevc3mod
+  module procedure bpack_@P@trevc3mod
+end interface
+interface @P@lange
+  module procedure bpack_@P@lange
+end interface
+interface @P@gemm
+  module procedure bpack_@P@gemm
+end interface
+interface @P@lacpy
+  module procedure bpack_@P@lacpy
+end interface
+interface @P@trsm
+  module procedure bpack_@P@trsm
+end interface
+interface @P@axpy
+  module procedure bpack_@P@axpy
+end interface

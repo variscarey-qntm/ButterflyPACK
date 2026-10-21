@@ -43,15 +43,21 @@ make install
 ( see example cmake script in example_scripts: run_cmake_build_gnu_ubuntu.sh, run_cmake_build_intel_ubuntu.sh, run_cmake_build_gnu_cori.sh, run_cmake_build_intel_cori.sh)
 ```
 
-### MPI-4 large counts and ILP64
+### MPI4 numerical-library integer adapters
 
-The opt-in CMake option `-DMPI4=ON` targets GNU Fortran and MPICH 5.0 or
-newer. It defines `MPI4` and compiles the Fortran components, including the
-bundled modified LAPACK/ScaLAPACK routines and Fortran examples, with
-`-fdefault-integer-8`. The default build is unchanged.
+The opt-in CMake option `-DMPI4=ON` targets GNU Fortran with Fortran 2018
+assumed-rank support and an MPI-4 implementation. Under `#ifdef MPI4`,
+numerical-library adapters convert
+ButterflyPACK's default integers to 8-byte (64-bit, not 8-bit) integers
+immediately before calling BLAS, LAPACK or ScaLAPACK. Descriptors, pivots,
+integer workspaces and integer results are converted as needed; returned
+values that cannot fit in a ButterflyPACK integer are rejected.
+Only the bundled modified `LAPACK_*.f` and `SCALAPACK_*.f` implementations
+are compiled with `-fdefault-integer-8`. Application Fortran integers and
+the existing C/C++ interfaces are unchanged. The default build is unchanged.
 
 Use matching ILP64 OpenBLAS, LAPACK and ScaLAPACK installations. In particular,
-build the MPI-4-capable `variscarey-qntm/scalapack` implementation with 8-byte
+build the `mpi_large` branch of `variscarey-qntm/scalapack` with 8-byte
 Fortran integers against the same MPI and ILP64 BLAS/LAPACK. Ordinary LP64
 libraries are not interchangeable, even when they export the same symbols.
 The numerical libraries must expose the usual unsuffixed Fortran symbols
@@ -67,23 +73,20 @@ cmake -S . -B build-mpi4 \
   -DTPL_LAPACK_LIBRARIES=/path/to/ilp64/libopenblas.so \
   -DTPL_SCALAPACK_LIBRARIES=/path/to/ilp64/libscalapack.so
 cmake --build build-mpi4
-ctest --test-dir build-mpi4 -R mpi4_bridge --output-on-failure
+ctest --test-dir build-mpi4 -R ilp64 --output-on-failure
 ```
 
-Use a fresh build directory when changing integer widths, and rebuild Fortran
-applications against the generated modules using `-fdefault-integer-8`.
-External Fortran sources that call MPI must also enable preprocessing, define
-`MPI4`, and include the installed `bpack_mpi4.fi` mapping header before their
-MPI calls (with the ButterflyPACK definitions module in scope). CMake applies
-these mappings automatically to ButterflyPACK and its Fortran examples.
-MPI ranks, tags, handles and status fields retain the MPI implementation's ABI;
-large-count operations must not pass default 8-byte integers to legacy MPI
-Fortran entry points. CMake checks for the MPI-4 C large-count API, but the
-user remains responsible for selecting matching ILP64 numerical libraries.
-The bridge regression tests use two MPI ranks and exercise large-count calls
-without allocating multi-gigabyte buffers. The C/C++ public interfaces retain
-their existing 32-bit integer dimensions and indices; widening the Fortran
-implementation does not widen that public API. OpenBLAS batch GEMM is disabled
+Use a fresh build directory when switching modes. Do not compile ButterflyPACK
+or its Fortran applications with a global `-fdefault-integer-8` flag.
+This mode only adapts numerical-library calls: ButterflyPACK's MPI calls,
+counts, dimensions and indices retain their existing limits. It does not
+enable the earlier experimental MPI large-count bridge or require its mapping
+header. ScaLAPACK itself can use MPI-4 large-count operations internally.
+CMake checks for the MPI-4 C large-count API, but the user remains responsible
+for selecting matching ILP64 numerical libraries. The `ilp64` regression tests
+exercise LAPACK numerically in all four precisions and use ILP64 ScaLAPACK test
+doubles to verify argument conversion; distributed numerical validation still
+requires your ScaLAPACK build. OpenBLAS batch GEMM is disabled
 in this mode; the existing individual GEMM path is used instead.
 MAGMA, ARPACK/PARPACK, PaRSEC, ZFP and FFTW integrations are currently rejected
 in this mode rather than assuming their integer interfaces are ILP64-compatible.

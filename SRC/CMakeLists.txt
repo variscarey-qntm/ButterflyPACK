@@ -87,6 +87,11 @@ if (CMAKE_CURRENT_SOURCE_DIR MATCHES "/SRC$" OR
   if (enable_mpi)
     list(APPEND sources ${common_scalapack_sources})
   endif ()
+  if (MPI4)
+    # Only the bundled numerical implementations have an ILP64 default ABI.
+    set_source_files_properties(${common_lapack_sources} ${common_scalapack_sources}
+      PROPERTIES COMPILE_OPTIONS "-fdefault-integer-8")
+  endif ()
 endif ()
 
 if (enable_parsec)
@@ -98,7 +103,7 @@ endif ()
 
 add_library(butterflypack OBJECT ${sources} ${headers})
 if(MPI4)
-  add_dependencies(butterflypack bpack_mpi4)
+  target_link_libraries(butterflypack bpack_ilp64)
 endif()
 target_include_directories(butterflypack PRIVATE
   ${CMAKE_SOURCE_DIR}/h2_parallel

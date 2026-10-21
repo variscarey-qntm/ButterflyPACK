@@ -1,0 +1,387 @@
+! NUMROC is evaluated in the library's integer kind, including index arithmetic.
+integer function bpack_p@P@local(n, desc, axis) result(nlocal)
+   integer(int64), intent(in) :: n
+   integer, intent(in) :: desc(9), axis
+   integer(int64) :: nr, nc, ir, ic, count
+   integer(int64), external :: numroc
+   external :: blacs_gridinfo
+   call blacs_gridinfo(int(desc(2), int64), nr, nc, ir, ic)
+   if (axis == 1) then
+      count = numroc(max(0_int64, n), int(desc(5), int64), ir, int(desc(7), int64), nr)
+   else
+      count = numroc(max(0_int64, n), int(desc(6), int64), ic, int(desc(8), int64), nc)
+   end if
+   nlocal = bpack_int(count)
+end function
+
+subroutine bpack_p@P@gemm(transa, transb, m, n, k, alpha, a, ia, ja, desca, &
+                         b, ib, jb, descb, beta, c, ic, jc, descc)
+   character, intent(in) :: transa, transb
+   integer, intent(in) :: m, n, k, ia, ja, ib, jb, ic, jc, desca(9), descb(9), descc(9)
+   @T@ :: alpha, beta, a(desca(9),*), b(descb(9),*), c(descc(9),*)
+   external :: p@P@gemm
+   call p@P@gemm(transa, transb, int(m,int64), int(n,int64), int(k,int64), alpha, &
+      a, int(ia,int64), int(ja,int64), int(desca,int64), b, int(ib,int64), int(jb,int64), &
+      int(descb,int64), beta, c, int(ic,int64), int(jc,int64), int(descc,int64))
+end subroutine
+
+subroutine bpack_p@P@gemr2d(m, n, a, ia, ja, desca, b, ib, jb, descb, ictxt)
+   integer, intent(in) :: m, n, ia, ja, ib, jb, desca(9), descb(9), ictxt
+   @T@ :: a(desca(9),*), b(descb(9),*)
+   external :: p@P@gemr2d
+   call p@P@gemr2d(int(m,int64), int(n,int64), a, int(ia,int64), int(ja,int64), &
+      int(desca,int64), b, int(ib,int64), int(jb,int64), int(descb,int64), int(ictxt,int64))
+end subroutine
+
+subroutine bpack_p@P@trsm(side, uplo, transa, diag, m, n, alpha, a, ia, ja, desca, b, ib, jb, descb)
+   character, intent(in) :: side, uplo, transa, diag
+   integer, intent(in) :: m, n, ia, ja, ib, jb, desca(9), descb(9)
+   @T@ :: alpha, a(desca(9),*), b(descb(9),*)
+   external :: p@P@trsm
+   call p@P@trsm(side, uplo, transa, diag, int(m,int64), int(n,int64), alpha, a, &
+      int(ia,int64), int(ja,int64), int(desca,int64), b, int(ib,int64), int(jb,int64), int(descb,int64))
+end subroutine
+
+subroutine bpack_p@P@copy(n, x, ix, jx, descx, incx, y, iy, jy, descy, incy)
+   integer, intent(in) :: n, ix, jx, incx, iy, jy, incy, descx(9), descy(9)
+   @T@ :: x(*), y(*)
+   external :: p@P@copy
+   call p@P@copy(int(n,int64), x, int(ix,int64), int(jx,int64), int(descx,int64), &
+      int(incx,int64), y, int(iy,int64), int(jy,int64), int(descy,int64), int(incy,int64))
+end subroutine
+
+@R@ function bpack_p@P@lange(norm, m, n, a, ia, ja, desca, work) result(value)
+   character, intent(in) :: norm
+   integer, intent(in) :: m, n, ia, ja, desca(9)
+   @T@ :: a(desca(9),*)
+   @R@ :: work(*)
+   @R@, external :: p@P@lange
+   value = p@P@lange(norm, int(m,int64), int(n,int64), a, int(ia,int64), int(ja,int64), &
+      int(desca,int64), work)
+end function
+
+subroutine bpack_p@P@getrf(m, n, a, ia, ja, desca, ipiv, info)
+   integer, intent(in) :: m, n, ia, ja, desca(9)
+   integer :: ipiv(*), info
+   @T@ :: a(desca(9),*)
+   integer(int64), allocatable :: piv(:)
+   integer(int64) :: info64
+   integer :: first, last, npiv
+   external :: p@P@getrf
+   npiv = bpack_int(int(bpack_p@P@local(int(desca(3),int64),desca,1),int64) + int(desca(5),int64))
+   allocate(piv(max(1,npiv)))
+   piv = 0_int64
+   call p@P@getrf(int(m,int64), int(n,int64), a, int(ia,int64), int(ja,int64), &
+      int(desca,int64), piv, info64)
+   info = bpack_int(info64)
+   if (info >= 0) then
+      first = bpack_int(int(bpack_p@P@local(int(ia,int64)-1_int64,desca,1),int64) + 1_int64)
+      last = bpack_p@P@local(int(ia,int64)+int(min(m,n),int64)-1_int64,desca,1)
+      ipiv(first:last) = bpack_int(piv(first:last))
+   end if
+end subroutine
+
+subroutine bpack_p@P@getrfmod(m, n, a, ia, ja, desca, thresh, ipiv, info)
+   integer, intent(in) :: m, n, ia, ja, desca(9)
+   integer :: ipiv(*), info
+   @T@ :: a(desca(9),*)
+   @R@ :: thresh
+   integer(int64), allocatable :: piv(:)
+   integer(int64) :: info64
+   integer :: first, last, npiv
+   external :: p@P@getrfmod
+   npiv = bpack_int(int(bpack_p@P@local(int(desca(3),int64),desca,1),int64) + int(desca(5),int64))
+   allocate(piv(max(1,npiv)))
+   piv = 0_int64
+   call p@P@getrfmod(int(m,int64), int(n,int64), a, int(ia,int64), int(ja,int64), &
+      int(desca,int64), thresh, piv, info64)
+   info = bpack_int(info64)
+   if (info >= 0) then
+      first = bpack_int(int(bpack_p@P@local(int(ia,int64)-1_int64,desca,1),int64) + 1_int64)
+      last = bpack_p@P@local(int(ia,int64)+int(min(m,n),int64)-1_int64,desca,1)
+      ipiv(first:last) = bpack_int(piv(first:last))
+   end if
+end subroutine
+
+subroutine bpack_p@P@getri(n, a, ia, ja, desca, ipiv, work, lwork, iwork, liwork, info)
+   integer, intent(in) :: n, ia, ja, desca(9), ipiv(*), lwork, liwork
+   integer :: iwork(*), info
+   @T@ :: a(desca(9),*), work(*)
+   integer(int64), allocatable :: piv(:), iw(:)
+   integer(int64) :: info64
+   integer :: npiv, first, last
+   logical :: query
+   external :: p@P@getri
+   query = lwork == -1 .or. liwork == -1
+   npiv = 1
+   if (.not.query) npiv = bpack_int( &
+      int(bpack_p@P@local(int(desca(3),int64),desca,1),int64) + int(desca(5),int64))
+   allocate(piv(max(1,npiv)), iw(max(1,liwork)))
+   piv = 0_int64
+   iw = 0_int64
+   if (.not.query) then
+      first = bpack_int(int(bpack_p@P@local(int(ia,int64)-1_int64,desca,1),int64) + 1_int64)
+      last = bpack_p@P@local(int(ia,int64)+int(n,int64)-1_int64,desca,1)
+      piv(first:last) = int(ipiv(first:last),int64)
+   end if
+   call p@P@getri(int(n,int64), a, int(ia,int64), int(ja,int64), int(desca,int64), &
+      piv, work, int(lwork,int64), iw, int(liwork,int64), info64)
+   info = bpack_int(info64)
+   if (query) then
+      if (info == 0) iwork(1) = bpack_int(iw(1))
+   else
+      iwork(1:liwork) = bpack_int(iw(1:liwork))
+   end if
+end subroutine
+
+subroutine bpack_p@P@geqrf(m, n, a, ia, ja, desca, tau, work, lwork, info)
+   integer, intent(in) :: m, n, ia, ja, desca(9), lwork
+   integer :: info
+   @T@ :: a(desca(9),*), tau(*), work(*)
+   integer(int64) :: info64
+   external :: p@P@geqrf
+   call p@P@geqrf(int(m,int64), int(n,int64), a, int(ia,int64), int(ja,int64), &
+      int(desca,int64), tau, work, int(lwork,int64), info64)
+   info = bpack_int(info64)
+end subroutine
+
+subroutine bpack_p@P@@ORG@qr(m, n, k, a, ia, ja, desca, tau, work, lwork, info)
+   integer, intent(in) :: m, n, k, ia, ja, desca(9), lwork
+   integer :: info
+   @T@ :: a(desca(9),*), tau(*), work(*)
+   integer(int64) :: info64
+   external :: p@P@@ORG@qr
+   call p@P@@ORG@qr(int(m,int64), int(n,int64), int(k,int64), a, int(ia,int64), &
+      int(ja,int64), int(desca,int64), tau, work, int(lwork,int64), info64)
+   info = bpack_int(info64)
+end subroutine
+
+subroutine bpack_p@P@@ORM@qr(side, trans, m, n, k, a, ia, ja, desca, tau, c, ic, jc, descc, work, lwork, info)
+   character, intent(in) :: side, trans
+   integer, intent(in) :: m, n, k, ia, ja, ic, jc, desca(9), descc(9), lwork
+   integer :: info
+   @T@ :: a(desca(9),*), tau(*), c(descc(9),*), work(*)
+   integer(int64) :: info64
+   external :: p@P@@ORM@qr
+   call p@P@@ORM@qr(side, trans, int(m,int64), int(n,int64), int(k,int64), a, &
+      int(ia,int64), int(ja,int64), int(desca,int64), tau, c, int(ic,int64), int(jc,int64), &
+      int(descc,int64), work, int(lwork,int64), info64)
+   info = bpack_int(info64)
+end subroutine
+
+subroutine bpack_p@P@geqpfmod(m, n, a, ia, ja, desca, ipiv, tau, work, lwork, &
+#if @IS_COMPLEX@
+                            rwork, lrwork, &
+#endif
+                            info, jperm, jpiv, rank, rtol, atol)
+   integer, intent(in) :: m, n, ia, ja, desca(9), lwork
+   integer :: ipiv(*), info, jperm(*), jpiv(*), rank
+   @T@ :: a(desca(9),*), tau(*), work(*)
+   @R@ :: rtol, atol
+#if @IS_COMPLEX@
+   integer, intent(in) :: lrwork
+   @R@ :: rwork(*)
+#endif
+   integer(int64), allocatable :: piv(:), perm(:), swaps(:)
+   integer(int64) :: info64, rank64
+   integer :: npiv, nperm, nswaps, first, last
+   logical :: query
+   external :: p@P@geqpfmod
+   query = lwork == -1
+#if @IS_COMPLEX@
+   query = query .or. lrwork == -1
+#endif
+   npiv = 1
+   nperm = 1
+   nswaps = 1
+   if (.not.query) then
+      npiv = bpack_p@P@local(int(ja,int64)+int(n,int64)-1_int64,desca,2)
+      nperm = bpack_int(int(ja,int64)+int(n,int64)-1_int64)
+      nswaps = bpack_int(int(ja,int64)+int(min(m,n),int64)-1_int64)
+   end if
+   allocate(piv(max(1,npiv)), perm(max(1,nperm)), swaps(max(1,nswaps)))
+   piv = 0_int64
+   perm = 0_int64
+   swaps = 0_int64
+   rank64 = 0_int64
+   if (.not.query) perm(1:nperm) = int(jperm(1:nperm),int64)
+   call p@P@geqpfmod(int(m,int64), int(n,int64), a, int(ia,int64), int(ja,int64), &
+      int(desca,int64), piv, tau, work, int(lwork,int64), &
+#if @IS_COMPLEX@
+      rwork, int(lrwork,int64), &
+#endif
+      info64, perm, swaps, rank64, rtol, atol)
+   info = bpack_int(info64)
+   if (.not.query .and. info == 0) then
+      first = bpack_int(int(bpack_p@P@local(int(ja,int64)-1_int64,desca,2),int64) + 1_int64)
+      ipiv(first:npiv) = bpack_int(piv(first:npiv))
+      jperm(1:nperm) = bpack_int(perm(1:nperm))
+      rank = bpack_int(rank64)
+      last = bpack_int(int(ja,int64)+int(rank,int64)-1_int64)
+      jpiv(ja:last) = bpack_int(swaps(ja:last))
+   end if
+end subroutine
+
+subroutine bpack_p@P@gesvd(jobu, jobvt, m, n, a, ia, ja, desca, s, u, iu, ju, descu, &
+                         vt, ivt, jvt, descvt, work, lwork, &
+#if @IS_COMPLEX@
+                         rwork, &
+#endif
+                         info)
+   character, intent(in) :: jobu, jobvt
+   integer, intent(in) :: m, n, ia, ja, iu, ju, ivt, jvt, desca(9), descu(9), descvt(9), lwork
+   integer :: info
+   @T@ :: a(desca(9),*), u(descu(9),*), vt(descvt(9),*), work(*)
+   @R@ :: s(*)
+#if @IS_COMPLEX@
+   @R@ :: rwork(*)
+#endif
+   integer(int64) :: info64
+   external :: p@P@gesvd
+   call p@P@gesvd(jobu, jobvt, int(m,int64), int(n,int64), a, int(ia,int64), &
+      int(ja,int64), int(desca,int64), s, u, int(iu,int64), int(ju,int64), int(descu,int64), &
+      vt, int(ivt,int64), int(jvt,int64), int(descvt,int64), work, int(lwork,int64), &
+#if @IS_COMPLEX@
+      rwork, &
+#endif
+      info64)
+   info = bpack_int(info64)
+end subroutine
+
+subroutine bpack_p@P@lapiv(direc, rowcol, pivroc, m, n, a, ia, ja, desca, ipiv, ip, jp, descip, iwork)
+   character, intent(in) :: direc, rowcol, pivroc
+   integer, intent(in) :: m, n, ia, ja, ip, jp, desca(9), descip(9)
+   integer :: ipiv(*), iwork(*)
+   @T@ :: a(desca(9),*)
+   integer(int64), allocatable :: piv(:), iw(:)
+   integer(int64) :: extent, nr, nc, ir, ic, gcd_a, gcd_b, remainder, lcm, block, count, extra
+   integer(int64), external :: numroc
+   integer :: npiv, ndata, nwork, axis
+   logical :: rowpivot, colvector, transpose
+   external :: p@P@lapiv, blacs_gridinfo
+   rowpivot = rowcol == 'R' .or. rowcol == 'r'
+   colvector = pivroc == 'C' .or. pivroc == 'c'
+   transpose = rowpivot .neqv. colvector
+   axis = 2
+   if (colvector) axis = 1
+   if (.not.transpose) then
+      extent = int(ja,int64) + int(n,int64) - 1_int64
+      if (rowpivot) extent = int(ia,int64) + int(m,int64) - 1_int64
+      ndata = bpack_p@P@local(extent,desca,axis)
+      npiv = max(bpack_int(int(ndata,int64) + int(desca(4+axis),int64)), &
+         bpack_p@P@local(int(descip(2+axis),int64),descip,axis))
+   else
+      extent = int(n,int64)
+      if (rowpivot) extent = int(m,int64)
+      if (colvector) then
+         extent = extent + modulo(int(ip,int64)-1_int64,int(descip(5),int64))
+      else
+         extent = extent + modulo(int(jp,int64)-1_int64,int(descip(6),int64))
+      end if
+      ndata = bpack_p@P@local(extent,descip,axis)
+      npiv = ndata
+   end if
+   nwork = 1
+   if (transpose) then
+      call blacs_gridinfo(int(desca(2),int64), nr, nc, ir, ic)
+      gcd_a = nr
+      gcd_b = nc
+      do while (gcd_b /= 0_int64)
+         remainder = modulo(gcd_a,gcd_b)
+         gcd_a = gcd_b
+         gcd_b = remainder
+      end do
+      lcm = (nr/gcd_a)*nc
+      if (rowpivot) then
+         block = int(descip(6),int64)
+         extent = int(descip(4),int64) + modulo(int(jp,int64)-1_int64,block)
+         count = numroc(extent,block,ir,int(desca(7),int64),nr)
+         extra = block
+         if (nr /= nc) then
+            extent = int(bpack_p@P@local(int(descip(4),int64),descip,2),int64)
+            extra = block * (((extent+block-1_int64)/block+lcm/nc-1_int64)/(lcm/nc))
+         end if
+      else
+         block = int(descip(5),int64)
+         extent = int(descip(3),int64) + modulo(int(ip,int64)-1_int64,block)
+         count = numroc(extent,block,ic,int(desca(8),int64),nc)
+         extra = block
+         if (nr /= nc) then
+            extent = int(bpack_p@P@local(int(descip(3),int64),descip,1),int64)
+            extra = block * (((extent+block-1_int64)/block+lcm/nr-1_int64)/(lcm/nr))
+         end if
+      end if
+      nwork = bpack_int(count+extra)
+   end if
+   allocate(piv(max(1,npiv)), iw(max(1,nwork)))
+   piv = 0_int64
+   iw = 0_int64
+   piv(1:ndata) = int(ipiv(1:ndata),int64)
+   call p@P@lapiv(direc, rowcol, pivroc, int(m,int64), int(n,int64), a, int(ia,int64), &
+      int(ja,int64), int(desca,int64), piv, int(ip,int64), int(jp,int64), int(descip,int64), iw)
+   if (transpose) iwork(1:nwork) = bpack_int(iw(1:nwork))
+end subroutine
+
+subroutine bpack_p@P@gehrd(n, ilo, ihi, a, ia, ja, desca, tau, work, lwork, info)
+   integer, intent(in) :: n, ilo, ihi, ia, ja, desca(9), lwork
+   integer :: info
+   @T@ :: a(desca(9),*), tau(*), work(*)
+   integer(int64) :: info64
+   external :: p@P@gehrd
+   call p@P@gehrd(int(n,int64), int(ilo,int64), int(ihi,int64), a, int(ia,int64), &
+      int(ja,int64), int(desca,int64), tau, work, int(lwork,int64), info64)
+   info = bpack_int(info64)
+end subroutine
+
+subroutine bpack_p@P@lahqr(wantt, wantz, n, ilo, ihi, a, desca, w, &
+#if !@IS_COMPLEX@
+                         wi, &
+#endif
+                         iloz, ihiz, z, descz, work, lwork, iwork, ilwork, info)
+   logical, intent(in) :: wantt, wantz
+   integer, intent(in) :: n, ilo, ihi, iloz, ihiz, desca(9), descz(9), lwork, ilwork
+   integer :: iwork(*), info
+   @T@ :: a(desca(9),*), w(*), z(descz(9),*), work(*)
+#if !@IS_COMPLEX@
+   @R@ :: wi(*)
+#endif
+   logical(kind=int64) :: wantt64, wantz64
+   integer(int64), allocatable :: iw(:)
+   integer(int64) :: info64
+   external :: p@P@lahqr
+   wantt64 = wantt
+   wantz64 = wantz
+   allocate(iw(max(1,ilwork)))
+   iw = 0_int64
+   call p@P@lahqr(wantt64, wantz64, int(n,int64), int(ilo,int64), int(ihi,int64), a, &
+      int(desca,int64), w, &
+#if !@IS_COMPLEX@
+      wi, &
+#endif
+      int(iloz,int64), int(ihiz,int64), z, int(descz,int64), work, int(lwork,int64), &
+      iw, int(ilwork,int64), info64)
+   info = bpack_int(info64)
+   ! LAHQR currently documents IWORK as unreferenced (reserved for future releases).
+   if (lwork /= -1 .and. ilwork /= -1) iwork(1:ilwork) = bpack_int(iw(1:ilwork))
+end subroutine
+
+#if @IS_COMPLEX@
+subroutine bpack_p@P@trevc(side, howmny, select, n, t, desct, vl, descvl, vr, descvr, mm, m, work, rwork, info)
+   character, intent(in) :: side, howmny
+   integer, intent(in) :: n, desct(9), descvl(9), descvr(9), mm
+   logical, intent(in) :: select(*)
+   integer :: m, info
+   @T@ :: t(desct(9),*), vl(descvl(9),*), vr(descvr(9),*), work(*)
+   @R@ :: rwork(*)
+   logical(kind=int64), allocatable :: select64(:)
+   integer(int64) :: m64, info64
+   external :: p@P@trevc
+   allocate(select64(max(1,n)))
+   select64 = .false.
+   if (howmny == 'S' .or. howmny == 's') select64(1:n) = select(1:n)
+   call p@P@trevc(side, howmny, select64, int(n,int64), t, int(desct,int64), vl, &
+      int(descvl,int64), vr, int(descvr,int64), int(mm,int64), m64, work, rwork, info64)
+   info = bpack_int(info64)
+   if (info == 0) m = bpack_int(m64)
+end subroutine
+#endif

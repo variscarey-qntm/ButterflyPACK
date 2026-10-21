@@ -21,18 +21,10 @@
 
 module BPACK_DEFS
 
-#if defined(MPI4) && defined(HAVE_MPI)
-    use bpack_mpi4_constants
-    use iso_c_binding
-#ifdef HAVE_ZFP
-    use zfp
+#ifdef MPI4
+    use bpack_ilp64
 #endif
-#if __GNUC__ >= 5
-    use ieee_arithmetic
-#endif
-    use BPACK_linkedlist
-    implicit none
-#elif defined(MPIMODULE)
+#ifdef MPIMODULE
 #ifdef HAVE_MPI
     use MPI
 #endif

@@ -5108,7 +5108,9 @@ end subroutine TensorPermute
    integer function sys2blacs_handle_wrp(comm)
       integer comm
 #ifdef HAVE_MPI
+#ifndef MPI4
       integer, external :: sys2blacs_handle
+#endif
       sys2blacs_handle_wrp=sys2blacs_handle(comm)
 #else
       sys2blacs_handle_wrp=1

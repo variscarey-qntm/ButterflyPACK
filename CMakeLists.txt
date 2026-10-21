@@ -23,7 +23,7 @@ option(enable_toplevel_openmp    "Use OpenMP at top levels of the solver" OFF)
 option(enable_mpi    "Build with MPI support" ON)
 option(enable_python "Enable Python" OFF)
 option(enable_fftw "Build FFTW" OFF)
-option(MPI4 "Use MPI-4 large counts and ILP64 numerical libraries (GNU Fortran)" OFF)
+option(MPI4 "Adapt numerical-library calls to ILP64 ScaLAPACK/BLAS/LAPACK (GNU Fortran)" OFF)
 
 if(MPI4)
   if(NOT enable_mpi)
@@ -44,15 +44,17 @@ if(MPI4)
     message(FATAL_ERROR "MPI4 requires explicit ILP64 BLAS/LAPACK libraries with CMake older than 3.22")
   endif()
   set(BLA_SIZEOF_INTEGER 8)
-  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -DMPI4 -fdefault-integer-8")
+  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -DMPI4")
   add_compile_definitions(MPI4)
-  file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/MPI4/bpack_mpi4.fi"
-       _mpi4_mappings REGEX "^#define ")
-  foreach(_mapping IN LISTS _mpi4_mappings)
-    string(REGEX REPLACE "^#define +([^ ]+) +([^ ]+).*$" "\\1=\\2"
-           _definition "${_mapping}")
-    add_compile_definitions("$<$<COMPILE_LANGUAGE:Fortran>:${_definition}>")
-  endforeach()
+  include(CheckFortranSourceCompiles)
+  check_fortran_source_compiles("
+program default_integer_abi
+  integer, parameter :: assert_width = 1 / merge(1, 0, storage_size(0) == 32)
+  print *, assert_width
+end program" BUTTERFLYPACK_DEFAULT_INTEGER_32 SRC_EXT F90)
+  if(NOT BUTTERFLYPACK_DEFAULT_INTEGER_32)
+    message(FATAL_ERROR "MPI4 adapters require default 32-bit application integers; remove global integer-widening compiler flags")
+  endif()
 endif()
 
 ######################################################################
@@ -581,9 +583,7 @@ if(NOT enable_mpi)
 add_subdirectory(MPI_DUMMY)
 endif()
 if(MPI4)
-  add_subdirectory(MPI4)
-  include_directories(${ButterflyPACK_SOURCE_DIR}/MPI4
-                      ${ButterflyPACK_BINARY_DIR}/MPI4)
+  include(MPI4/ILP64.cmake)
 endif()
 add_subdirectory(SRC_DOUBLE)
 add_subdirectory(SRC_DOUBLECOMPLEX)
@@ -601,10 +601,8 @@ add_library(butterflypack
   $<TARGET_OBJECTS:butterflypack_cpp>)
 
 if(MPI4)
-  target_sources(butterflypack PRIVATE $<TARGET_OBJECTS:bpack_mpi4>)
-  target_link_libraries(butterflypack PUBLIC ${MPI_C_LIBRARIES})
+  target_sources(butterflypack PRIVATE $<TARGET_OBJECTS:bpack_ilp64>)
   target_include_directories(butterflypack PUBLIC
-    $<BUILD_INTERFACE:${ButterflyPACK_SOURCE_DIR}/MPI4>
     $<BUILD_INTERFACE:${ButterflyPACK_BINARY_DIR}/MPI4>)
 endif()
 

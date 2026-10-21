@@ -1,0 +1,55 @@
+! Default-integer public interfaces to the ILP64 distributed numerical library.
+private :: bpack_p@P@local
+interface p@P@gemm
+   module procedure bpack_p@P@gemm
+end interface
+interface p@P@gemr2d
+   module procedure bpack_p@P@gemr2d
+end interface
+interface p@P@trsm
+   module procedure bpack_p@P@trsm
+end interface
+interface p@P@copy
+   module procedure bpack_p@P@copy
+end interface
+interface p@P@lange
+   module procedure bpack_p@P@lange
+end interface
+interface p@P@getrf
+   module procedure bpack_p@P@getrf
+end interface
+interface p@P@getrfmod
+   module procedure bpack_p@P@getrfmod
+end interface
+interface p@P@getri
+   module procedure bpack_p@P@getri
+end interface
+interface p@P@geqrf
+   module procedure bpack_p@P@geqrf
+end interface
+interface p@P@geqpfmod
+   module procedure bpack_p@P@geqpfmod
+end interface
+interface p@P@@ORG@qr
+   module procedure bpack_p@P@@ORG@qr
+end interface
+interface p@P@@ORM@qr
+   module procedure bpack_p@P@@ORM@qr
+end interface
+interface p@P@gesvd
+   module procedure bpack_p@P@gesvd
+end interface
+interface p@P@lapiv
+   module procedure bpack_p@P@lapiv
+end interface
+interface p@P@gehrd
+   module procedure bpack_p@P@gehrd
+end interface
+interface p@P@lahqr
+   module procedure bpack_p@P@lahqr
+end interface
+#if @IS_COMPLEX@
+interface p@P@trevc
+   module procedure bpack_p@P@trevc
+end interface
+#endif

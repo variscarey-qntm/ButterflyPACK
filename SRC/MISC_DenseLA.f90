@@ -359,7 +359,9 @@ contains
    integer function numroc_wp(n, nb, iproc, isrcproc, nprocs)
       integer :: n, nb, iproc, isrcproc, nprocs
 #ifdef HAVE_MPI
+#ifndef MPI4
       integer :: numroc ! blacs routine
+#endif
       numroc_wp = numroc(n, nb, iproc, isrcproc, nprocs)
 #else
       numroc_wp = n
@@ -406,7 +408,9 @@ contains
       character, optional:: norm
       character::opt
       real(kind=8), allocatable:: WORK(:)
+#ifndef MPI4
       real(kind=8) dlange
+#endif
 
       opt = 'F'
       if (present(norm)) opt = norm
@@ -435,7 +439,9 @@ contains
       character, optional:: norm
       character::opt
       real(kind=4), allocatable:: WORK(:)
+#ifndef MPI4
       real(kind=4) slange
+#endif
 
       opt = 'F'
       if (present(norm)) opt = norm
@@ -461,8 +467,14 @@ contains
       integer M, N, lda
       character, optional:: norm
       character::opt
+#ifdef MPI4
+      real(kind=8), allocatable:: WORK(:)
+#else
       complex(kind=8), allocatable:: WORK(:)
+#endif
+#ifndef MPI4
       real(kind=8) zlange
+#endif
 
       opt = 'F'
       if (present(norm)) opt = norm
@@ -490,8 +502,14 @@ contains
       integer M, N, lda
       character, optional:: norm
       character::opt
+#ifdef MPI4
+      real(kind=4), allocatable:: WORK(:)
+#else
       complex(kind=4), allocatable:: WORK(:)
+#endif
+#ifndef MPI4
       real(kind=4) clange
+#endif
 
       opt = 'F'
       if (present(norm)) opt = norm
@@ -540,7 +558,9 @@ contains
       integer desca(9)
       character, optional:: norm
       real(kind=8), allocatable:: WORK(:)
+#ifndef MPI4
       real(kind=8) pdlange
+#endif
       character::opt
       integer IROFFA,ICOFFA
 
@@ -566,7 +586,9 @@ contains
       integer desca(9)
       character, optional:: norm
       real(kind=4), allocatable:: WORK(:)
+#ifndef MPI4
       real(kind=4) pslange
+#endif
       character::opt
       integer IROFFA,ICOFFA
 
@@ -591,8 +613,14 @@ contains
       complex(kind=8) Matrix(:, :)
       integer desca(9)
       character, optional:: norm
+#ifdef MPI4
+      real(kind=8), allocatable:: WORK(:)
+#else
       complex(kind=8), allocatable:: WORK(:)
+#endif
+#ifndef MPI4
       real(kind=8) pzlange
+#endif
       character::opt
       integer IROFFA,ICOFFA
 
@@ -616,8 +644,14 @@ contains
       complex(kind=4) Matrix(:, :)
       integer desca(9)
       character, optional:: norm
+#ifdef MPI4
+      real(kind=4), allocatable:: WORK(:)
+#else
       complex(kind=4), allocatable:: WORK(:)
+#endif
+#ifndef MPI4
       real(kind=4) pclange
+#endif
       character::opt
       integer IROFFA,ICOFFA
 
