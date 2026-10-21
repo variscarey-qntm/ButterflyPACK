@@ -273,10 +273,11 @@ subroutine bpack_p@P@lapiv(direc, rowcol, pivroc, m, n, a, ia, ja, desca, ipiv, 
    else
       extent = int(n,int64)
       if (rowpivot) extent = int(m,int64)
+      ! IP/JP are forwarded unchanged, so retain the entire preceding global prefix.
       if (colvector) then
-         extent = extent + modulo(int(ip,int64)-1_int64,int(descip(5),int64))
+         extent = extent + int(ip,int64) - 1_int64
       else
-         extent = extent + modulo(int(jp,int64)-1_int64,int(descip(6),int64))
+         extent = extent + int(jp,int64) - 1_int64
       end if
       ndata = bpack_p@P@local(extent,descip,axis)
       npiv = ndata

@@ -102,6 +102,32 @@ contains
       call check(iloz == 1 .and. ihiz == 3 .and. ilwork == 1, 'LAHQR bounds and integer workspace')
       call check(lwork == -1 .or. lwork == 32, 'LAHQR workspace query sign extension')
    end subroutine
+
+   subroutine lapiv_result(direc, rowcol, pivroc, m, n, ia, ja, desca, piv, ip, jp, descip, iw, last)
+      character, intent(in) :: direc, rowcol, pivroc
+      integer(int64), intent(in) :: m, n, ia, ja, desca(9), piv(*), ip, jp, descip(9)
+      integer(int64), intent(out) :: iw(*), last
+      integer :: i
+      call check_descriptor(desca)
+      call check(direc == 'B' .and. rowcol == pivroc, 'LAPIV transpose orientation')
+      call check(m == 3 .and. n == 3 .and. ia == 1 .and. ja == 1, 'LAPIV scalar ABI')
+      if (rowcol == 'C') then
+         call check(ip == 3 .and. jp == 1, 'LAPIV original row offset')
+         call check(all(descip == [1_int64,7_int64,5_int64,1_int64,2_int64,1_int64,0_int64,0_int64,5_int64]), &
+            'LAPIV column-vector descriptor')
+         last = piv(ip+n-1_int64)
+      else
+         call check(ip == 1 .and. jp == 3, 'LAPIV original column offset')
+         call check(all(descip == [1_int64,7_int64,1_int64,5_int64,1_int64,2_int64,0_int64,0_int64,1_int64]), &
+            'LAPIV row-vector descriptor')
+         last = piv(jp+m-1_int64)
+      end if
+      call check(last == 5_int64, 'LAPIV final original-index pivot beyond the first block')
+      call check(all(piv(1:5) == [1_int64,2_int64,3_int64,4_int64,5_int64]), 'LAPIV complete pivot prefix')
+      do i = 1, 7
+         iw(i) = int(200+i,int64)
+      end do
+   end subroutine
 end module
 
 program test_ilp64_scalapack
@@ -193,6 +219,7 @@ program test_ilp64_scalapack
    call check(info == 0 .and. all(piv == [2,3,3,untouched,untouched]), 'modified complex LU')
    call test_real()
    call test_complex()
+   call test_lapiv()
    write(*,*) 'PASS: mocked distributed ILP64 integer, descriptor, pivot, workspace and logical adapters'
 contains
    subroutine test_real()
@@ -288,6 +315,42 @@ contains
       m = untouched
       call pztrevc('R','S',select,3,a,descriptor,vl,descriptor,vr,descriptor,3,m,work,rwork,info)
       call check(info == 0 .and. m == 2, 'TREVC 64-bit SELECT and M')
+   end subroutine
+
+   subroutine test_lapiv()
+      integer :: vector_desc(9), input(5), work(9), ip, jp, orientation, i
+      character :: axis
+      input = [1,2,3,4,5]
+      do orientation = 1, 2
+         if (orientation == 1) then
+            axis = 'C'
+            ip = 3
+            jp = 1
+            vector_desc = [1,7,5,1,2,1,0,0,5]
+         else
+            axis = 'R'
+            ip = 1
+            jp = 3
+            vector_desc = [1,7,1,5,1,2,0,0,1]
+         end if
+         work = untouched
+         call pslapiv('B',axis,axis,3,3,sa,1,1,descriptor,input,ip,jp,vector_desc,work)
+         call check(sa(1,1) == 5 .and. all(work(1:7) == [(200+i,i=1,7)]), 'single real LAPIV prefix')
+         call check(all(work(8:9) == untouched), 'single real LAPIV workspace guards')
+         work = untouched
+         call pdlapiv('B',axis,axis,3,3,da,1,1,descriptor,input,ip,jp,vector_desc,work)
+         call check(da(1,1) == 5 .and. all(work(1:7) == [(200+i,i=1,7)]), 'double real LAPIV prefix')
+         call check(all(work(8:9) == untouched), 'double real LAPIV workspace guards')
+         work = untouched
+         call pclapiv('B',axis,axis,3,3,ca,1,1,descriptor,input,ip,jp,vector_desc,work)
+         call check(ca(1,1) == 5 .and. all(work(1:7) == [(200+i,i=1,7)]), 'single complex LAPIV prefix')
+         call check(all(work(8:9) == untouched), 'single complex LAPIV workspace guards')
+         work = untouched
+         call pzlapiv('B',axis,axis,3,3,za,1,1,descriptor,input,ip,jp,vector_desc,work)
+         call check(za(1,1) == 5 .and. all(work(1:7) == [(200+i,i=1,7)]), 'double complex LAPIV prefix')
+         call check(all(work(8:9) == untouched), 'double complex LAPIV workspace guards')
+         call check(all(input == [1,2,3,4,5]), 'LAPIV input pivots are preserved')
+      end do
    end subroutine
 end program
 
@@ -549,4 +612,44 @@ subroutine pztrevc(side, howmny, select, n, t, desct, vl, descvl, vr, descvr, mm
    vr(1,1) = 1
    work(1) = 0
    rwork(1) = 0
+end subroutine
+
+subroutine pslapiv(direc, rowcol, pivroc, m, n, a, ia, ja, desca, piv, ip, jp, descip, iw)
+   use ilp64_scalapack_fixture
+   implicit none
+   character :: direc, rowcol, pivroc
+   integer(int64) :: m, n, ia, ja, desca(9), piv(*), ip, jp, descip(9), iw(*), last
+   real(kind=4) :: a(desca(9),*)
+   call lapiv_result(direc,rowcol,pivroc,m,n,ia,ja,desca,piv,ip,jp,descip,iw,last)
+   a(1,1) = real(last,kind=4)
+end subroutine
+
+subroutine pdlapiv(direc, rowcol, pivroc, m, n, a, ia, ja, desca, piv, ip, jp, descip, iw)
+   use ilp64_scalapack_fixture
+   implicit none
+   character :: direc, rowcol, pivroc
+   integer(int64) :: m, n, ia, ja, desca(9), piv(*), ip, jp, descip(9), iw(*), last
+   real(kind=8) :: a(desca(9),*)
+   call lapiv_result(direc,rowcol,pivroc,m,n,ia,ja,desca,piv,ip,jp,descip,iw,last)
+   a(1,1) = real(last,kind=8)
+end subroutine
+
+subroutine pclapiv(direc, rowcol, pivroc, m, n, a, ia, ja, desca, piv, ip, jp, descip, iw)
+   use ilp64_scalapack_fixture
+   implicit none
+   character :: direc, rowcol, pivroc
+   integer(int64) :: m, n, ia, ja, desca(9), piv(*), ip, jp, descip(9), iw(*), last
+   complex(kind=4) :: a(desca(9),*)
+   call lapiv_result(direc,rowcol,pivroc,m,n,ia,ja,desca,piv,ip,jp,descip,iw,last)
+   a(1,1) = real(last,kind=4)
+end subroutine
+
+subroutine pzlapiv(direc, rowcol, pivroc, m, n, a, ia, ja, desca, piv, ip, jp, descip, iw)
+   use ilp64_scalapack_fixture
+   implicit none
+   character :: direc, rowcol, pivroc
+   integer(int64) :: m, n, ia, ja, desca(9), piv(*), ip, jp, descip(9), iw(*), last
+   complex(kind=8) :: a(desca(9),*)
+   call lapiv_result(direc,rowcol,pivroc,m,n,ia,ja,desca,piv,ip,jp,descip,iw,last)
+   a(1,1) = real(last,kind=8)
 end subroutine
